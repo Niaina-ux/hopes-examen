@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class TypeExercice extends Model
+{
+    protected $table = 'types_exercice';
+    
+    protected $fillable = ['nom', 'slug', 'icone'];
+
+    public function examens()
+    {
+        return $this->belongsToMany(Examen::class, 'examen_type_exercice');
+    }
+}

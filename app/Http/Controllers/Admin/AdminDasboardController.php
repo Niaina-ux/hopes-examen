@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class AdminDasboardController extends Controller
+{
+    public function index()
+    {
+        return View('/admin/dashboard');
+    }
+}

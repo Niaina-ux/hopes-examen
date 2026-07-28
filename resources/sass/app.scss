@@ -1,0 +1,67 @@
+@font-face {
+    font-family: Poppins;
+    src: url('../font/Poppins-Regular.ttf') format('truetype');
+}
+
+@import '../sass/color.scss' ;
+
+*{
+    font-family: Poppins;
+}
+.container{
+    width: 80%;
+    margin: auto;
+}
+.container-2{
+    width: 22cm;
+    margin: auto;
+}
+@media (max-width:640px) {
+    .container{
+        width: 90%;
+    }
+}
+@media (max-width:1024px) {
+    .container{
+        width: 85%;
+    }
+}
+@media (min-width:1280px) {
+    .container{
+        width: 80%;
+    }
+}
+
+.text-vert{
+    color: $vert;
+}
+.bg-vert{
+    background: $vert;
+}
+.text-rouge{
+    color: $rouger;
+}
+.bg-rouge{
+    background: $rouger;
+}
+
+.header-link-examen{
+    .links-examen{
+        display: none;
+    }
+    &:hover{
+        .links-examen{
+            display: block;
+        }
+    }
+}
+
+.bg-sgress {
+    background: linear-gradient(rgb(80, 80, 80), rgb(160, 160, 160), rgb(104, 104, 104));
+}
+.custom-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: $vert; /* loko maitso (vert) */
+}
