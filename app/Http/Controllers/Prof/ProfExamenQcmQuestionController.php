@@ -61,6 +61,19 @@ class ProfExamenQcmQuestionController extends Controller
             ])->withInput();
         }
 
+        if ($qcm->duree_minutes !== null) {
+            $dureeMaxSecondes = $qcm->duree_minutes * 60;
+
+            $dureeExistante = $qcm->qcmQuestions()->sum('duree_seconde');
+            $dureeNouvelle = collect($validated['questions'])->sum('duree_seconde');
+            $dureeTotal = $dureeExistante + $dureeNouvelle;
+
+            if ($dureeTotal > $dureeMaxSecondes) {
+                return back()->withErrors([
+                    'questions' => "La durée totale des questions ({$dureeTotal} sec) dépasse la durée autorisée pour ce QCM ({$dureeMaxSecondes} sec / {$qcm->duree_minutes} min). Durée déjà utilisée : {$dureeExistante} sec.",
+                ])->withInput();
+            }
+        }
         // Fanamarinana manuel isaky ny question, araka ny reponse_type
         foreach ($validated['questions'] as $index => $q) {
             if ($q['reponse_type'] === 'true_false') {
@@ -81,7 +94,6 @@ class ProfExamenQcmQuestionController extends Controller
                     ])->withInput();
                 }
             } else {
-                // multiple
                 $hasCorrect = collect($q['choices'] ?? [])->contains(fn($c) => isset($c['est_correcte']));
                 if (!$hasCorrect) {
                     return back()->withErrors([
@@ -174,7 +186,7 @@ class ProfExamenQcmQuestionController extends Controller
         $question->delete();
 
         return redirect()
-            ->route('prof.examen.qcm.question.show', [$slug, $examen->id, $qcm->id])
+            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
             ->with('success', 'Question supprimée avec succès.');
     }
 
@@ -245,6 +257,22 @@ class ProfExamenQcmQuestionController extends Controller
             ])->withInput();
         }
 
+        if ($qcm->duree_minutes !== null) {
+            $dureeSecondesAutres = $qcm->qcmQuestions()
+                ->where('id', '!=', $question->id)
+                ->sum('duree_seconde');
+
+            $dureeSecondesTotal = $dureeSecondesAutres + $validated['duree_seconde'];
+            $dureeMaxSecondes = $qcm->duree_minutes * 60;
+
+            if ($dureeSecondesTotal > $dureeMaxSecondes) {
+                $dureeRestante = $dureeMaxSecondes - $dureeSecondesAutres;
+                return back()->withErrors([
+                    'duree_seconde' => "Le total des durées ({$dureeSecondesTotal}s) dépasse la durée maximale autorisée pour ce QCM ({$dureeMaxSecondes}s, soit {$qcm->duree_minutes} min). Durée maximale disponible pour cette question : {$dureeRestante}s.",
+                ])->withInput();
+            }
+        }
+        
         DB::transaction(function () use ($request, $validated, $question) {
             $imagePath = $question->image;
             if ($request->hasFile('image')) {

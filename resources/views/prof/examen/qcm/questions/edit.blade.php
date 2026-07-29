@@ -23,7 +23,7 @@
                     <div class="mb-2">
                         <label class="block text-sm font-medium mb-1">Média actuel</label>
                         @if($question->image)
-                            <img src="{{ asset('images/questions/' . $question->image) }}" class="w-24 h-24 object-cover rounded-md mb-2">
+                            <img src="{{ asset('images/questions/' . $question->image) }}" class="w-30 h-25 object-cover rounded-md mb-2">
                         @endif
                         @if($question->video)
                             <video controls class="w-48 rounded-md mb-2">
@@ -44,37 +44,42 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" flex gap-5 my-4">
-                        <div class="">
-                            <label class="block text-sm font-medium">Points</label>
-                            <input 
-                                type="number" 
-                                name="points" 
-                                value="{{ old('points', $question->points) }}" 
-                                min="0.1" step="0.1" 
-                                class="border  border-black/20 rounded w-32 p-2">
-                            @error('points') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                    <div class=" my-4 w-[16cm]">
+                        <div class="flex gap-5">
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium">Points</label>
+                                <input 
+                                    type="number" 
+                                    name="points" 
+                                    value="{{ old('points', $question->points) }}" 
+                                    min="0.1" step="0.1" 
+                                    class="border w-full  border-black/20 rounded  p-2">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium">Durée (secondes)</label>
+                                <input
+                                    type="number"
+                                    name="duree_seconde"
+                                    value="{{ old('duree_seconde', $question->duree_seconde) }}"
+                                    min="1"
+                                    class="border w-full border-black/20 rounded  p-2">
+                                
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium">Type de réponse</label>
+                                <select name="reponse_type" class="reponse-type border border-black/20 rounded w-full p-2" onchange="toggleReponseType(this)">
+                                    <option value="single" {{ old('reponse_type', $question->reponse_type) == 'single' ? 'selected' : '' }}>Réponse simple</option>
+                                    <option value="multiple" {{ old('reponse_type', $question->reponse_type) == 'multiple' ? 'selected' : '' }}>Réponse multiple</option>
+                                    <option value="true_false" {{ old('reponse_type', $question->reponse_type) == 'true_false' ? 'selected' : '' }}>Vrai / Faux</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="">
-                            <label class="block text-sm font-medium">Durée (secondes)</label>
-                            <input
-                                type="number"
-                                name="duree_seconde"
-                                value="{{ old('duree_seconde', $question->duree_seconde) }}"
-                                min="1"
-                                class="border border-black/20 rounded w-32 p-2">
-                            @error('duree_seconde')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div class="">
-                            <label class="block text-sm font-medium">Type de réponse</label>
-                            <select name="reponse_type" class="reponse-type border border-black/20 rounded w-full p-2" onchange="toggleReponseType(this)">
-                                <option value="single" {{ old('reponse_type', $question->reponse_type) == 'single' ? 'selected' : '' }}>Réponse simple</option>
-                                <option value="multiple" {{ old('reponse_type', $question->reponse_type) == 'multiple' ? 'selected' : '' }}>Réponse multiple</option>
-                                <option value="true_false" {{ old('reponse_type', $question->reponse_type) == 'true_false' ? 'selected' : '' }}>Vrai / Faux</option>
-                            </select>
-                        </div>
+                        @error('points') 
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p> 
+                        @enderror
+                        @error('duree_seconde')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <label class="block font-medium mb-1">Choix</label>
                     <div class="choices-block border border-black/20 bg-black/2 p-2 rounded-md {{ $question->reponse_type === 'true_false' ? 'hidden' : '' }}">
