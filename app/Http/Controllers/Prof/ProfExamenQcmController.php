@@ -63,7 +63,7 @@ class ProfExamenQcmController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.qcm.question.show', [$slug, $examen->id, $qcm->id])
+            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
             ->with('success', 'QCM créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 
@@ -93,7 +93,7 @@ class ProfExamenQcmController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.qcm.question.show', [$slug, $examen->id, $qcm->id])
+            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
             ->with('success', 'QCM modifié avec succès.');
     }
 

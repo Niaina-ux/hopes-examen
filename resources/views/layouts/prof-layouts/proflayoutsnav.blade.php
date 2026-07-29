@@ -15,6 +15,7 @@
                     Dashboard
                 </a>
             </li>
+            @if($profCategorie ?? false)
             <li>
                 <a href="{{route('prof.student.show',$profCategorie->slug)}}"
                     class="inline-block px-2 py-1">
@@ -22,7 +23,6 @@
                     Etudiants
                 </a>
             </li>
-            @if($profCategorie ?? false)
                 <li>
                     <a href="{{ route('prof.examen.show', $profCategorie->slug) }}" class="inline-block px-2 py-1">
                         <i class="fa-solid fa-folder me-2"></i>

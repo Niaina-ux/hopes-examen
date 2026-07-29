@@ -6,6 +6,8 @@ use App\Http\Controllers\Prof\ProfExamenCodeQuestionController;
 use App\Http\Controllers\Prof\ProfExamenController;
 use App\Http\Controllers\Prof\ProfExamenFichierController;
 use App\Http\Controllers\Prof\ProfExamenFichierQuestionController;
+use App\Http\Controllers\Prof\ProfExamenGlisserDeposerController;
+use App\Http\Controllers\Prof\ProfExamenGlisserDeposerQuestionController;
 use App\Http\Controllers\Prof\ProfExamenMotsCroisesController;
 use App\Http\Controllers\Prof\ProfExamenPointillerController;
 use App\Http\Controllers\Prof\ProfExamenPointillerQuestionController;
@@ -151,6 +153,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('prof/examen/{slug}/{examen}/motscroises/{motscroises}/edit', 'edit')->name('prof.examen.motscroises.edit');
         Route::put('/prof/examen/{slug}/{examen}/motscroises/{motscroises}', 'update')->name('prof.examen.motscroises.update');
         Route::delete('prof/examen/{slug}/{examen}/motscroises/{motscroises}', 'destroy')->name('prof.examen.motscroises.destroy');
+    });
+
+    Route::controller(ProfExamenGlisserDeposerController::class)->group(function () {
+        Route::get('prof/examen/{slug}/{examen}/glisserdeposer', 'show')->name('prof.examen.glisserdeposer');
+        Route::get('prof/examen/{slug}/{examen}/glisserdeposer/create', 'create')->name('prof.examen.glisserdeposer.create');
+        Route::post('prof/examen/{slug}/{examen}/glisserdeposer/store', 'store')->name('prof.examen.glisserdeposer.store');
+        Route::get('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/edit', 'edit')->name('prof.examen.glisserdeposer.edit');
+        Route::put('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}', 'update')->name('prof.examen.glisserdeposer.update');
+        Route::delete('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}', 'destroy')->name('prof.examen.glisserdeposer.destroy');
+    });
+
+    Route::controller(ProfExamenGlisserDeposerQuestionController::class)->group(function () {
+        Route::get('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/question', 'show')->name('prof.examen.glisserdeposer.question.index');
+        Route::get('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/question/create', 'create')->name('prof.examen.glisserdeposer.question.create');
+        Route::post('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/question/store', 'store')->name('prof.examen.glisserdeposer.question.store');
+        Route::get('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/question/{question}/edit', 'edit')->name('prof.examen.glisserdeposer.question.edit');
+        Route::put('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/question/{question}', 'update')->name('prof.examen.glisserdeposer.question.update');
+        Route::delete('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/question/{question}', 'destroy')->name('prof.examen.glisserdeposer.question.destroy');
     });
 
     Route::controller(ProfStudentController::class)->group(function()

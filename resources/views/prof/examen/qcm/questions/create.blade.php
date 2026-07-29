@@ -68,7 +68,7 @@
                             <input type="number" name="questions[0][points]" value="{{ old('questions.0.points') }}" min="0.1" step="0.1" class="border border-black/20 rounded w-full p-2" placeholder="1">
                             @error('questions.0.points') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                             @error('questions')
-                                <div class="text-red-500 p-3">
+                                <div class="text-red-500 p-3 text-sm">
                                     {{ $message }}
                                 </div>
                             @enderror
@@ -77,8 +77,8 @@
                             <label class="block text-sm font-medium">Duree seconde</label>
                             <input type="number" name="questions[0][duree_seconde]" value="{{ old('questions.0.duree_seconde') }}" min="0.5" step="0.1" class="border border-black/20 rounded w-full p-2" placeholder="10">
                             @error('questions.0.duree_seconde') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                            @error('questions')
-                                <div class="text-red-500 p-3">
+                            @error('questions.0.duree_seconde')
+                                <div class="text-red-500 p-3 text-sm">
                                     {{ $message }}
                                 </div>
                             @enderror

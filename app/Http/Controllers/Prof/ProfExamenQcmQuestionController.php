@@ -309,7 +309,7 @@ class ProfExamenQcmQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.qcm.question.show', [$slug, $examen->id, $qcm->id])
+            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
             ->with('success', 'Question modifiée avec succès.');
     }
 }

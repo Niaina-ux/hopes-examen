@@ -59,14 +59,21 @@ class ExamAttempt extends Model
         $scorePointiller = PointillerEtudiantReponse::where('exam_attempt_id', $this->id)
             ->sum('points_obtenus');
 
-        $scorePointiller = RelierReponse::where('exam_attempt_id', $this->id)
+        $scoreGlisserDeposer = GlisserDeposerReponse::where('exam_attempt_id', $this->id)
             ->sum('points_obtenus');
 
-        $scoreCode = CodeReponse::where('exam_attempt_id', $this->id)
+        $scoreMotsCroiser = MotsCroisesReponse::where('exam_attempt_id', $this->id)
             ->sum('points_obtenus');
-        // Ampio eto ny score an'ny type_exercice hafa (redaction, fleche, sns) raha misy
-
-        $scoreTotal = $scoreQcm + $scorePointiller + $scorePointiller + $scoreCode;
+        
+        $scoreRelier = RelierReponse::where('exam_attempt_id', $this->id)
+            ->sum('points_obtenus');
+            
+        $scoreTotal = $scoreQcm 
+                    + $scorePointiller 
+                    + $scorePointiller 
+                    + $scoreGlisserDeposer
+                    + $scoreMotsCroiser
+                    + $scoreRelier;
 
         $this->update(['score' => $scoreTotal]);
 

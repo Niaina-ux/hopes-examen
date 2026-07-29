@@ -2,6 +2,7 @@
 
 use App\Models\Code;
 use App\Models\Fichier;
+use App\Models\GlisserDeposer;
 use App\Models\MotsCroises;
 use App\Models\Qcm;
 use App\Models\Pointiller;
@@ -44,5 +45,9 @@ return [
         'model'    => MotsCroises::class,
         'order_by' => 'ordre',
     ],
+    'glisserdeposer' => [
+        'model'       => GlisserDeposer::class,
+        'order_by'    => 'ordre',
+    ]
     // Ampio eto isaky ny misy type_exercice vaovao — tsy ilaina manova code Controller intsony
 ];

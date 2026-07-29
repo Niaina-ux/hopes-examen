@@ -10,13 +10,17 @@ use App\Models\ExamAttempt;
 use App\Models\Examen;
 use App\Models\ExamenTypeExercice;
 use App\Models\Fichier;
+use App\Models\GlisserDeposerReponse;
 use App\Models\MotsCroises;
 use App\Models\Pointiller;
+use App\Models\PointillerEtudiantReponse;
 use App\Models\PointillerQuestion;
 use App\Models\Qcm;
 use App\Models\QcmQuestion;
+use App\Models\QcmReponse;
 use App\Models\Relier;
 use App\Models\RelierQuestion;
+use App\Models\RelierReponse;
 use App\Models\Student;
 use App\Models\StudentExamen;
 use App\Models\Text;
@@ -158,17 +162,12 @@ class StudentExamenController extends Controller
             ]);
         }
 
-        $attempt->recalculerScore();
+        // $attempt->recalculerScore();
         
         StudentExamen::where('examen_id', $examen->id)
             ->where('user_id', $userId)
             ->update(['termine' => true]);
-            
-        // Mikajy ny totalin'ny points azo aloha (points maximum) ho an'ity examen ity
-        // $totalPointsQcm = QcmQuestion::whereHas('qcm', function ($q) use ($examen) {
-        //     $q->where('examen_id', $examen->id);
-        // })->sum('points');
-        
+                   
         $totalPoints = 10;
 
         return view('student.examen.terminer', compact('examen', 'attempt', 'totalPoints'));

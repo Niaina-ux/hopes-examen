@@ -52,6 +52,11 @@ class Examen extends Model
         return $this->hasMany(Text::class);
     }
 
+    public function glisserDeposers()
+    {
+        return $this->hasMany(GlisserDeposer::class);
+    }
+
     public function students()
     {
         return $this->belongsToMany(User::class, 'student_examen')

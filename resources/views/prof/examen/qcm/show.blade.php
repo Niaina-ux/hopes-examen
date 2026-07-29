@@ -16,7 +16,7 @@
                 </button>
             </div>
         @endif
-        <div class=" mt-2" >
+        <div class=" mt-2">
             @forelse($qcms as $index => $qcm)
                 <div class="p-2  flex gap-5 justify-between border border-black/10 rounded-md my-2">
                     <div class="w-15 h-15 rounded-md bg-black/3 flex justify-center items-center">
@@ -73,9 +73,11 @@
                                                     <h4 class="text-base">{{ $question->enonce }}</h4>
                                                     <div class="flex gap-3">
                                                         <div class="flex text-sm">
-                                                            Type: <span class="px-3 inline-block text-rouge">{{ $question->reponse_type }}</span>
-                                                        </div>
-                                                        
+                                                            {{ $question->reponse_type }}, 
+                                                        </div>                                                       
+                                                        <div class="flex text-sm">
+                                                            Duree: <span class="px-3 inline-block text-rouge">{{ $question->duree_seconde }} sec,</span>
+                                                        </div>                                                       
                                                         <div class="flex text-sm">
                                                             Point: <span class="px-3 inline-block text-vert">{{ $question->points }}</span>
                                                         </div>

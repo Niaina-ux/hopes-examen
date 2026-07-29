@@ -3,6 +3,7 @@
 use App\Http\Controllers\Student\StudentExamenCodeController;
 use App\Http\Controllers\Student\StudentExamenController;
 use App\Http\Controllers\Student\StudentExamenFichierController;
+use App\Http\Controllers\Student\StudentExamenGlisserDeposerController;
 use App\Http\Controllers\Student\StudentExamenMotsCroisesController;
 use App\Http\Controllers\Student\StudentExamenPointillerController;
 use App\Http\Controllers\Student\StudentExamenQcmController;
@@ -57,6 +58,11 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(StudentExamenMotsCroisesController::class)->group(function () {
             Route::get('examen/{examen}/{slug}/motscroises/{motscroises}', 'show')->name('examen.motscroises.show');
             Route::post('examen/{examen}/{slug}/motscroises/{motscroises}/store', 'store')->name('examen.motscroises.store');
+        });
+
+        Route::controller(StudentExamenGlisserDeposerController::class)->group(function(){
+            Route::get('/examen/{examen}/{slug}/glisserdeposer/{glisserdeposer}', 'show')->name('examen.glisserdeposer.show');
+            Route::post('/examen/{examen}/{slug}/glisserdeposer/{glisserdeposer}/store', 'store')->name('examen.glisserdeposer.store');
         });
     });
 });
