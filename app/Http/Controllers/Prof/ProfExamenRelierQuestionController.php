@@ -107,7 +107,7 @@ class ProfExamenRelierQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id])
+            ->route('prof.examen.relier', [$slug, $examen->id])
             ->with('success', 'Question enregistrée avec succès.');
     }
 

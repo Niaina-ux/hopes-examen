@@ -15,7 +15,7 @@
     <div class="border border-black/10 rounded-md p-5 mb-6 bg-black/2  overflow-y-auto">
         <h2 class="text-2xl font-semibold mb-4">Compréhension du text</h2>
         <h3 class="text-base font-semibold mb-3">{{ $text->titre }}</h3>
-        <div class="text-sm leading-relaxed whitespace-pre-line">{{ $text->texte }}</div>
+        <div class=" leading-relaxed whitespace-pre-line">{{ $text->texte }}</div>
     </div>
 
     <form action="{{ route('examen.text.store', ['examen' => $examen->id, 'slug' => $slug, 'text' => $text->id]) }}" method="POST">
@@ -28,7 +28,7 @@
                         {{ $qIndex + 1 }}
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-base font-semibold">{{ $question->enonce }}</h3>
+                        <h3 class="text-base ">{{ $question->enonce }}</h3>
                         <span class="text-sm rounded-full border border-black/10 text-rouge px-3">
                             {{ rtrim(rtrim(number_format($question->points, 2), '0'), '.') }} Points
                         </span>
@@ -38,7 +38,7 @@
                 <textarea
                     name="reponses[{{ $question->id }}]"
                     rows="4"
-                    class="w-full p-3 bg-black/2 border border-black/10 rounded-md text-sm"
+                    class="w-full p-3 bg-black/2 border border-black/10 rounded-md"
                     placeholder="Votre réponse..."
                 >{{ $reponsesExistantes[$question->id] ?? '' }}</textarea>
             </div>

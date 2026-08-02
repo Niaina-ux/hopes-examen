@@ -19,7 +19,8 @@ class Examen extends Model
     {
         return $this->belongsToMany(TypeExercice::class, 'examen_type_exercice', 'examen_id', 'type_exercice_id')
             ->withPivot('ordre')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->orderByPivot('ordre');
     }
 
     public function qcm()

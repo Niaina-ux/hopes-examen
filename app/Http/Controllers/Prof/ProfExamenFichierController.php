@@ -16,7 +16,7 @@ class ProfExamenFichierController extends Controller
         // $fichierWebs = Fichier::where('examen_id', $examen->id)->get();
         $fichiers = $examen->fichier()
                     ->where('categorie_id', $categorie->id)
-                    ->withCount('fichierQuestions')
+                    ->with('fichierQuestions')
                     ->latest()
                     ->get();
 
@@ -54,7 +54,7 @@ class ProfExamenFichierController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.fichier.qeustion.show', [$slug, $examen->id, $fichiers->id])
+            ->route('prof.examen.fichier', [$slug, $examen->id])
             ->with('success', 'Exercice compoléter le pointiller créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 

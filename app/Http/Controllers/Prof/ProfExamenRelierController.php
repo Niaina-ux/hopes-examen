@@ -12,7 +12,11 @@ class ProfExamenRelierController extends Controller
 {
     public function show(string $slug, Examen $examen)
     {
-        $reliers = $examen->relier()->withCount('relierQuestions')->latest()->get();
+        $reliers = $examen->relier()
+            ->with('relierQuestions')
+            ->latest()
+            ->get();
+        
         return view('prof.examen.relier.show', compact('slug','examen', 'reliers'));
     }
 
@@ -47,7 +51,7 @@ class ProfExamenRelierController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id])
+            ->route('prof.examen.relier', [$slug, $examen->id])
             ->with('success', 'QCM créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 

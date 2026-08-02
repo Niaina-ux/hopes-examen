@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Student\StudentExamenCodeController;
 use App\Http\Controllers\Student\StudentExamenController;
+use App\Http\Controllers\Student\StudentExamenDashboardController;
 use App\Http\Controllers\Student\StudentExamenFichierController;
 use App\Http\Controllers\Student\StudentExamenGlisserDeposerController;
+use App\Http\Controllers\Student\StudentExamenHistoriqueController;
 use App\Http\Controllers\Student\StudentExamenMotsCroisesController;
 use App\Http\Controllers\Student\StudentExamenPointillerController;
 use App\Http\Controllers\Student\StudentExamenQcmController;
@@ -65,4 +67,10 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/examen/{examen}/{slug}/glisserdeposer/{glisserdeposer}/store', 'store')->name('examen.glisserdeposer.store');
         });
     });
+
+    Route::controller(StudentExamenHistoriqueController::class)->group(function(){
+        Route::get('/dashboard', 'dashboard')->name('student.dashboard');
+        Route::get('/mes-examen/{attempt}', 'show')->name('student.examen.historique.show');
+    });
+
 });

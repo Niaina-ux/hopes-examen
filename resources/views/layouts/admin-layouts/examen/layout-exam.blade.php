@@ -1,4 +1,10 @@
-<div class="flex justify-between items-end gap-5">
+    <div class="">
+        <div class="flex  items-center my-2">
+            <a href="{{route('prof.examen.show', $slug)}}" class="hover:underline">
+                Examen/
+            </a>
+            <span class="font-semibold">Details</span>
+        </div>
         <div class="w-[70%]">
             <h2 class="text-2xl font-semibold text-vert">{{ $examen->titre }}</h2>
             <p>{{ $examen->description }}</p>

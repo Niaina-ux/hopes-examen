@@ -1,12 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
     <div class="py-3">
-        <div class="flex gap-3 items-center my-2">
-            <a href="" class="">
-                Examen /
-            </a>
-            <span class="font-semibold">Details</span>
-        </div>
         @include('layouts.admin-layouts.examen.layout-exam')
         @forelse($pointillers as $index => $pointiller)
             <div class="p-2 flex gap-7 justify-between border-b border-black/10 my-2">

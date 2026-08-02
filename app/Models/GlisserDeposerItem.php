@@ -28,4 +28,10 @@ class GlisserDeposerItem extends Model
     {
         return $this->belongsTo(GlisserDeposerZone::class, 'glisser_deposer_zone_id');
     }
+
+    public function reponses()
+    {
+        return $this->hasMany(GlisserDeposerReponse::class, 'glisser_deposer_item_id');
+    }
+
 }

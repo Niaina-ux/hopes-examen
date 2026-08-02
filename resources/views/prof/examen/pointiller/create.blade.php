@@ -18,7 +18,7 @@
         </div>
 
         <div class="flex gap-4 mb-4">
-            <div class="flex-1">
+            <div class="flex-1 hidden">
                 <label class="block text-sm font-medium">Durée (minutes)</label>
                 <input type="number" name="duree_minutes" value="{{ old('duree_minutes') }}" class="border rounded w-full p-2">
                 @error('duree_minutes') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror

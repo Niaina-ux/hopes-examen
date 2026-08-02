@@ -15,6 +15,13 @@
                     Dashboard
                 </a>
             </li>
+            <li>
+                <a  href="{{ route('admin.typeExercice.index') }}"
+                    class="inline-block px-2 py-1">
+                    <i class="fa-solid fa-user-tie me-2"></i>
+                    Type d'exercice
+                </a>
+            </li>
             @if($profCategorie ?? false)
             <li>
                 <a href="{{route('prof.student.show',$profCategorie->slug)}}"

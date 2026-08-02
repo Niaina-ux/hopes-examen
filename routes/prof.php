@@ -27,8 +27,8 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProfExamenController::class)->group( function(){
         Route::get('prof/examen/{slug}/show', 'show')->name('prof.examen.show');
         Route::get('prof/examen/{slug}/{examen}/types', 'showTypes')->name('prof.examen.showtypes');
-        Route::get('prof/examen/{examen}/assign-types', 'assignTypes')->name('prof.examen.assignTypes');
-        Route::post('prof/examen/{examen}/assign-types', 'storeTypes')->name('prof.examen.storeTypes');
+        Route::get('prof/examen/{slug}/{examen}/assign-types', 'assignTypes')->name('prof.examen.assignTypes');
+        Route::post('prof/examen/{slug}/{examen}/assign-types', 'storeTypes')->name('prof.examen.storeTypes');
     });
 
     Route::controller(ProfExamenQcmController::class)->group(function(){

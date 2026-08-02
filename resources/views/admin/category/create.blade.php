@@ -1,31 +1,30 @@
-@extends('layouts.layoutheadd')
-@section('contenue')
-    <div class="container">
-        <div class="py-10 w-[60%] m-auto ">
-            <div class="border-b-2 border-black/10 py-2 text-center">
+@extends('layouts.admin-layouts.layouthead')
+@section('contenue-admin')
+    <div class="">
+        <div class="my-3 me-2">
+            <div class="border-b-2 border-black/10 pb-2">
                 <h3 class="text-2xl text-vert font-semibold mb-2">Creation catégorie</h3>
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt nam fugit blanditiis consequuntur adipisci. Reiciendis, iusto! Officiis nulla nam amet voluptate qui placeat, consectetur minima quidem? Eos neque dolor dolorum?</p>
             </div>
-            <div class="w-[11cm] m-auto p-4 border border-black/10 mt-5 rounded-md bg-black/2">
+            <div class=" mt-5 rounded-md bg-black/2 p-3">
                 <form action="{{ route('admin.categorie.store') }}" method="POST">
                     @csrf
-                    <div class="py-2">
+                    <div class="py-1">
                         <span class="block">Titre</span>
                         <input type="text" name="nom" value="{{ old('nom') }}"
-                            class="p-2 border border-black/10 rounded w-full bg-white"
+                            class="p-2 border border-black/10 rounded w-full bg-white outline-0 focus:border-[rgb(104,167,2)]"
                             placeholder="Ex: Français">
                         @error('nom') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="py-2">
-                        <span class="block">Slug</span>
+                    <div class="py-2 w-[60%]">
+                        <span class="block">Slug: (Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, earum.)</span>
                         <input type="text" name="slug" value="{{ old('slug') }}"
-                            class="p-2 border border-black/10 rounded w-full bg-white"
-                            placeholder="Ex: francais, anglais, web, python, design, bureautique">
+                            class="p-2 border border-black/10 rounded bg-white w-[10cm] outline-0 focus:border-[rgb(104,167,2)]"
+                            placeholder="Ex: francais, anglais, ....">
                         @error('slug') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="flex justify-end mt-4">
+                    <div class="flex mt-4">
                         <button type="submit" class="bg-rouge rounded-md px-5 py-2 text-white">
                             Créer la catégorie
                         </button>

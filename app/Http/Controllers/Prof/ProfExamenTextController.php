@@ -56,7 +56,7 @@ class ProfExamenTextController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.text.question.show', [$slug, $examen->id, $text->id])
+            ->route('prof.examen.text', [$slug, $examen->id])
             ->with('success', 'Texte créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 

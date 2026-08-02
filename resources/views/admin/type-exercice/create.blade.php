@@ -1,5 +1,5 @@
-@extends('layouts.layoutheadd')
-@section('contenue')
+@extends('layouts.admin-layouts.layouthead')
+@section('contenue-admin')
 <div class="bg-white p-4 rounded-md">
     <h2 class="text-2xl font-semibold text-vert mb-4">Créer un type d'exercice</h2>
 
@@ -12,7 +12,6 @@
             </ul>
         </div>
     @endif
-
     <form action="{{ route('admin.typeExercice.store') }}" method="POST">
         @csrf
 

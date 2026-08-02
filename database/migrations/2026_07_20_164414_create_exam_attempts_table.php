@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
             $table->foreignId('examen_id')->constrained('examens')->cascadeOnDelete();
             $table->integer('numero_tentative')->default(1);
-            $table->enum('status', ['en_cours','termine',])->default('en_cours');
+            $table->enum('status', ['en_cours','termine','corrige'])->default('en_cours');
             $table->timestamp('date_debut')->nullable();
             $table->timestamp('date_fin')->nullable();
             $table->decimal('score', 8, 2)->default(0);

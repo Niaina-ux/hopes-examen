@@ -28,14 +28,14 @@
                 <textarea name="description" rows="2" class="border border-black/10 rounded w-full p-2">{{ old('description') }}</textarea>
             </div>
 
-            <div class="flex gap-4 mb-4 w-[10cm]">
-                <div class="flex-1">
+            <div class="flex gap-4 mb-4 w-[5cm]">
+                <div class="flex-1 hidden">
                     <label class="block text-base font-medium">Durée (minutes)</label>
                     <input type="number" name="duree_minutes" value="{{ old('duree_minutes') }}" min="1" class="border border-black/10 rounded w-full p-2">
                 </div>
                 <div class="flex-1">
                     <label class="block text-base font-medium">Note totale</label>
-                    <input type="number" name="note_totale" value="{{ old('note_totale', 20) }}" min="0.1" step="0.1" class="border border-black/10 rounded w-full p-2">
+                    <input type="number" name="note_totale" value="{{ old('note_totale', 10) }}" min="0.1" step="0.1" class="border border-black/10 rounded w-full p-2">
                 </div>
             </div>
 

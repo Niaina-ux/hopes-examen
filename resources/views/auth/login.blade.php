@@ -10,18 +10,14 @@
     <div class="text-black/60 h-screen py-10">
         <div class="mb-5 text-center ">
             <img src="/images/logo.png" alt="" class="w-[2cm] m-auto">
-            {{-- <h3 class="text-5xl font-bold text-vert">Hopes</h3> --}}
         </div>
         <div class="w-[11cm] m-auto rounded-md p-4 shadow border border-black/10">
-            
             <h3 class="text-2xl font-semibold mb-4 text-vert text-center">Connexion</h3>
-
             @if (session('error'))
                 <div class="text-left text-red-600 text-sm mb-3">
                     {{ session('error') }}
                 </div>
             @endif
-
             <form action="{{ route('login.store') }}" method="POST">
                 @csrf
                 <label for="">Votre email</label>

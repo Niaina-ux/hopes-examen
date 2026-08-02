@@ -6,7 +6,7 @@
         <span class="font-semibold">Creation</span>
     </div>
     <div class="bg-white rounded-md me-2">
-        <h2 class="text-2xl font-semibold my-2 text-vert">
+        <h2 class="text-2xl font-semibold my-2 text-vert border-b--2 border-black/10">
             Ajouter une question — {{ $glisserdeposer->titre }}
         </h2>
         @if($errors->any())

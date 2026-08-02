@@ -1,12 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
     <div class="py-3">
-        <div class="flex gap-3 items-center my-2">
-            <a href="" class="">
-                Examen /
-            </a>
-            <span class="font-semibold">Details</span>
-        </div>
         @include('layouts.admin-layouts.examen.layout-exam')
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md my-2 flex justify-between items-center">
@@ -53,7 +47,7 @@
                         </div>
                         <div class="bg-black/3 rounded-md p-2 px-3 mt-2">
                             <span class="font-semibold">Text</span>
-                            <p class="text-sm whitespace-pre-line bg-white/60 rounded-md p-2 mb-2">{{$text->texte}}</p>
+                            <p class="whitespace-pre-line bg-white/60 rounded-md p-2 mb-2">{{$text->texte}}</p>
                             <div class="flex justify-between items-center my-2">
                                 <span class="font-semibold">Question</span>
                                 <a href="{{ route('prof.examen.text.question.create', [$slug, $examen->id, $text->id]) }}" class="bg-vert text-white px-4 py-1 rounded-md text-nowrap">
@@ -62,11 +56,11 @@
                             </div>
                             <div class="border border-black/10 rounded-md p-2 bg-white/60">
                                 @forelse ($text->textQuestions as $question)  
-                                <div class="border-b border-black/10 p-2 flex justify-between items-center ">
-                                    <div class="text-sm">
+                                <div class="border-b border-black/10 p-2 gap-3 flex justify-between items-center ">
+                                    <div class="flex-1 flex gap-3 justify-between">
                                         <span class="text-vert font-semibold">{{ $index + 1 }}.</span>
-                                        {{ $question->enonce }}
-                                        <span class="text-sm text-black/40 ml-2">({{ $question->points }} pts)</span>
+                                        <p class="flex-1">{{ $question->enonce }}</p>
+                                        <span class="text-sm mt-1 text-black/40 ml-2">({{ $question->points }} pts)</span>
                                     </div>
                                     <div class="flex gap-3">
                                         <a href="{{ route('prof.examen.text.question.edit', [$slug, $examen->id, $text->id, $question->id]) }}" class="text-black/60">

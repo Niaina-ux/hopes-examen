@@ -31,4 +31,9 @@ class QcmReponse extends Model
     {
         return $this->belongsTo(User::class, 'student_id');
     }
+
+    public function question()
+    {
+        return $this->belongsTo(QcmQuestion::class, 'question_id');
+    }
 }

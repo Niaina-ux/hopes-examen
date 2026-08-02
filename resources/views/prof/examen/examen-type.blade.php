@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="py-3">
+<div class="py-3 me-2">
     <div class="">
         <a href="" 
             class="flex gap-3 items-center font-semibold">
@@ -32,8 +32,8 @@
                     </span>
                 </div> 
             </div>
-            <div class="flex justify-end mt-4 text-white me-2">
-                <a href="{{ route('prof.examen.assignTypes', $examen->id) }}" class="inline-block p-1 px-5 rounded-md bg-rouge">
+            <div class="flex justify-end mt-4 text-white">
+                <a href="{{ route('prof.examen.assignTypes', [$slug, $examen->id]) }}" class="inline-block p-1 px-5 rounded-md bg-rouge">
                     @if($examen->typesExercice->isEmpty())
                         + Ajouter type d'exercice
                     @else
@@ -53,16 +53,19 @@
     @endif
     
     @if($examen->typesExercice->isNotEmpty())
-        <div class="gap-3 py-2 border border-black/10 bg-black/3 rounded-md p-2 mt-4 ">
+        <div class="gap-3 py-2 border border-black/3 bg-black/3 rounded-md p-2 mt-4 ">
             @foreach($examen->typesExercice as $type)
                 @if(\Illuminate\Support\Facades\Route::has('prof.examen.' . $type->slug))
                     <a href="{{ route('prof.examen.' . $type->slug, [$slug, $examen->id]) }}"
                         class="w-full  py-3 px-2 border-b hover:bg-black/3 border-black/10 flex gap-3 items-center justify-between {{ $loop->iteration == 2 ? 'bg-white/60' : '' }}">
                         <div class="font-semibold text-rouge w-8 h-8 rounded-md bg-black/5 flex justify-center items-center">
-                            {{ $type->pivot->ordre }}
+                            <i class="{{ $type->icone ?? 'fa-solid fa-chart-simple' }} text-vert"></i>
                         </div>
                         <div class="flex-1">
-                            {{ $type->nom }}
+                            <p>{{ $type->nom }}</p>
+                            <div class="">
+                                <span class="text-sm">Ordre n°: {{ $type->pivot->ordre }}</span>
+                            </div>
                         </div>
                         <i class="fa-solid fa-arrow-up-right-from-square text-vert"></i>
                     </a>

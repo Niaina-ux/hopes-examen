@@ -32,8 +32,8 @@ class ProfExamenFichierQuestionController extends Controller
             'instruction' => [
                 'required',
                 'string',
-                Rule::unique('fichier__questions', 'instruction')
-                    ->where('fichier__id', $fichier->id),
+                Rule::unique('fichier_questions', 'instruction')
+                    ->where('fichier_id', $fichier->id),
             ],
             'points' => ['required', 'numeric', 'min:0.1'],
             'fichier_prof' => ['nullable', 'file', 'mimes:pdf,doc,docx,zip,rar', 'max:20240'],
@@ -61,7 +61,7 @@ class ProfExamenFichierQuestionController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.fichier.qeustion.show', [$slug, $examen->id, $fichier->id])
+            ->route('prof.examen.fichier', [$slug, $examen->id])
             ->with('success', 'Devoir ajouté avec succès.');
     }
 
@@ -108,7 +108,7 @@ class ProfExamenFichierQuestionController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.fichier.qeustion.show', [$slug, $examen->id, $fichier->id])
+            ->route('prof.examen.fichier', [$slug, $examen->id])
             ->with('success', 'Devoir modifié avec succès.');
     }
 

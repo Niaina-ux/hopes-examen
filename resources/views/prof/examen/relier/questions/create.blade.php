@@ -1,14 +1,14 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="py-3">
-    <div class="flex items-center gap-3 my-3">
-        <a href="{{ route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id]) }}" class="bg-vert rounded-md w-7 h-7 flex justify-center items-center text-white">
-            <i class="fa-solid fa-angle-left"></i>
+<div class="py-3 me-2">
+    <div class="flex items-center">
+        <a href="{{route('prof.examen.relier', [$slug, $examen->id])}}" class="hover:underline">
+            Retour/ 
         </a>
-        Retour
+        <span class="font-semibold"> Création</span>
     </div>
     <div class="w-full">
-        <h2 class="text-2xl font-semibold text-vert">Créer votre exercice relier par flèche</h2>
+        <h2 class="text-2xl font-semibold text-vert border-b-2 border-black/20 pb-2">Créer votre exercice relier par flèche</h2>
         @if($errors->any())
             <div class="bg-red-100 text-red-700 p-3 rounded mt-4">
                 <ul>
@@ -18,45 +18,37 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('prof.examen.relier.question.store', [$slug, $examen->id, $relier->id]) }}">
+        <form method="POST" action="{{ route('prof.examen.relier.question.store', [$slug, $examen->id, $relier->id]) }}"
+            class="mt-2">
             @csrf
             <div class="w-full pb-4 border-b-2 border-black/20">
                 <div class="mb-2">
                     <label class="inline-block w-full">Question</label>
-                    <textarea name="enonce" class="form-control w-full p-2 border border-black/10 rounded-md bg-black/3">{{ old('enonce') }}</textarea>
+                    <textarea name="enonce" class="form-control w-full p-2 border border-black/20 rounded-md ">{{ old('enonce') }}</textarea>
                     @error('enonce') <small class="text-red-600">{{ $message }}</small> @enderror
                 </div>
                 <div class="w-[11cm] flex justify-between gap-5">
                     <div class="flex-1">
                         <label>Points</label>
-                        <input type="number" name="points" value="{{ old('points', 1) }}" class="border border-black/10 rounded-md bg-black/3 p-2">
+                        <input type="text" name="points" value="{{ old('points', 1) }}" class="border border-black/20 rounded-md  p-2">
                         @error('points') <small class="text-red-600">{{ $message }}</small> @enderror
                     </div>
                     <div class="flex-1">
                         <label>Ordre Question</label>
-                        <input type="number" name="ordre" value="{{ old('ordre', 1) }}" class="border border-black/10 rounded-md bg-black/3 p-2">
+                        <input type="text" name="ordre" value="{{ old('ordre', 1) }}" class="border border-black/20 rounded-md  p-2">
                         @error('ordre') <small class="text-red-600">{{ $message }}</small> @enderror
                     </div>
                 </div>
             </div>
             <div class="w-[95%]">
-                <div class="flex justify-between py-2 ">
-                    <h4 class="font-semibold text-base flex-1 text-center">Colonne gauche</h4>
-                    <h4 class="font-semibold text-base flex-1 text-center">Colonne droite</h4>
+                <div class="flex justify-between mt-2 gap-10">
+                    <h4 class="font-semibold text-base flex-1 ">Colonne gauche</h4>
+                    <h4 class="font-semibold text-base flex-1 ">Colonne droite</h4>
                 </div>
                 @error('element_gauche') <small class="text-red-600">{{ $message }}</small> @enderror
                 @error('element_droit') <small class="text-red-600">{{ $message }}</small> @enderror
                 <div id="tablePaires">
-                    <div class=" paire flex justify-between gap-10">
-                        <div class="flex-1 flex gap-2">
-                            <input class="form-control border w-full border-black/10 rounded-md p-2 bg-black/3" name="element_gauche[]">
-                            <input class="form-control border font-semibold border-black/3 rounded-md p-2 w-[2cm] text-center bg-black/10" type="number" name="order_left[]" value="1">
-                        </div>
-                        <div class="flex-1 flex gap-2">
-                            <input class="form-control border font-semibold border-black/10 rounded-md p-2 w-[2cm] text-center bg-black/10" type="number" name="order_right[]" value="1">
-                            <input class="form-control border w-full border-black/10 rounded-md p-2 bg-black/3" name="element_droit[]">
-                        </div>
-                    </div>
+                    {{-- ✅ Généré dynamiquement en JS (voir script plus bas), qu'il y ait des old() ou non --}}
                 </div>
             </div>
             <div class="mt-5">
@@ -72,20 +64,31 @@
 <script>
 const table = document.getElementById('tablePaires');
 
-document.getElementById('addRow').addEventListener('click', function () {
-    table.insertAdjacentHTML('beforeend', `
-        <div class="paire flex justify-between gap-10 mt-3 relative">
-            <div class="flex-1 flex gap-2">
-                <input class="border w-full border-black/10 rounded-md p-2 bg-black/3" name="element_gauche[]">
-                <input class="border border-black/10 rounded-md p-2 w-[2cm] text-center bg-black/10" type="number" name="order_left[]" value="1">
-            </div>
-            <div class="flex-1 flex gap-2">
-                <input class="border border-black/10 rounded-md p-2 w-[2cm] text-center bg-black/10" type="number" name="order_right[]" value="1">
-                <input class="border w-full border-black/10 rounded-md p-2 bg-black/3" name="element_droit[]">
-            </div>
-            <button type="button" class="remove absolute top-0 -right-10 bg-red-500/70 text-white px-2 rounded">X</button>
+// ✅ Valeurs "old" envoyées par le serveur (si une validation a échoué)
+const oldElementGauche = @json(old('element_gauche', []));
+const oldElementDroit  = @json(old('element_droit', []));
+const oldOrderLeft     = @json(old('order_left', []));
+const oldOrderRight    = @json(old('order_right', []));
+
+function creerLigne(valGauche = '', valDroit = '', ordreGauche = 1, ordreDroit = 1) {
+    const div = document.createElement('div');
+    div.className = 'paire flex justify-between gap-10 mt-3 relative';
+    div.innerHTML = `
+        <div class="flex-1 flex gap-2">
+            <input class="border w-full border-black/20 rounded-md p-2 " name="element_gauche[]" value="${valGauche}">
+            <input class="border border-black/20 rounded-md p-2 w-[1cm] text-center bg-black/10" type="text" name="order_left[]" value="${ordreGauche}">
         </div>
-    `);
+        <div class="flex-1 flex gap-2">
+            <input class="border border-black/20 rounded-md p-2 w-[1cm] text-center bg-black/10" type="text" name="order_right[]" value="${ordreDroit}">
+            <input class="border w-full border-black/20 rounded-md p-2 " name="element_droit[]" value="${valDroit}">
+        </div>
+        <button type="button" class="remove absolute top-0 -right-10 bg-red-500/70 text-white px-2 rounded">X</button>
+    `;
+    table.appendChild(div);
+}
+
+document.getElementById('addRow').addEventListener('click', function () {
+    creerLigne();
 });
 
 document.addEventListener('click', function (e) {
@@ -93,5 +96,20 @@ document.addEventListener('click', function (e) {
         e.target.closest('.paire').remove();
     }
 });
+
+// ✅ Au chargement de la page : recrée les lignes avec les anciennes valeurs si elles existent,
+// sinon affiche une ligne vide par défaut
+if (oldElementGauche.length > 0) {
+    oldElementGauche.forEach(function (valGauche, index) {
+        creerLigne(
+            valGauche || '',
+            oldElementDroit[index] || '',
+            oldOrderLeft[index] || 1,
+            oldOrderRight[index] || 1
+        );
+    });
+} else {
+    creerLigne(); // ligne vide par défaut, au premier chargement
+}
 </script>
 @endsection

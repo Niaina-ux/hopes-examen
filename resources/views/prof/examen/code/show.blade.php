@@ -1,12 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
     <div class="py-3">
-        <div class="flex gap-3 items-center my-2">
-            <a href="" class="">
-                Examen /
-            </a>
-            <span class="font-semibold">Details</span>
-        </div>
         @include('layouts.admin-layouts.examen.layout-exam')
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">

@@ -28,7 +28,9 @@
                 </li>
 
                 <li>
-                    <a href="" class="p-1 px-3 uppercase font-semibold hover:text-[rgb(250,131,51)] transition">A propos</a>
+                    <a href="{{route('student.dashboard')}}" 
+                        class="p-1 px-3 uppercase font-semibold hover:text-[rgb(250,131,51)] transition">Dashboard
+                    </a>
                 </li>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf

@@ -7,6 +7,7 @@ use App\Models\Categorie;
 use App\Models\Prof;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,8 +26,9 @@ class AdminProfController extends Controller
     public function create()
     {
         $categories = Categorie::all();
+        $profACompleter = null;
 
-        return view('admin.prof.create', compact('categories'));
+        return view('admin.prof.create', compact('categories', 'profACompleter'));
     }
 
     public function store(Request $request)
@@ -35,9 +37,8 @@ class AdminProfController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', Password::min(6)],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // 2MB max
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
-
 
         $imageName = null;
         if ($request->hasFile('image')) {
@@ -46,19 +47,22 @@ class AdminProfController extends Controller
             $image->move(public_path('images'), $imageName);
         }
 
-        User::create([
+        $prof = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'password_affiche' => Crypt::encrypt($validated['password']),
             'role' => 'prof',
-            'image' => $imageName, 
+            'image' => $imageName,
         ]);
 
-        return redirect()
-            ->route('admin.prof.index')
-            ->with('success', 'Professeur créé avec succès');
-    }
+        $categories = Categorie::all();
+        $profACompleter = $prof;
 
+        return view('admin.prof.create', compact('categories', 'profACompleter'))
+            ->with('success', 'Professeur créé avec succès. Complétez la catégorie ci-dessous.');
+    }
+  
     //ajout categorie
     public function assignCategorie(User $prof)
     {
@@ -96,6 +100,4 @@ class AdminProfController extends Controller
             ->route('admin.prof.index')
             ->with('success', 'Professeur effacé avec succes.');
     }
-
-
 }
