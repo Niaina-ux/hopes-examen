@@ -60,7 +60,6 @@ class ProfExamenStudentController extends Controller
         $user = Auth::user();
         $prof = $user->prof;
 
-        // ✅ Manamarina raha tena "prof" ilay mpampiasa
         if (!$prof) {
             abort(403, 'Accès réservé aux professeurs.');
         }
@@ -70,35 +69,30 @@ class ProfExamenStudentController extends Controller
         $student = User::findOrFail($student_id);
         $etudiant = $student->student;
 
-        // ✅ Manamarina raha tena manana profil "Student" ilay user
         if (!$etudiant) {
             return redirect()
                 ->route('prof.page.notfound')
                 ->with('error', 'Profil étudiant introuvable.');
         }
 
-        // ✅ Manamarina fa ny slug an'ny URL dia mitovy amin'ny categorie an'ny prof
         if ($slug !== $profCategorie->slug) {
             return redirect()
                 ->route('prof.page.notfound')
                 ->with('error', 'Vous n\'êtes pas autorisé à consulter cette catégorie.');
         }
 
-        // ✅ Manamarina fa ny examen dia tena an'ity categorie ity ihany koa
         if ($examen->categorie->slug !== $slug) {
             return redirect()
                 ->route('prof.examen.studentswithexamen', [$slug, $examen->id])
                 ->with('error', 'Examen introuvable pour cette catégorie.');
         }
 
-        // ✅ FANOVANA LEHIBE: manamarina fa ny mpianatra dia an'ity categorie/examen ity IHANY
         if ($etudiant->categorie_id !== $examen->categorie_id) {
             return redirect()
                 ->route('prof.examen.studentswithexamen', [$slug, $examen->id])
                 ->with('error', 'Cet étudiant n\'appartient pas à la catégorie de cet examen.');
         }
 
-        // ✅ Manamarina fa ity mpianatra ity dia tena "assigné" amin'ity examen ity (StudentExamen)
         $estAssigne = StudentExamen::where('examen_id', $examen->id)
             ->where('user_id', $student->id)
             ->exists();
