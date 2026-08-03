@@ -34,7 +34,7 @@
     @endif
     <div class="border border-black/10 rounded-md p-2 bg-black/3">  
         @forelse ($examens as $index => $examen)
-        <div class="flex justify-between gap-7 p-2 border border-black/10 rounded-md">
+        <div class="flex justify-between gap-7 p-2 border border-black/3 my-1 bg-white/80 rounded-md">
             <div class="w-15 h-15 rounded-md bg-black/5 overflow-hidden font-semibold flex justify-center items-center">
                 <span>{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
             </div>
@@ -67,7 +67,7 @@
                     <a href="{{route('prof.examen.showtypes',[$slug, $examen->id])}}" class="text-vert rounded px-1">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     </a> 
-                    <a href="{{route('prof.examen.showtypes',[$slug, $examen->id])}}" class=" rounded px-1">
+                    <a href="{{route('prof.examen.studentswithexamen',[$slug, $examen->id])}}" class=" rounded px-1">
                         <i class="fa-solid fa-user-graduate"></i>
                     </a>
                 </div>

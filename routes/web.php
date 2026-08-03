@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Route;
 use PhpParser\Node\Scalar\MagicConst\Dir;
 
 
-
-
 Route::get('/login', [loginController::class, 'login'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');

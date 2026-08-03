@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenQcmController;
 use App\Http\Controllers\Prof\ProfDashboardController;
 use App\Http\Controllers\Prof\ProfExamenCodeController;
 use App\Http\Controllers\Prof\ProfExamenCodeQuestionController;
@@ -16,10 +17,12 @@ use App\Http\Controllers\Prof\ProfExamenQcmQuestionController;
 use App\Http\Controllers\Prof\ProfExamenRedactionController;
 use App\Http\Controllers\Prof\ProfExamenRelierController;
 use App\Http\Controllers\Prof\ProfExamenRelierQuestionController;
+use App\Http\Controllers\Prof\ProfExamenStudentController;
 use App\Http\Controllers\Prof\ProfExamenTextController;
 use App\Http\Controllers\Prof\ProfExamenTextQuestionController;
 use App\Http\Controllers\Prof\ProfStudentController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\Mailer\Transport\RoundRobinTransport;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/prof', [ProfDashboardController::class, 'index'])->name('prof.dashboard');
@@ -176,5 +179,14 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProfStudentController::class)->group(function()
     {
         Route::get('prof/student/{slug}', 'show')->name('prof.student.show');
+    });
+
+    Route::controller(ProfExamenStudentController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student', 'studentswithexamen')->name('prof.examen.studentswithexamen');
+        Route::get('prof/examen/{slug}/{examen}/student/{student}', 'examenwherestudent')->name('prof.examen.examenwherestudent');
+    });
+
+    Route::controller(ProfCorrigeExamenQcmController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/qcm' , 'showtache')->name('prof.examen.showtache.qcm');
     });
 });

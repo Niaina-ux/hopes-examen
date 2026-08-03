@@ -5,17 +5,15 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Code;
 use App\Models\ExamAttempt;
-use App\Models\ExamenTypeExercice;
 use App\Models\Fichier;
 use App\Models\GlisserDeposer;
 use App\Models\MotsCroises;
 use App\Models\Pointiller;
-use App\Models\PointillerReponse;
 use App\Models\Qcm;
-use App\Models\QcmReponse;
 use App\Models\Redaction;
 use App\Models\Relier;
 use App\Models\Student;
+use App\Models\StudentExamen;
 use App\Models\Text;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +30,17 @@ class StudentExamenHistoriqueController extends Controller
             ->with('examen.categorie')
             ->latest('date_fin')
             ->get();
-        return view('student.dashboard', compact('attempts'));
+
+        $examen_planifie = StudentExamen::with('examen.categorie')
+            ->where('user_id', Auth::id())
+            ->where('termine', false)
+            ->whereHas('examen', function ($query) {
+                $query->where('status', '!=', 'brouillon');
+            })
+            ->orderBy('id', 'asc')
+            ->get();
+       
+        return view('student.dashboard', compact('attempts', 'examen_planifie'));
     }
 
     public function show(ExamAttempt $attempt)
