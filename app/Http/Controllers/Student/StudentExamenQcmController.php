@@ -144,16 +144,6 @@ class StudentExamenQcmController extends Controller
             ]);
         }
 
-        // Vita ny question rehetra ao amin'ity Qcm ity — mikajy ny score an'io Qcm io
-        $scoreQcm = QcmReponse::where('exam_attempt_id', $attempt->id)
-            ->whereIn('qcm_question_id', $qcm->qcmQuestions()->pluck('id'))
-            ->groupBy('qcm_question_id')
-            ->selectRaw('qcm_question_id, SUM(points_obtenus) as points')
-            ->get()
-            ->sum('points');
-
-        $attempt->increment('score', $scoreQcm);
-
         // Qcm suivant ao amin'io examen io ihany
         $qcmSuivant = Qcm::where('examen_id', $examen->id)
             ->where('ordre', '>', $qcm->ordre)

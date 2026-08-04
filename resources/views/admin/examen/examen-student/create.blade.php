@@ -52,8 +52,8 @@
                         <label class="student-item flex justify-between gap-4 p-2 border-b border-black/10 last:border-b-0 hover:bg-black/3" data-nom="{{ strtolower($student->user->name) }}">
                             <div class="w-10 h-10 rounded-md overflow-hidden border border-black/10">
                                 <img src="{{ $student->user->image ? asset('images/' . $student->user->image) : asset('images/default-avatar.png') }}"
-                    alt="{{ $student->name }}"
-                    class="w-full h-full object-cover">
+                                alt="{{ $student->name }}"
+                                class="w-full h-full object-cover">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-base">{{ $student->user->name }}</h3>

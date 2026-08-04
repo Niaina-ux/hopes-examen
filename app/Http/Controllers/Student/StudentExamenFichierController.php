@@ -91,17 +91,17 @@ class StudentExamenFichierController extends Controller
             $file->move(public_path('fichiers/etudiants'), $fileName);
 
             FichierReponse::updateOrCreate(
-            [
-                'fichier_question_id' => $question->id,
-                'exam_attempt_id'     => $attempt->id,
-                'student_id'          => $student->id, 
-            ],
-            [
-                'fichier_etudiant' => $fileName,
-                'points_obtenus'   => null,
-                'commentaire_prof' => null,
-                'est_corrige'      => false,
-            ]
+                [
+                    'fichier_question_id' => $question->id,
+                    'exam_attempt_id'     => $attempt->id,
+                    'student_id'          => $student->user_id, 
+                ],
+                [
+                    'fichier_etudiant' => $fileName,
+                    'points_obtenus'   => null,
+                    'commentaire_prof' => null,
+                    'est_corrige'      => false,
+                ]
         );
         }
 

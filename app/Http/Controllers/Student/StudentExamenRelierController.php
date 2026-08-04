@@ -103,8 +103,6 @@ class StudentExamenRelierController extends Controller
             }
         }
 
-        // Mikajy indray ny score manontolo an'ity attempt ity
-        $attempt->recalculerScore();
 
         // Relier suivant ao anaty examen iray ihany (araka ny ordre)
         $relierSuivant = Relier::where('examen_id', $examen->id)

@@ -162,14 +162,13 @@ class StudentExamenController extends Controller
             ]);
         }
 
-        // $attempt->recalculerScore();
+        $attempt->calculerNoteTotal();
         
         StudentExamen::where('examen_id', $examen->id)
             ->where('user_id', $userId)
             ->update(['termine' => true]);
                    
-        $totalPoints = 10;
 
-        return view('student.examen.terminer', compact('examen', 'attempt', 'totalPoints'));
+        return view('student.examen.terminer', compact('examen', 'attempt'));
     }
 }

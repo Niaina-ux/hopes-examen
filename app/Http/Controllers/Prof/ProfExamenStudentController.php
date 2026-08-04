@@ -26,7 +26,7 @@ class ProfExamenStudentController extends Controller
             ->sort()
             ->values();
 
-        // ✅ Manisa ny mpianatra isaky ny daty
+        //  Manisa ny mpianatra isaky ny daty
         $nombreParDate = $tousLesStudentExamen
             ->groupBy(fn($se) => $se->date_examen->format('Y-m-d'))
             ->map(fn($group) => $group->count());

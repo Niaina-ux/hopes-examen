@@ -78,7 +78,9 @@ class StudentExamenHistoriqueController extends Controller
                             'qcmQuestions' => fn($q) => $q->orderBy('ordre'),
                             'qcmQuestions.qcmChoices',
                             'qcmQuestions.qcmReponsesEtudiants' => function ($query) use ($attempt) {
-                                $query->where('exam_attempt_id', $attempt->id)->with('qcmchoice');
+                                $query->where('exam_attempt_id', $attempt->id)
+                                    ->where('student_id', Auth::id())
+                                    ->with('qcmchoice');
                             },
                         ])
                         ->get();
@@ -89,7 +91,7 @@ class StudentExamenHistoriqueController extends Controller
                         ->orderBy('ordre')
                         ->with([
                             'pointillerQuestions' => fn($q) => $q->orderBy('ordre'),
-                            'pointillerQuestions.reponses',
+                            'pointillerQuestions.reponses' =>fn($q) => $q->where('student_id', Auth::id()),
                         ])
                         ->get();
                     break;
@@ -107,21 +109,27 @@ class StudentExamenHistoriqueController extends Controller
                 case 'code':
                     $codes = Code::where('examen_id', $examen->id)
                         ->orderBy('ordre')
-                        ->with('codeQuestions.reponses')
+                        ->with('codeQuestions.reponses', function($query){
+                            $query->where('student_id', Auth::id());
+                        })
                         ->get();
                     break;
 
                 case 'text':
                     $texts = Text::where('examen_id', $examen->id)
                         ->orderBy('ordre')
-                        ->with('textQuestions.reponses')
+                        ->with('textQuestions.reponses', function($query){
+                            $query->where('student_id', Auth::id());
+                        })
                         ->get();
                     break;
 
                 case 'redaction':
                     $redactions = Redaction::where('examen_id', $examen->id)
                         ->orderBy('ordre')
-                        ->with('reponses')
+                        ->with('reponses', function($query){
+                            $query->where('student_id', Auth::id());
+                        })
                         ->get();
                     break;
                     
@@ -133,7 +141,9 @@ class StudentExamenHistoriqueController extends Controller
                             'questions.zones',
                             'questions.items' => function ($q) use ($attempt) {
                                 $q->with(['zone', 'reponses' => function ($rq) use ($attempt) {
-                                    $rq->where('exam_attempt_id', $attempt->id)->with('zoneChoisie');
+                                    $rq->where('exam_attempt_id', $attempt->id)
+                                        ->where('student_id', Auth::id())
+                                        ->with('zoneChoisie');
                                 }]);
                             },
                         ])
@@ -145,7 +155,8 @@ class StudentExamenHistoriqueController extends Controller
                         ->with([
                             'fichierQuestions' => fn($q) => $q->orderBy('ordre'),
                             'fichierQuestions.reponses' => function ($q) use ($attempt) {
-                                $q->where('exam_attempt_id', $attempt->id);
+                                $q->where('exam_attempt_id', $attempt->id)
+                                    ->where('student_id', Auth::id());
                             },
                         ])
                         ->get();
@@ -157,7 +168,8 @@ class StudentExamenHistoriqueController extends Controller
                         ->with([
                             'motsCroisesMots' => fn($q) => $q->orderBy('numero'),
                             'motsCroisesMots.reponses' => function ($q) use ($attempt) {
-                                $q->where('exam_attempt_id', $attempt->id);
+                                $q->where('exam_attempt_id', $attempt->id)
+                                 ->where('student_id', Auth::id());
                             },
                         ])
                         ->get();

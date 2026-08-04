@@ -112,27 +112,27 @@ class AdminStudentController extends Controller
     // }
 
     public function storeCategorie(Request $request, User $student)
-{
-    $validated = $request->validate([
-        'matricule' => ['required', 'string', 'max:255', 'unique:students,matricule'],
-        'categorie_id' => ['required', 'exists:categories,id'],
-    ], [
-        'matricule.required' => 'Le matricule est obligatoire.',
-        'categorie_id.required' => 'Veuillez sélectionner une catégorie.',
-    ]);
+    {
+        $validated = $request->validate([
+            'matricule' => ['required', 'string', 'max:255', 'unique:students,matricule'],
+            'categorie_id' => ['required', 'exists:categories,id'],
+        ], [
+            'matricule.required' => 'Le matricule est obligatoire.',
+            'categorie_id.required' => 'Veuillez sélectionner une catégorie.',
+        ]);
 
-    Student::create([
-        'user_id' => $student->id,
-        'matricule' => $validated['matricule'],
-        'categorie_id' => $validated['categorie_id'],
-    ]);
+        Student::create([
+            'user_id' => $student->id,
+            'matricule' => $validated['matricule'],
+            'categorie_id' => $validated['categorie_id'],
+        ]);
 
-    session()->forget('student_id');
+        session()->forget('student_id');
 
-    return redirect()
-        ->route('admin.student.create')
-        ->with('success', 'Étudiant assigné à sa catégorie avec succès.');
-}
+        return redirect()
+            ->route('admin.student.create')
+            ->with('success', 'Étudiant assigné à sa catégorie avec succès.');
+    }
 
     //supprimer
     public function destroy(User $student)

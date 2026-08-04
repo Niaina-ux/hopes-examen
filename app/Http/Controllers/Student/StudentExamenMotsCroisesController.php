@@ -141,8 +141,6 @@ class StudentExamenMotsCroisesController extends Controller
             ]);
         }
 
-        $attempt->recalculerScore();
-
         $motsCroiseSuivant = MotsCroises::where('examen_id', $examen->id)
             ->where('ordre', '>', $motscroises->ordre)
             ->orderBy('ordre')

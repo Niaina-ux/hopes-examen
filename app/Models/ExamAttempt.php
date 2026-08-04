@@ -20,6 +20,7 @@ class ExamAttempt extends Model
         'date_debut',
         'date_fin',
         'score',
+        'note_total',
     ];
 
     protected $casts = [
@@ -43,41 +44,37 @@ class ExamAttempt extends Model
         return $this->status === 'en_cours';
     }
 
-    /**
-     * Manisa indray ny score manontolo an'ity attempt ity,
-     * avy amin'ny totalin'ny points_obtenus rehetra (qcm + pointiller + hafa).
-     * Tsy "increment" fa "recalculate from source of truth" mba tsy hisy double counting.
-     */
-    public function recalculerScore(): float
+
+    public function calculerNoteTotal(): float
     {
-        $scoreQcm = QcmReponse::where('exam_attempt_id', $this->id)
-            ->groupBy('qcm_question_id')
-            ->selectRaw('qcm_question_id, MAX(points_obtenus) as points')
-            ->get()
-            ->sum('points');
+        $examenId = $this->examen_id;
 
-        $scorePointiller = PointillerEtudiantReponse::where('exam_attempt_id', $this->id)
-            ->sum('points_obtenus');
+        $totalQcm = Qcm::where('examen_id', $examenId)->sum('note_totale');
+        $totalPointiller = Pointiller::where('examen_id', $examenId)->sum('note_totale');
+        $totalRelier = Relier::where('examen_id', $examenId)->sum('note_totale');
+        $totalGlisserDeposer = GlisserDeposer::where('examen_id', $examenId)->sum('note_totale');
+        $totalMotsCroises = MotsCroises::where('examen_id', $examenId)->sum('note_totale');
+        $totalCode = Code::where('examen_id', $examenId)->sum('note_totale');
+        $totalText = Text::where('examen_id', $examenId)->sum('note_totale');
+        $totalRedaction = Redaction::where('examen_id', $examenId)->sum('note_totale');
+        $totalFichier = Fichier::where('examen_id', $examenId)->sum('note_totale');
 
-        $scoreGlisserDeposer = GlisserDeposerReponse::where('exam_attempt_id', $this->id)
-            ->sum('points_obtenus');
+        $noteTotal = $totalQcm
+            + $totalPointiller
+            + $totalRelier
+            + $totalGlisserDeposer
+            + $totalMotsCroises
+            + $totalCode
+            + $totalText
+            + $totalRedaction
+            + $totalFichier;
 
-        $scoreMotsCroiser = MotsCroisesReponse::where('exam_attempt_id', $this->id)
-            ->sum('points_obtenus');
-        
-        $scoreRelier = RelierReponse::where('exam_attempt_id', $this->id)
-            ->sum('points_obtenus');
-            
-        $scoreTotal = $scoreQcm 
-                    + $scorePointiller 
-                    + $scorePointiller 
-                    + $scoreGlisserDeposer
-                    + $scoreMotsCroiser
-                    + $scoreRelier;
+        // ✅ Tehirizina AO ALOHAN'NY return
+        $this->update([
+            'note_total' => $noteTotal,
+        ]);
 
-        $this->update(['score' => $scoreTotal]);
-
-        return $scoreTotal;
+        return $noteTotal;
     }
 
     public function fichierReponses()

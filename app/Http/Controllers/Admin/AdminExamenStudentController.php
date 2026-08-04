@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ExamAttempt;
 use App\Models\Examen;
 use App\Models\Student;
 use App\Models\StudentExamen;
@@ -10,10 +11,46 @@ use Illuminate\Http\Request;
 
 class AdminExamenStudentController extends Controller
 {
-    public function show(string $slug, Examen $examen)
-    {
-        return view('admin.examen.examen-student.show', compact('slug', 'examen'));
-    }
+    public function show(Request $request, string $slug, Examen $examen)
+{
+    $tousLesStudentExamen = StudentExamen::where('examen_id', $examen->id)
+        ->whereNotNull('date_examen')
+        ->get();
+
+    $datesDisponibles = $tousLesStudentExamen
+        ->map(fn($se) => $se->date_examen->format('Y-m-d'))
+        ->unique()
+        ->sort()
+        ->values();
+
+    $nombreParDate = $tousLesStudentExamen
+        ->groupBy(fn($se) => $se->date_examen->format('Y-m-d'))
+        ->map(fn($group) => $group->count());
+
+    // ✅ Daty farany foana no default (mitovy amin'izay natao teo aloha)
+    $dateSelectionnee = $request->query('date', $datesDisponibles->last());
+
+    $studentwithexam = StudentExamen::where('examen_id', $examen->id)
+        ->when($dateSelectionnee, function ($query) use ($dateSelectionnee) {
+            $query->whereDate('date_examen', $dateSelectionnee);
+        })
+        ->with('user.student')
+        ->get();
+
+    $userIds = $studentwithexam->pluck('user_id');
+    $students = Student::whereIn('user_id', $userIds)->pluck('id', 'user_id');
+
+    $attempts = ExamAttempt::where('examen_id', $examen->id)
+        ->where('numero_tentative', 1)
+        ->whereIn('student_id', $students->values())
+        ->get()
+        ->keyBy('student_id');
+
+    return view('admin.examen.examen-student.show', compact(
+        'slug', 'examen', 'studentwithexam', 'datesDisponibles',
+        'dateSelectionnee', 'students', 'attempts', 'nombreParDate'
+    ));
+}
 
     // 
     public function create(string $slug, Examen $examen)
