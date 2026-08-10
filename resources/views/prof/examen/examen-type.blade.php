@@ -53,12 +53,12 @@
     @endif
     
     @if($examen->typesExercice->isNotEmpty())
-        <div class="gap-3 py-2 border border-black/3 bg-black/3 rounded-md p-2 mt-4 ">
+        <div class="gap-3 py-2 border border-black/3 bg-black/2 rounded-md p-2 mt-4 ">
             @foreach($examen->typesExercice as $type)
                 @if(\Illuminate\Support\Facades\Route::has('prof.examen.' . $type->slug))
                     <a href="{{ route('prof.examen.' . $type->slug, [$slug, $examen->id]) }}"
-                        class="w-full  py-3 px-2 border-b hover:bg-black/3 border-black/10 flex gap-3 items-center justify-between {{ $loop->iteration == 2 ? 'bg-white/60' : '' }}">
-                        <div class="font-semibold text-rouge w-8 h-8 rounded-md bg-black/5 flex justify-center items-center">
+                        class="w-full  p-2 border hover:bg-black/3 rounded border-black/3 bg-white/70 flex gap-3 items-center justify-between ">
+                        <div class="font-semibold text-rouge w-8 h-8 rounded bg-black/5 flex justify-center items-center">
                             <i class="{{ $type->icone ?? 'fa-solid fa-chart-simple' }} text-vert"></i>
                         </div>
                         <div class="flex-1">
@@ -70,7 +70,7 @@
                         <i class="fa-solid fa-arrow-up-right-from-square text-vert"></i>
                     </a>
                 @else
-                    <span class="w-full py-3 px-2 border-b border-black/10 text-black/30 flex gap-3 items-center" title="Bientôt disponible">
+                    <span class="w-full py-3 px-2 border border-black/3 rounded bg-white/70 text-black/30 flex gap-3 items-center" title="Bientôt disponible">
                         <div class="font-semibold text-rouge w-8 h-8 rounded-md bg-black/5 flex justify-center items-center">
                             {{ $type->pivot->ordre }}
                         </div>
@@ -84,7 +84,6 @@
             <i class="fa-solid fa-box-open text-3xl"></i>
             <p>Aucun type d'exercice n'a encore été ajouté à cet examen.</p>
         </div>
-    @endif
-    
+    @endif 
 </div>
 @endsection

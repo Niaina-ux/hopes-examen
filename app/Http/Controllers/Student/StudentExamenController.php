@@ -120,6 +120,7 @@ class StudentExamenController extends Controller
         if (!$premierType) {
             return back()->with('error', 'Aucun type d\'exercice défini pour cet examen.');
         }
+        
         return $this->redirectVersPremierElement($examen, $slug, $premierType->slug);
     }
 

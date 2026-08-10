@@ -22,10 +22,10 @@
         </div>
     @endif
 
-    <div class="p-2 border border-black/10 rounded-md mt-4 bg-black/2">
+    <div class="p-2 border border-black/3 rounded-md mt-4 bg-black/2">
         @forelse($examens as $index => $examen)
-            <div class="flex justify-between gap-7 border-b border-black/10 p-2 {{ $loop->iteration == 2 ? 'bg-white' : '' }}">
-                <div class="w-10 h-10 rounded-sm bg-black/5 flex justify-center items-center font-semibold">
+            <div class="flex justify-between gap-7 border  border-black/3 rounded bg-white/70 p-2 {{ $loop->iteration == 2 ? 'bg-white' : '' }}">
+                <div class="w-10 h-10 rounded bg-black/5 flex justify-center items-center font-semibold">
                     {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
                 </div>
                 <div class="flex-1">

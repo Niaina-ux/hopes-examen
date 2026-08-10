@@ -1,6 +1,17 @@
 <?php
 
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrectionController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenCodeController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenFichierController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenGlissesDeposesController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenImageController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenMotsCroisesController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenPointllerController;
 use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenQcmController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenRedactionController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenRelierController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfCorrigeExamenTextController;
+use App\Http\Controllers\Prof\CorrigeExamen\ProfExamenCommentaireController;
 use App\Http\Controllers\Prof\ProfDashboardController;
 use App\Http\Controllers\Prof\ProfExamenCodeController;
 use App\Http\Controllers\Prof\ProfExamenCodeQuestionController;
@@ -9,6 +20,8 @@ use App\Http\Controllers\Prof\ProfExamenFichierController;
 use App\Http\Controllers\Prof\ProfExamenFichierQuestionController;
 use App\Http\Controllers\Prof\ProfExamenGlisserDeposerController;
 use App\Http\Controllers\Prof\ProfExamenGlisserDeposerQuestionController;
+use App\Http\Controllers\Prof\ProfExamenImageController;
+use App\Http\Controllers\Prof\ProfExamenImageQuestionController;
 use App\Http\Controllers\Prof\ProfExamenMotsCroisesController;
 use App\Http\Controllers\Prof\ProfExamenPointillerController;
 use App\Http\Controllers\Prof\ProfExamenPointillerQuestionController;
@@ -176,9 +189,27 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('prof/examen/{slug}/{examen}/glisserdeposer/{glisserdeposer}/question/{question}', 'destroy')->name('prof.examen.glisserdeposer.question.destroy');
     });
 
+    Route::controller(ProfExamenImageController::class)->group(function () {
+        Route::get('prof/examen/{slug}/{examen}/image', 'show')->name('prof.examen.image');
+        Route::get('prof/examen/{slug}/{examen}/image/create', 'create')->name('prof.examen.image.create');
+        Route::post('prof/examen/{slug}/{examen}/image/store', 'store')->name('prof.examen.image.store');
+        Route::get('prof/examen/{slug}/{examen}/image/{image}/edit', 'edit')->name('prof.examen.image.edit');
+        Route::put('prof/examen/{slug}/{examen}/image/{image}', 'update')->name('prof.examen.image.update');
+        Route::delete('prof/examen/{slug}/{examen}/image/{image}', 'destroy')->name('prof.examen.image.destroy');
+    });
+
+    Route::controller(ProfExamenImageQuestionController::class)->group(function () {
+        Route::get('prof/examen/{slug}/{examen}/image/{image}/question/create', 'create')->name('prof.examen.image.question.create');
+        Route::post('prof/examen/{slug}/{examen}/image/{image}/question/store', 'store')->name('prof.examen.image.question.store');
+        Route::get('prof/examen/{slug}/{examen}/image/{image}/question/{question}/edit', 'edit')->name('prof.examen.image.question.edit');
+        Route::put('prof/examen/{slug}/{examen}/image/{image}/question/{question}', 'update')->name('prof.examen.image.question.update');
+        Route::delete('prof/examen/{slug}/{examen}/image/{image}/question/{question}', 'destroy')->name('prof.examen.image.question.destroy');
+    });
+
     Route::controller(ProfStudentController::class)->group(function()
     {
-        Route::get('prof/student/{slug}', 'show')->name('prof.student.show');
+        Route::get('prof/{slug}/student', 'show')->name('prof.student.show');
+        Route::get('stat/{slug}/student/{student}', 'studentstatexam')->name('student.statexam');
     });
 
     Route::controller(ProfExamenStudentController::class)->group(function(){
@@ -186,7 +217,46 @@ Route::middleware(['auth'])->group(function () {
         Route::get('prof/examen/{slug}/{examen}/student/{student}', 'examenwherestudent')->name('prof.examen.examenwherestudent');
     });
 
+    //corriger//
     Route::controller(ProfCorrigeExamenQcmController::class)->group(function(){
         Route::get('prof/examen/{slug}/{examen}/student/{student}/qcm' , 'showtache')->name('prof.examen.showtache.qcm');
     });
+    Route::controller(ProfCorrigeExamenRedactionController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/redaction' , 'showtache')->name('prof.examen.showtache.redaction');
+        Route::post('prof/correction/redaction/{reponse}/annoter', 'storeAnnotation')->name('prof.correction.redaction.annoter');
+    });
+    Route::controller(ProfCorrigeExamenRelierController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/relier' , 'showtache')->name('prof.examen.showtache.relier');
+    });
+    Route::controller(ProfCorrigeExamenTextController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/text' , 'showtache')->name('prof.examen.showtache.text');
+        Route::post('prof/correction/text/{text}/annoter', 'storeAnnotation')->name('prof.correction.text.annoter');
+    });
+    Route::controller(ProfCorrigeExamenCodeController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/code' , 'showtache')->name('prof.examen.showtache.code');
+        Route::post('prof/correction/code/{code}/annoter', 'storeAnnotation')->name('prof.correction.code.annoter');
+    });
+    Route::controller(ProfCorrigeExamenMotsCroisesController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/motscroises' , 'showtache')->name('prof.examen.showtache.motscroises');
+    });
+    Route::controller(ProfCorrigeExamenFichierController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/fichier' , 'showtache')->name('prof.examen.showtache.fichier');
+        Route::post('prof/correction/fichier/{fichier}/annoter', 'storeAnnotation')->name('prof.correction.fichier.annoter');
+    });
+    Route::controller(ProfCorrigeExamenImageController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/image' , 'showtache')->name('prof.examen.showtache.image');
+        Route::post('prof/correction/image/{imageExercice}/annoter', 'storeAnnotation')->name('prof.correction.image.annoter');
+    });
+    Route::controller(ProfCorrigeExamenGlissesDeposesController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/glisserdeposer' , 'showtache')->name('prof.examen.showtache.glisserdeposer');
+    });
+    Route::controller(ProfCorrigeExamenPointllerController::class)->group(function(){
+        Route::get('prof/examen/{slug}/{examen}/student/{student}/pointiller' , 'showtache')->name('prof.examen.showtache.pointiller');
+    });
+
+    Route::post('prof/correction/commentaire', [ProfExamenCommentaireController::class, 'storeCommentaire'])
+    ->name('prof.correction.storeCommentaire');
+    
+    Route::post('prof/correction/{slug}/{examen}/{student}/terminer', [ProfCorrectionController::class, 'terminerCorrection'])
+    ->name('prof.correction.terminer');
 });

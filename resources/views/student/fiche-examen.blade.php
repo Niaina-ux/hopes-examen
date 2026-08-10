@@ -1,39 +1,34 @@
 
 @extends('layouts.student-layouts.layouthead')
 @section('contenue-student')
-<div class="container py-5">
-    <div class="mb-2">
-        <a href="{{ route('student.examen.show', $examen->categorie->slug ?? '') }}">
-            Retour /
-        </a>
-        <span class="font-semibold">Examen</span>
-    </div>
-
-    <div class="flex justify-between">
-        <div class="rounded-md">
-            <h2 class="text-2xl font-semibold text-vert">{{ $examen->titre }}</h2>
-            <p class="py-1">{{ $examen->description }}</p>
-            <p class="text-sm text-black/50">Finis le {{ $attempt->date_fin?->format('d/m/Y à H:i') }}</p>
-        </div>
-        <div class="">
-            <span class="border border-black/10 rounded-full p-1 px-4 
-                {{ $attempt->status === 'corrige' ? 'text-vert' : 'text-rouge' }}">
-                {{ $attempt->status === 'corrige' ? 'Corrigé' : 'En attente de correction' }}
-            </span>
-        </div>
-    </div>
-
-    <div class="flex justify-between  gap-5 compare-section">
-        
-        <div class="w-[70%]" >
-            {{-- Navigation rapide entre les sections --}}
-            <div class="flex flex-wrap gap-2 sticky top-0 z-50 bg-white pt-3 pb-2 border-b-2 border-black/10 ">
-                @foreach($examen->typesExercice as $type)
-                    <a href="#section-{{ $type->slug }}" class="p-1 px-2  rounded-md bg-black/3 hover:bg-black/5">
-                        {{ $type->nom }}
-                    </a>
-                @endforeach
+<div class="container py-25">
+    <div class="bg-white z-50 sticky top-0">
+        <div class="flex justify-between py-2">
+            <div class="rounded-md">
+                <h2 class="text-2xl font-semibold text-vert">{{ $examen->titre }}</h2>
+                <p class="py-1">{{ $examen->description }}</p>
+                <p class="text-sm text-black/50">Finis le {{ $attempt->date_fin?->format('d/m/Y à H:i') }}</p>
             </div>
+            <div class="mt-2">
+                <span class="border border-black/10 rounded-full p-1 px-4 
+                    {{ $attempt->status === 'corrige' ? 'text-vert' : 'text-rouge' }}">
+                    {{ $attempt->status === 'corrige' ? 'Corrigé' : 'En attente de correction' }}
+                </span>
+            </div>
+        </div>
+        {{-- Navigation rapide entre les sections --}}
+       <div class="flex flex-wrap gap-2 items-center  z-50 bg-white pt-3 pb-2 border-b-2 border-black/10">
+            @foreach($examen->typesExercice as $type)
+                <a href="#section-{{ $type->slug }}"
+                class="menu-section p-1 flex items-center px-2 rounded border border-black/5 bg-black/3 transition-all duration-200 hover:bg-rouge hover:text-white hover:border-rouge"
+                data-target="section-{{ $type->slug }}">
+                    {{ $type->nom }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+    <div class="flex justify-between  gap-5 compare-section">    
+        <div class="w-[70%]" >
 
             {{-- Section QCM --}}
             @if($qcms->isNotEmpty())
@@ -91,6 +86,12 @@
                             @endforeach
                         </div>
                     @endforeach
+                    @if($typeQcm && $commentsQcm)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsQcm->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -172,6 +173,12 @@
                             </div>
                         </div>
                     @endforeach
+                    @if($typePointiller && $commentsPointiller)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsPointiller->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -255,6 +262,12 @@
                             @endforeach
                         </div>
                     @endforeach
+                    @if($typeRelier && $commentsRelier)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsRelier->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -296,8 +309,10 @@
                                             </span> / {{ $question->points }} Pts
                                         </span>
                                     </div>
-                                    <div class="max-w-full overflow-x-auto">
-                                        <pre class="p-2 mt-1 bg-white/90 rounded inline-block min-w-full">{{ $reponse?->code_soumis ?? 'Aucun code soumis' }}</pre>
+                                   <div class="max-w-full overflow-x-auto">
+                                        <pre class="p-2 mt-1 bg-white/90 rounded inline-block min-w-full">{!! $estCorrigeCode && $reponse?->code_annote
+                                            ? $reponse->code_annote
+                                            : e($reponse?->code_soumis ?? 'Aucun code soumis') !!}</pre>
                                     </div>
                                     @if($reponse?->commentaire_prof)
                                         <div class="mt-2 pt-2 border-t border-black/10 text-sm">
@@ -306,9 +321,15 @@
                                         </div>
                                     @endif
                                 </div>
-                            @endforeach
+                            @endforeach  
                         </div>
                     @endforeach
+                    @if($typeCode && $commentsCode)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsCode->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -354,7 +375,11 @@
                                         </div>
                                     </div>
                                     <div class="p-2 rounded bg-white/90 mt-1">
-                                        {{ $reponse?->reponse_texte ?? 'Réponse vide !!' }}
+                                        @if($estCorrigeText && $reponse?->reponse_annotee)
+                                            {!! $reponse->reponse_annotee !!}
+                                        @else
+                                            {{ $reponse?->reponse_texte ?? 'Réponse vide !!' }}
+                                        @endif
                                     </div>
                                     @if($reponse?->commentaire_prof)
                                         <div class="mt-2 pt-2 border-t border-black/10 text-sm">
@@ -363,9 +388,15 @@
                                         </div>
                                     @endif
                                 </div>
-                            @endforeach
+                            @endforeach  
                         </div>
                     @endforeach
+                    @if($typeText && $commentsText)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsText->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -377,6 +408,7 @@
                     </h2>
                     @foreach($redactions as $redaction)
                         <div class="border border-black/10 p-4 rounded-md mb-3">
+                            @php $repRedaction = $redaction->reponses->first(); @endphp
                             <div class="flex items-center gap-3 mb-2">
                                 <div class="w-8 h-8 rounded-md bg-black/3 flex justify-center items-center font-semibold">
                                     {{ $loop->iteration }}
@@ -384,8 +416,8 @@
                                 <h3 class="text-lg font-semibold flex-1">{{ $redaction->titre }}</h3>
                                 <div class="text-sm flex gap-3">
                                     <span class="border border-black/20 rounded-full px-2 text-rouge">
-                                        {{$redaction->reponses[0]->note_obtenus ?? 'en attent'}} Pts
-                                    </span>  / 
+                                        {{ $repRedaction?->note_obtenue ?? 'en attente' }} Pts
+                                    </span> /
                                     <span class="border border-black/20 rounded-full px-2 text-vert">
                                         {{ $redaction->note_totale }} Pts total
                                     </span>
@@ -396,16 +428,25 @@
                                 <p class="mb-1 whitespace-pre-line"> {{$redaction->sujet}} </p>
                                 <span>Instruction</span>
                                 <p class="mb-1 whitespace-pre-line"> {{$redaction->instruction}} </p>
-                                <div class="p-2 rounded-md bg-black/3 ">
+                                <div class="p-2 rounded-md bg-black/3">
                                     <span>Reponse</span>
-
                                     <pre class="p-2 bg-white/90 rounded whitespace-pre-line mt-1">
-                                        {{$redaction->reponses[0]->reponse_texte}}
+                                        @if($repRedaction?->note_obtenue !== null && $repRedaction?->reponse_annotee)
+                                            {!! $repRedaction->reponse_annotee !!}
+                                        @else
+                                            {{ $repRedaction?->reponse_texte }}
+                                        @endif
                                     </pre>
                                 </div>
                             </div>
                         </div>
                     @endforeach
+                    @if($typeRedaction && $commentsRedaction)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsRedaction->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -415,6 +456,15 @@
                         <i class="fa-solid fa-arrows-up-down-left-right"></i> Glisser-déposer <i class="fa-solid fa-arrows-up-down-left-right"></i>
                     </h2>
                     @foreach($glisserDeposers as $glisserDeposer)
+                        @php
+                            // ✅ Kajiana ny fitambaran'ny points azon'ny mpianatra amin'ity glisserDeposer ity manontolo
+                            $pointsObtenusTotal = 0;
+                            foreach ($glisserDeposer->questions as $q) {
+                                $totalCorrect = $q->items->filter(fn($i) => ($i->reponses->first()->est_correcte ?? false))->count();
+                                $totalItems = $q->items->count();
+                                $pointsObtenusTotal += $totalItems > 0 ? round(($totalCorrect / $totalItems) * $q->points, 2) : 0;
+                            }
+                        @endphp
                         <div class="border border-black/10 p-4 rounded-md mb-2">
                             <div class="flex items-center gap-3 mb-2">
                                 <div class="w-8 h-8 rounded-md bg-black/3 flex justify-center items-center font-semibold">
@@ -423,25 +473,25 @@
                                 <h3 class="text-lg font-semibold flex-1">{{ $glisserDeposer->titre }}</h3>
                                 <div class="text-sm flex gap-3">
                                     <span class="border border-black/20 rounded-full px-2 text-rouge">
-                                        01 Pts obtenus
+                                        {{ $pointsObtenusTotal }} Pts obtenus
                                     </span>
                                     <span class="border border-black/20 rounded-full px-2 text-vert">
                                         {{ $glisserDeposer->note_totale }} Pts total
-                                    </span> 
+                                    </span>
                                 </div>
                             </div>
                             @foreach($glisserDeposer->questions as $question)
-                                <div class="mb-2 border-b border-black/5  p-2 rounded-md bg-black/3 text-base">
+                                <div class="mb-2 border-b border-black/5 p-2 rounded-md bg-black/3 text-base">
                                     @if($question->enonce)
                                     <div class="flex justify-between gap-3 mb-2">
-                                        <p class="">{{$question->ordre}} - {{ $question->enonce }}</p>
+                                        <p class="">{{ $question->ordre }} - {{ $question->enonce }}</p>
                                         @php
                                             $totalCorrect = $question->items->filter(fn($i) => ($i->reponses->first()->est_correcte ?? false))->count();
                                             $totalItems = $question->items->count();
                                             $pointsCalcules = $totalItems > 0 ? round(($totalCorrect / $totalItems) * $question->points, 2) : 0;
                                         @endphp
                                         <span>{{ $pointsCalcules }} / {{ $question->points }}</span>
-                                    </div>  
+                                    </div>
                                     @endif
                                     <div class="relative inline-block border border-black/10 rounded overflow-hidden">
                                         <img src="{{ asset('images/glisserdeposer/' . $question->image) }}" class="w-full block">
@@ -477,6 +527,12 @@
                             @endforeach
                         </div>
                     @endforeach
+                    @if($typeGlisserDeposer && $commentsGlisserDeposer)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsGlisserDeposer->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -546,6 +602,12 @@
                             @endforeach
                         </div>
                     @endforeach
+                    @if($typeFichier && $commentsFichier)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsFichier->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -708,18 +770,127 @@
                             </div>
                         </div>
                     @endforeach
+                    @if($typeMotsCroises && $commentsMotsCroises)
+                        <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                            <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                            <p class="whitespace-pre-line mt-1">{{ $commentsMotsCroises->contenu }}</p>
+                        </div>
+                    @endif
                 </div>
             @endif
+
+            {{-- Section Fichier (upload/download) --}}
+            @if($image->isNotEmpty())
+            <div id="section-image">
+                <h2 class="p-1 mt-4 flex gap-2 items-center text-rouge">
+                    <i class="fa-solid fa-image"></i>
+                    Devoir image
+                    <i class="fa-solid fa-image"></i>
+                </h2>
+                @foreach($image as $imageExercice)
+                    @php
+                        $reponsesImage = $imageExercice->questions->flatMap(fn($q) => $q->reponses);
+                        $obtenusImage = $reponsesImage->sum('points_obtenus');
+                        $estCorrigeImage = $reponsesImage->isNotEmpty()
+                            && $reponsesImage->every(fn($r) => $r->points_obtenus !== null);
+                    @endphp
+                    <div class="border border-black/10 p-4 rounded-md mb-3 text-base">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-8 h-8 rounded-md bg-black/3 flex justify-center items-center font-semibold">
+                                {{ $loop->iteration }}
+                            </div>
+                            <h3 class="text-lg font-semibold flex-1">
+                                {{ $imageExercice->titre }}
+                            </h3>
+                            <div class="text-sm flex gap-3">
+                                <span class="border border-black/20 rounded-full px-2 {{ $estCorrigeImage ? 'text-rouge' : 'text-black/40' }}">
+                                    {{ $estCorrigeImage ? $obtenusImage.' Pts obtenus' : 'En attente' }}
+                                </span>
+                                <span class="border border-black/20 rounded-full px-2 text-vert">
+                                    {{ $imageExercice->note_totale }} Pts total
+                                </span>
+                            </div>
+                        </div>
+                        @foreach($imageExercice->questions as $question)
+                            @php
+                                $reponse = $question->reponses->first();
+                            @endphp
+                            <div class="p-2 rounded-md bg-black/3 my-2">
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="flex-1">
+                                        {{ $question->ordre }} -
+                                        {{ $question->instruction }}
+                                    </p>
+                                    <span class="text-sm text-nowrap">
+                                        {{ $reponse?->points_obtenus ?? 'En attente' }}
+                                        /
+                                        {{ $question->points }} Pts
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    {{-- Sujet du professeur --}}
+                                    <div class="bg-white rounded-md p-2 border border-black/10">
+                                        <p class="text-sm font-medium mb-2">
+                                            Sujet
+                                        </p>
+                                        @if($question->image)
+                                            <img
+                                                src="{{ asset('images/image_exercice/'.$question->image) }}"
+                                                class="w-full h-56 object-contain rounded border border-black/20">
+                                        @else
+                                            <div class="text-sm italic text-black/40">
+                                                Aucune image.
+                                            </div>
+                                        @endif
+                                    </div>
+                                    {{-- Réponse étudiant --}}
+                                    <div class="bg-white rounded-md p-2 border border-black/10">
+                                        <p class="text-sm font-medium mb-2">
+                                            Votre réponse
+                                        </p>
+                                        @if($reponse?->image_soumise)
+                                            <img
+                                                src="{{ asset('images/image_reponses/'.$reponse->image_soumise) }}"
+                                                class="w-full h-56 object-contain rounded border border-black/20">
+                                        @else
+                                            <div class="text-sm italic text-black/40">
+                                                Aucune image envoyée.
+                                            </div>
+                                        @endif
+                                        @if($reponse?->commentaire_prof)
+                                            <div class="mt-3 pt-3 border-t border-black/10">
+                                                <span class="text-sm text-black/50">
+                                                    Commentaire du professeur
+                                                </span>
+                                                <p class="mt-1 whitespace-pre-line">
+                                                    {{ $reponse->commentaire_prof }}
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                             </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endforeach
+                @if($typeImage && $commentsImage)
+                    <div class="mt-2 p-3 rounded-md bg-black/3 border border-black/10 text-sm">
+                        <span class="text-black/50 font-semibold">Remarque générale du professeur :</span>
+                        <p class="whitespace-pre-line mt-1">{{ $commentsImage->contenu }}</p>
+                    </div>
+                @endif
+            </div>
+            @endif
         </div>
-        <div class=" w-[30%]">
-            <h2 class="text-lg font-semibold text-vert mb-3">Résumé</h2>
-            <div class="rounded-md flow-right sticky top-5 self-start">
+        <div class=" w-[30%] pt-4">
+            <h2 class="text-lg font-semibold text-vert mb-1">Résumé</h2>
+            <div class="rounded-md flow-right sticky top-0 self-start">
                 @php
                     $resumeParType = [];
                     $totalPointsGlobalObtenus = 0;
                     $totalNoteGlobal = 0;
 
-                    $typesCorrectionManuelle = ['code', 'text', 'redaction', 'fichier'];
+                    $typesCorrectionManuelle = ['code', 'text', 'redaction', 'fichier', 'image'];
 
                     // QCM
                     if ($qcms->isNotEmpty()) {
@@ -789,6 +960,23 @@
                         $total = $fichiers->sum('note_totale');
                         $estCorrige = $reponsesFichier->isNotEmpty() && $reponsesFichier->every(fn($r) => $r->points_obtenus !== null);
                         $resumeParType['fichier'] = ['nom' => 'Download & Upload', 'obtenus' => $obtenus, 'total' => $total, 'corrige' => $estCorrige];
+                    }
+
+                    // Image (correction manuelle)
+                    if ($image->isNotEmpty()) {
+                        $reponsesImage = $image
+                            ->flatMap(fn($i) => $i->questions)
+                            ->flatMap(fn($q) => $q->reponses);
+                        $obtenus = $reponsesImage->sum('points_obtenus');
+                        $total = $image->sum('note_totale');
+                        $estCorrige = $reponsesImage->isNotEmpty()
+                            && $reponsesImage->every(fn($r) => $r->points_obtenus !== null);
+                        $resumeParType['image'] = [
+                            'nom' => 'Image',
+                            'obtenus' => $obtenus,
+                            'total' => $total,
+                            'corrige' => $estCorrige,
+                        ];
                     }
 
                     // Mots croisés
@@ -872,6 +1060,7 @@
     </div>
 </div>
 
+
 <style>
     .flow-right{
         position:sticky;
@@ -880,32 +1069,53 @@
         overflow:auto;
         scrollbar-width: none;
     }
+    .menu-section.active{
+        background: rgb(104, 167, 2);   /* rouge */
+        color:white;
+        border-color: rgb(104, 167, 2);
+    }
+
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.relier-fleche').forEach(function (line) {
-            const svg = line.closest('svg');
-            const containerRect = svg.getBoundingClientRect();
-    
-            const gaucheEl = svg.parentElement.querySelector(`.relier-item-gauche[data-paire-id="${line.dataset.gaucheId}"]`);
-            const droiteEl = svg.parentElement.querySelector(`.relier-item-droite[data-paire-id="${line.dataset.droiteId}"]`);
-    
-            if (!gaucheEl || !droiteEl) return;
-    
-            const gaucheRect = gaucheEl.getBoundingClientRect();
-            const droiteRect = droiteEl.getBoundingClientRect();
-    
-            const x1 = gaucheRect.right - containerRect.left;
-            const y1 = gaucheRect.top + gaucheRect.height / 2 - containerRect.top;
-            const x2 = droiteRect.left - containerRect.left;
-            const y2 = droiteRect.top + droiteRect.height / 2 - containerRect.top;
-    
-            line.setAttribute('x1', x1);
-            line.setAttribute('y1', y1);
-            line.setAttribute('x2', x2);
-            line.setAttribute('y2', y2);
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    // ===== Relier =====
+    document.querySelectorAll('.relier-fleche').forEach(line => {
+        const svg = line.closest('svg');
+        const containerRect = svg.getBoundingClientRect();
+        const gaucheEl = svg.parentElement.querySelector(
+            `.relier-item-gauche[data-paire-id="${line.dataset.gaucheId}"]`
+        );
+        const droiteEl = svg.parentElement.querySelector(
+            `.relier-item-droite[data-paire-id="${line.dataset.droiteId}"]`
+        );
+        if (!gaucheEl || !droiteEl) return;
+        const gaucheRect = gaucheEl.getBoundingClientRect();
+        const droiteRect = droiteEl.getBoundingClientRect();
+        line.setAttribute('x1', gaucheRect.right - containerRect.left);
+        line.setAttribute('y1', gaucheRect.top + gaucheRect.height / 2 - containerRect.top);
+        line.setAttribute('x2', droiteRect.left - containerRect.left);
+        line.setAttribute('y2', droiteRect.top + droiteRect.height / 2 - containerRect.top);
+
     });
-    </script>
+
+    // ===== Menu actif =====
+    const links = document.querySelectorAll(".menu-section");
+    const sections = [...links].map(link => document.getElementById(link.dataset.target)).filter(Boolean);
+    function updateActive() {
+        let current = sections[0];
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                current = section;
+            }
+        });
+        links.forEach(link => {
+            link.classList.toggle("active",current && current.id === link.dataset.target);
+        });
+    }
+    updateActive();
+    window.addEventListener("scroll", updateActive);
+});
+</script>
 @endsection

@@ -10,7 +10,6 @@
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, earum.</p>
         </div>
 
-        {{-- ✅ Lisitry ny daty, mifototra amin'ny data tena misy --}}
         <div class="flex gap-2 flex-wrap">
             @forelse($datesDisponibles as $date)
                 <a href="{{ route('prof.examen.studentswithexamen', [$slug, $examen->id, 'date' => $date]) }}"
@@ -26,7 +25,7 @@
             @endforelse
         </div>
 
-        <div class="mt-2 border border-black/10 rounded-md bg-black/3 p-2">
+        <div class="mt-2 border border-black/3 rounded-md bg-black/2 p-2">
             @forelse($studentwithexam as $se)
                 @php
                     $user = $se->user;
@@ -45,7 +44,7 @@
                         $statutClass = 'text-black/40';
                     }
                 @endphp
-                <div class="flex gap-5 mb-1 p-2 rounded bg-white/70 border border-black/3">
+                <div class="flex gap-5 p-2 rounded bg-white/70 border border-black/3">
                     <div class="w-11 h-11 rounded-md bg-black/3 overflow-hidden">
                         <img src="{{ $user->image ? asset('images/' . $user->image) : '' }}" alt="" class="w-full h-full object-cover">
                     </div>

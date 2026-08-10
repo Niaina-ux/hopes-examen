@@ -17,7 +17,7 @@ class ProfExamenPointillerController extends Controller
 
         $pointillers = $examen->pointiller()
                     ->where('categorie_id', $categorie->id)
-                    ->withCount('pointillerQuestions')
+                    ->with('pointillerQuestions')
                     ->latest()
                     ->get();
         return view('prof.examen.pointiller.show', compact('pointillers','examen','slug'));
@@ -54,7 +54,7 @@ class ProfExamenPointillerController extends Controller
         ]);
 
         return redirect()
-            ->route('prof.examen.pointiller.question.show', [$slug, $examen->id, $pointille->id])
+            ->route('prof.examen.pointiller', [$slug, $examen->id])
             ->with('success', 'Exercice compoléter le pointiller créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 

@@ -92,7 +92,6 @@ class StudentExamenPointillerController extends Controller
             ->whereIn('pointiller_reponse_id', $questions->pluck('reponses')->flatten()->pluck('id'))
             ->sum('points_obtenus');
 
-        $attempt->recalculerScore();
 
         // Pointiller manaraka ao anaty examen iray ihany (araka ny ordre)
         $pointillerSuivant = Pointiller::where('examen_id', $examen->id)

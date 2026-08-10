@@ -1,6 +1,6 @@
 @extends('layouts.student-layouts.layouthead')
 @section('contenue-student')
-    <section class="bg-black/5">
+    <section class="pt-20">
         <div class="container flex justify-between py-15 gap-20 items-center">
             <div class="w-[70%] m-auto text-center">
                 <h2 class="font-bold text-4xl mb-4">Pour le <span class="text-vert"> {{ $categorie->nom }} </span>, voici l'examen que tu dois faire maintenant.</h2>

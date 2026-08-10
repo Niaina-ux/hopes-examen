@@ -33,6 +33,14 @@ class ViewServiceProvider extends ServiceProvider
                 $prof = Prof::where('user_id', Auth::id())->with('categorie')->first();
                 $view->with('profCategorie', $prof?->categorie);
             }
+
+            $mySlug = null;
+
+            if (Auth::check()) {
+                $mySlug = Auth::user()->student?->categorie?->slug;
+            }
+
+            $view->with('mySlug', $mySlug);
         });
     }
 }

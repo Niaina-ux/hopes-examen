@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PointillerReponse extends Model
 {
@@ -19,5 +20,10 @@ class PointillerReponse extends Model
     public function choices()
     {
         return $this->hasMany(PointillerChoice::class);
+    }
+
+    public function etudiantReponses(): HasMany
+    {
+        return $this->hasMany(PointillerEtudiantReponse::class, 'pointiller_reponse_id');
     }
 }

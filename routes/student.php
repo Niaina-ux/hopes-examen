@@ -6,6 +6,7 @@ use App\Http\Controllers\Student\StudentExamenDashboardController;
 use App\Http\Controllers\Student\StudentExamenFichierController;
 use App\Http\Controllers\Student\StudentExamenGlisserDeposerController;
 use App\Http\Controllers\Student\StudentExamenHistoriqueController;
+use App\Http\Controllers\Student\StudentExamenImageController;
 use App\Http\Controllers\Student\StudentExamenMotsCroisesController;
 use App\Http\Controllers\Student\StudentExamenPointillerController;
 use App\Http\Controllers\Student\StudentExamenQcmController;
@@ -16,10 +17,10 @@ use App\Http\Controllers\Student\studentHomeCotroller;
 use App\Http\Middleware\CheckExamenEnCours;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', [studentHomeCotroller::class, 'index'])
+    ->name('home');
+    
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [studentHomeCotroller::class, 'index'])
-        ->name('home')
-        ->middleware('auth');
 
     Route::controller(StudentExamenController::class)->group(function(){
         Route::get('/examen/{slug}', 'index')->name('student.examen.show');
@@ -65,6 +66,11 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(StudentExamenGlisserDeposerController::class)->group(function(){
             Route::get('/examen/{examen}/{slug}/glisserdeposer/{glisserdeposer}', 'show')->name('examen.glisserdeposer.show');
             Route::post('/examen/{examen}/{slug}/glisserdeposer/{glisserdeposer}/store', 'store')->name('examen.glisserdeposer.store');
+        });
+
+        Route::controller(StudentExamenImageController::class)->group(function(){
+            Route::get('/examen/{examen}/{slug}/image/{image}', 'show')->name('examen.image.show');
+            Route::post('/examen/{examen}/{slug}/image/{image}/store', 'store')->name('examen.image.store');
         });
     });
 

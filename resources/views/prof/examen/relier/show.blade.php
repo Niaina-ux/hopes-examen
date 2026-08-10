@@ -4,12 +4,12 @@
         @include('layouts.admin-layouts.examen.layout-exam')
         <div class="">
             @forelse($reliers as $index => $relier)
-                <div class="p-2 flex gap-7 justify-between border-b border-black/10 my-2">
+                <div class="p-2 flex gap-7 justify-between border rounded border-black/10 my-2">
                     <div class="w-15 h-15 rounded-md bg-black/3 flex justify-center items-center">
                         <span class="font-bold">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                     </div>
-                    <div class="flex-1">
-                        <div class="flex gap-3">
+                    <div class="flex-1 ">
+                        <div class="flex gap-3 mb-2">
                             <div class="flex-1">
                                 <h3 class="text-base font-semibold">{{ $relier->titre }}</h3>
                                 <p>{{ $relier->description }}</p>
@@ -46,7 +46,7 @@
                             </div>
                         </div> 
                         @forelse($relier->relierQuestions as $index => $question)    
-                        <div class="py-4 border-b border-black/5 ">
+                        <div class="py-2 border-y border-black/5 ">
                             <div class="flex gap-5">
                                 <div class="w-8 h-8 bg-black/5 rounded-md flex font-semibold text-rouge justify-center items-center">
                                     {{ $loop->iteration }} 
@@ -74,11 +74,11 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-15 mt-1 bg-black/3 p-2 px-3 rounded-md">
+                                    <div class="grid grid-cols-2 gap-15 mt-1 bg-black/2 border border-black/3 p-2 px-3 rounded-md">
                                         <div>
                                             <p class="text-black/50 text-sm border-b-2 border-black/10 pb-1">Colonne gauche</p>
                                             @foreach ($question->paires as $paire)
-                                                <div class="py-1 flex justify-between gap-2 border-b border-black/5 {{ $loop->even ? 'bg-white/60' : '' }}">
+                                                <div class="py-1 flex justify-between gap-2 border-b border-black/5 bg-white/70 rounded">
                                                     <div class="flex-1">
                                                         - {{ $paire->element_gauche }} 
                                                     </div>
@@ -90,7 +90,7 @@
                                         <div>
                                             <p class="text-black/50 text-sm border-b-2 border-black/10 pb-1">Colonne droite</p>
                                             @foreach ($question->paires as $paire)
-                                                <div class="py-1 flex justify-between gap-2 text-left  border-b border-black/5 {{ $loop->even ? 'bg-white/60' : '' }}">
+                                                <div class="py-1 flex justify-between gap-2 text-left  border-b border-black/5 bg-white/70 rounded">
                                                     <span class="w-7 h-6 flex justify-center items-center text-white rounded-md bg-vert">{{ $paire->ordre_droite }}</span>
                                                     <div class="flex-1">
                                                         - {{ $paire->element_droite }}

@@ -15,7 +15,7 @@
             @foreach($examen->typesExercice as $type)
                 @if(\Illuminate\Support\Facades\Route::has('prof.examen.' . $type->slug))
                     <a href="{{ route('prof.examen.' . $type->slug, [$slug, $examen->id]) }}"
-                        class="inline-block p-1 px-3 rounded-sm border-2 {{ request()->routeIs('prof.examen.' . $type->slug .'*') ? 'bg-vert text-white border-vert font-semibold border-transparent' : 'bg-black/5 border-black/5' }}">
+                        class="inline-block p-1 px-3 rounded-sm border-2 {{ request()->routeIs('prof.examen.' . $type->slug .'*') ? 'bg-vert text-white border-vert border-transparent' : 'bg-black/5 border-black/5' }}">
                         {{ $type->nom }}
                     </a>
                 @else

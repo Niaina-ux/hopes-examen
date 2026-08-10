@@ -66,9 +66,14 @@
 
                             <div class="choices-container">
                                 <label class="block text-sm font-medium mb-1">Banque de mots (choix proposés)</label>
-                                <div class="space-y-1">
+                                <div class="space-y-1 choices-list">
                                     @foreach(($trou['choices'] ?? [null, null]) as $choice)
-                                        <input type="text" name="trous[{{ $index }}][choices][]" value="{{ $choice }}" class="border rounded w-full p-2">
+                                        <div class="flex gap-2 choice-row">
+                                            <input type="text" name="trous[{{ $index }}][choices][]" value="{{ $choice }}" class="border rounded w-full p-2">
+                                            <button type="button" class="remove-choice text-rouge px-2 border rounded" title="Supprimer ce choix">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
                                     @endforeach
                                 </div>
                                 @error("trous.$index.choices") <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
@@ -110,9 +115,19 @@ document.getElementById('detect-trous').addEventListener('click', function () {
             </div>
             <div class="choices-container">
                 <label class="block text-sm font-medium mb-1">Banque de mots (choix proposés)</label>
-                <div class="space-y-1">
-                    <input type="text" name="trous[${index}][choices][]" class="border rounded w-full p-2" placeholder="Choix 1">
-                    <input type="text" name="trous[${index}][choices][]" class="border rounded w-full p-2" placeholder="Choix 2">
+                <div class="space-y-1 choices-list">
+                    <div class="flex gap-2 choice-row">
+                        <input type="text" name="trous[${index}][choices][]" class="border rounded w-full p-2" placeholder="Choix 1">
+                        <button type="button" class="remove-choice text-rouge px-2 border rounded" title="Supprimer ce choix">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="flex gap-2 choice-row">
+                        <input type="text" name="trous[${index}][choices][]" class="border rounded w-full p-2" placeholder="Choix 2">
+                        <button type="button" class="remove-choice text-rouge px-2 border rounded" title="Supprimer ce choix">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
                 </div>
                 <button type="button" class="add-choice text-vert underline text-sm mt-1">+ Ajouter un choix</button>
             </div>
@@ -121,20 +136,40 @@ document.getElementById('detect-trous').addEventListener('click', function () {
     });
 });
 
+// ✅ Un seul listener global gère ajout ET suppression
 document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('add-choice')) {
-        const block = e.target.closest('.choices-container');
-        const container = block.querySelector('.space-y-1');
-        const count = container.querySelectorAll('input').length;
-        const trouDiv = e.target.closest('[class*="border"]');
+    // Ajouter un choix
+    if (e.target.closest('.add-choice')) {
+        const btn = e.target.closest('.add-choice');
+        const block = btn.closest('.choices-container');
+        const list = block.querySelector('.choices-list');
+        const count = list.querySelectorAll('input').length;
+        const trouDiv = btn.closest('[class*="border"]');
         const trouIndex = trouDiv.querySelector('input[name*="reponse_correcte"]').name.match(/trous\[(\d+)\]/)[1];
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = `trous[${trouIndex}][choices][]`;
-        input.placeholder = `Choix ${count + 1}`;
-        input.className = 'border rounded w-full p-2';
-        container.appendChild(input);
+        const row = document.createElement('div');
+        row.className = 'flex gap-2 choice-row';
+        row.innerHTML = `
+            <input type="text" name="trous[${trouIndex}][choices][]" placeholder="Choix ${count + 1}" class="border rounded w-full p-2">
+            <button type="button" class="remove-choice text-rouge px-2 border rounded" title="Supprimer ce choix">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        `;
+        list.appendChild(row);
+        return;
+    }
+
+    // ✅ Supprimer un choix
+    if (e.target.closest('.remove-choice')) {
+        const row = e.target.closest('.choice-row');
+        const list = row.closest('.choices-list');
+
+        if (list.querySelectorAll('.choice-row').length <= 2) {
+            alert('Il faut garder au moins 2 choix.');
+            return;
+        }
+
+        row.remove();
     }
 });
 

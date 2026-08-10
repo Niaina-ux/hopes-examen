@@ -1,6 +1,6 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')
-<div class="bg-white py-3 rounded-md">
+<div class="bg-white py-3 me-2 rounded-md">
     <div class="flex justify-between items-end">
         <div>
             <h2 class="text-2xl font-semibold text-vert">Types d'exercice</h2>
@@ -20,11 +20,11 @@
         </div>
     @endif
 
-    <div class="mt-4 border border-black/10 rounded-md bg-black/3 p-2">
+    <div class="mt-4 border border-black/3 rounded-md bg-black/2 p-2">
         @forelse($typesExercice as $type)
-            <div class="flex justify-between items-center gap-5 p-2 border-b border-black/10 {{ $loop->iteration == 2 ? 'bg-white/50' : '' }}">
+            <div class="flex justify-between items-center gap-5 p-2 border border-black/3 rounded bg-white/70">
                 <div class="w-10 h-10 rounded-md bg-black/5 flex justify-center items-center">
-                    <i class="{{ $type->icone ?? 'fa-solid fa-shapes' }}  text-vert"></i>
+                    <i class="{{ $type->icone ?? 'fa-solid fa-chart-simple' }}  text-vert"></i>
                 </div>
                 <div class="flex-1">
                     <h3 class="text-base">{{ $type->nom }}</h3>

@@ -17,6 +17,7 @@ class RedactionReponse extends Model
         'exam_attempt_id',
         'student_id',
         'reponse_texte',
+        'reponse_annotee',
         'nombre_mots',
         'submitted_at',
         'note_obtenue',

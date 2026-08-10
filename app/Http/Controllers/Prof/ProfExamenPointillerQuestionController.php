@@ -185,7 +185,7 @@ class ProfExamenPointillerQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.pointiller.question.show', [$slug, $examen->id, $pointiller->id])
+            ->route('prof.examen.pointiller', [$slug, $examen->id])
             ->with('success', 'Question modifiée avec succès.');
     }
 

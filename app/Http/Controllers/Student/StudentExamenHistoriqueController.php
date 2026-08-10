@@ -7,6 +7,7 @@ use App\Models\Code;
 use App\Models\ExamAttempt;
 use App\Models\Fichier;
 use App\Models\GlisserDeposer;
+use App\Models\ImageExercice;
 use App\Models\MotsCroises;
 use App\Models\Pointiller;
 use App\Models\Qcm;
@@ -15,11 +16,16 @@ use App\Models\Relier;
 use App\Models\Student;
 use App\Models\StudentExamen;
 use App\Models\Text;
+use App\Traits\CalculeStatistiquesExamen;
+use App\Traits\LoadsCommentairesExercice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class StudentExamenHistoriqueController extends Controller
 {
+    use LoadsCommentairesExercice , CalculeStatistiquesExamen;
+
     public function dashboard()
     {
         $student = Student::where('user_id', Auth::id())->firstOrFail();
@@ -31,6 +37,24 @@ class StudentExamenHistoriqueController extends Controller
             ->latest('date_fin')
             ->get();
 
+        // ✅ Statistiques : pourcentage par examen, seulement pour les attempts corrigés
+        $statistiques = $attempts
+            ->filter(fn($attempt) => $attempt->status === 'corrige')
+            ->map(function ($attempt) {
+                return [
+                    'titre' => $attempt->examen->titre,
+                    'date' => $attempt->date_fin?->format('d/m/Y'),
+                    'pourcentage' => $this->calculerPourcentageAttempt($attempt->examen, $attempt),
+                ];
+            })
+            ->filter(fn($s) => $s['pourcentage'] !== null)
+            ->sortBy('date') // ✅ ordre chronologique, du plus ancien au plus récent
+            ->values();
+
+        $moyenneGenerale = $statistiques->isNotEmpty()
+            ? round($statistiques->avg('pourcentage'), 1)
+            : null;
+
         $examen_planifie = StudentExamen::with('examen.categorie')
             ->where('user_id', Auth::id())
             ->where('termine', false)
@@ -39,8 +63,8 @@ class StudentExamenHistoriqueController extends Controller
             })
             ->orderBy('id', 'asc')
             ->get();
-       
-        return view('student.dashboard', compact('attempts', 'examen_planifie'));
+
+        return view('student.dashboard', compact('attempts', 'examen_planifie', 'statistiques', 'moyenneGenerale'));
     }
 
     public function show(ExamAttempt $attempt)
@@ -60,9 +84,11 @@ class StudentExamenHistoriqueController extends Controller
         $codes = collect();
         $texts = collect();
         $redactions = collect();
-        $glisserDeposers = collect(); 
+        $glisserDeposers = collect();
         $motsCroisesListe = collect();
-        
+        $fichiers = collect();
+        $image = collect();
+
         $resume = [
             'total_obtenu' => 0,
             'total_possible' => 0,
@@ -91,13 +117,16 @@ class StudentExamenHistoriqueController extends Controller
                         ->orderBy('ordre')
                         ->with([
                             'pointillerQuestions' => fn($q) => $q->orderBy('ordre'),
-                            'pointillerQuestions.reponses' =>fn($q) => $q->where('student_id', Auth::id()),
+                            'pointillerQuestions.reponses',
+                            'pointillerQuestions.reponses.etudiantReponses' => function ($q) use ($attempt) {
+                                $q->where('exam_attempt_id', $attempt->id);
+                            },
                         ])
                         ->get();
                     break;
 
                 case 'relier':
-                     $reliers = Relier::where('examen_id', $examen->id)
+                    $reliers = Relier::where('examen_id', $examen->id)
                         ->orderBy('ordre')
                         ->with([
                             'relierQuestions' => fn($q) => $q->orderBy('ordre'),
@@ -107,32 +136,35 @@ class StudentExamenHistoriqueController extends Controller
                     break;
 
                 case 'code':
+                    // ✅ 'codeQuestions.reponses' => function(){...} — tsy ',' intsony
                     $codes = Code::where('examen_id', $examen->id)
                         ->orderBy('ordre')
-                        ->with('codeQuestions.reponses', function($query){
+                        ->with(['codeQuestions.reponses' => function ($query) {
                             $query->where('student_id', Auth::id());
-                        })
+                        }])
                         ->get();
                     break;
 
                 case 'text':
+                    // ✅ 'textQuestions.reponses' => function(){...}
                     $texts = Text::where('examen_id', $examen->id)
                         ->orderBy('ordre')
-                        ->with('textQuestions.reponses', function($query){
+                        ->with(['textQuestions.reponses' => function ($query) {
                             $query->where('student_id', Auth::id());
-                        })
+                        }])
                         ->get();
                     break;
 
                 case 'redaction':
+                    // ✅ 'reponses' => function(){...}
                     $redactions = Redaction::where('examen_id', $examen->id)
                         ->orderBy('ordre')
-                        ->with('reponses', function($query){
+                        ->with(['reponses' => function ($query) {
                             $query->where('student_id', Auth::id());
-                        })
+                        }])
                         ->get();
                     break;
-                    
+
                 case 'glisserdeposer':
                     $glisserDeposers = GlisserDeposer::where('examen_id', $examen->id)
                         ->orderBy('ordre')
@@ -149,6 +181,7 @@ class StudentExamenHistoriqueController extends Controller
                         ])
                         ->get();
                     break;
+
                 case 'fichier':
                     $fichiers = Fichier::where('examen_id', $examen->id)
                         ->orderBy('ordre')
@@ -161,7 +194,7 @@ class StudentExamenHistoriqueController extends Controller
                         ])
                         ->get();
                     break;
-                
+
                 case 'motscroises':
                     $motsCroisesListe = MotsCroises::where('examen_id', $examen->id)
                         ->orderBy('ordre')
@@ -169,7 +202,19 @@ class StudentExamenHistoriqueController extends Controller
                             'motsCroisesMots' => fn($q) => $q->orderBy('numero'),
                             'motsCroisesMots.reponses' => function ($q) use ($attempt) {
                                 $q->where('exam_attempt_id', $attempt->id)
-                                 ->where('student_id', Auth::id());
+                                    ->where('student_id', Auth::id());
+                            },
+                        ])
+                        ->get();
+                    break;
+
+                case 'image':
+                    $image = ImageExercice::where('examen_id', $examen->id)
+                        ->orderBy('ordre')
+                        ->with([
+                            'questions' => fn($q) => $q->orderBy('ordre'),
+                            'questions.reponses' => function ($q) use ($attempt) {
+                                $q->where('exam_attempt_id', $attempt->id);
                             },
                         ])
                         ->get();
@@ -177,19 +222,30 @@ class StudentExamenHistoriqueController extends Controller
             }
         }
 
+        [$typeQcm, $commentsQcm]                     = $this->loadCommentairesType($examen, 'qcm', $attempt);
+        [$typePointiller, $commentsPointiller]       = $this->loadCommentairesType($examen, 'pointiller', $attempt);
+        [$typeRelier, $commentsRelier]               = $this->loadCommentairesType($examen, 'relier', $attempt);
+        [$typeCode, $commentsCode]                   = $this->loadCommentairesType($examen, 'code', $attempt);
+        [$typeText, $commentsText]                   = $this->loadCommentairesType($examen, 'text', $attempt);
+        [$typeRedaction, $commentsRedaction]         = $this->loadCommentairesType($examen, 'redaction', $attempt);
+        [$typeGlisserDeposer, $commentsGlisserDeposer] = $this->loadCommentairesType($examen, 'glisserdeposer', $attempt);
+        [$typeFichier, $commentsFichier]             = $this->loadCommentairesType($examen, 'fichier', $attempt);
+        [$typeMotsCroises, $commentsMotsCroises]     = $this->loadCommentairesType($examen, 'motscroises', $attempt);
+        [$typeImage, $commentsImage]                 = $this->loadCommentairesType($examen, 'image', $attempt);
+
         return view('student.fiche-examen', compact(
-            'attempt', 
-            'examen', 
-            'qcms', 
-            'pointillers', 
-            'reliers', 
-            'codes', 
-            'texts', 
-            'redactions', 
-            'glisserDeposers',
-            'fichiers',
-            'motsCroisesListe',
-            'resume'
+            'attempt', 'examen', 'qcms', 'pointillers', 'reliers', 'codes', 'texts',
+            'redactions', 'glisserDeposers', 'fichiers', 'motsCroisesListe', 'resume', 'image',
+            'typeQcm', 'commentsQcm',
+            'typePointiller', 'commentsPointiller',
+            'typeRelier', 'commentsRelier',
+            'typeCode', 'commentsCode',
+            'typeText', 'commentsText',
+            'typeRedaction', 'commentsRedaction',
+            'typeGlisserDeposer', 'commentsGlisserDeposer',
+            'typeFichier', 'commentsFichier',
+            'typeMotsCroises', 'commentsMotsCroises',
+            'typeImage', 'commentsImage'
         ));
     }
 }

@@ -17,6 +17,7 @@ class TextReponse extends Model
         'exam_attempt_id',
         'student_id',
         'reponse_texte',
+        'reponse_annotee',
         'submitted_at',
         'note_obtenue',
         'commentaire_prof',

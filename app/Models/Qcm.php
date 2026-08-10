@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Qcm extends Model
 {
@@ -25,5 +26,10 @@ class Qcm extends Model
     public function qcmQuestions(): HasMany
     {
         return $this->hasMany(QcmQuestion::class, 'qcm_id');
+    }
+
+    public function commentaires(): MorphMany
+    {
+        return $this->morphMany(Commentaire::class, 'commentable');
     }
 }

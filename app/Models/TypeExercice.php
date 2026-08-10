@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class TypeExercice extends Model
 {
@@ -13,5 +14,10 @@ class TypeExercice extends Model
     public function examens()
     {
         return $this->belongsToMany(Examen::class, 'examen_type_exercice');
+    }
+
+    public function commentaires(): MorphMany
+    {
+        return $this->morphMany(Commentaire::class, 'commentable');
     }
 }

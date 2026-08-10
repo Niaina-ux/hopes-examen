@@ -22,14 +22,14 @@
             </div>
         @endif
 
-        <div class="py-5">
+        <div class="border border-black/3 rounded-md bg-black/2 mt-4 p-2">
             @forelse($categories as $categorie)
-                <div class="flex justify-between gap-7 border-b border-black/10 p-2">
+                <div class="flex justify-between gap-7 border border-black/3 p-2 rounded bg-white/70 ">
                     <div class="w-10 h-10 rounded-md bg-black/5 flex justify-center items-center">
-                        <i class="fa-solid fa-caret-right text-rouge"></i>
+                        <i class="fa-solid fa-clipboard-check text-rouge"></i>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-base font-semibold">{{ $categorie->nom }}</h3>
+                        <h3 class="text-base ">{{ $categorie->nom }}</h3>
                         <div class="text-sm">
                             <span>Slug:</span>
                             <span class="px-4 border border-black/5 rounded-full text-vert">{{ $categorie->slug }}</span>

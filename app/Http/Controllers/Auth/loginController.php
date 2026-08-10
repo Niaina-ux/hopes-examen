@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,6 +11,8 @@ class loginController extends Controller
 {
     public function login()
     {
+        $adminExiste = User::where('role', 'admin')->exists();
+
         if (Auth::check()) {
             return match (Auth::user()->role) {
                 'admin' => redirect()->route('admin.dashboard'),
@@ -17,7 +20,7 @@ class loginController extends Controller
                 'student' => redirect()->route('home'),
             };
         }
-        return view('/auth/login');
+        return view('/auth/login', compact('adminExiste'));
     }
 
 

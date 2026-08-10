@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
     @vite(['resources/sass/app.scss','resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="text-black/60 h-screen py-10">
-        <div class="mb-5 text-center ">
-            <img src="/images/logo.png" alt="" class="w-[2cm] m-auto">
-        </div>
+    <div class="text-black/60 h-screen flex justify-center items-center relative">
+        <a href=" {{route('home')}} " class="absolute top-5 left-10 text-xl"><i class="fa-solid fa-xmark"></i></a>
         <div class="w-[11cm] m-auto rounded-md p-4 shadow border border-black/10">
             <h3 class="text-2xl font-semibold mb-4 text-vert text-center">Connexion</h3>
             @if (session('error'))
@@ -38,15 +39,17 @@
                     <label for="afficherPassword">Afficher mot de passe</label>
                 </div>
 
-                <button type="submit" class="p-1 rounded-md w-full mt-5 bg-rouge">
+                <button type="submit" class="p-1 rounded-md w-full my-5 bg-rouge">
                     Connexion
                 </button>
             </form>
 
-            <div class="text-center mt-2">
-                S'inscrire en tant que
-                <a href="{{ route('admin.register') }}" class="text-vert hover:underline">admin ?</a>
-            </div>
+            @if(!$adminExiste)
+                <div class="text-center mt-2">
+                    S'inscrire en tant que
+                    <a href="{{ route('admin.register') }}" class="text-vert hover:underline">admin ?</a>
+                </div>
+            @endif
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof') 
-<div class="bg-white h-full rounded-md py-3">
+<div class="bg-white h-full rounded-md py-3 me-2">
     <div class="flex gap-3 items-center my-2">
         <span class="font-semibold">
             Etudiants /
@@ -12,18 +12,12 @@
                 <h2 class="text-vert text-2xl font-semibold">Tous les étudiants</h2>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae aliquid, delectus modi dolore consequatur at?</p>
             </div>
-            <div class="">
-                <a href="{{ route('admin.student.create') }}" 
-                    class="bg-rouge p-1 px-4 rounded-md bg-rouge-hover mt-1">
-                    Ajouter étudiant
-                </a>
-            </div>
         </div>
     </div>
-    <div class="w-full  mt-4 border border-black/10 rounded-md p-2 bg-black/3">
+    <div class="w-full  mt-4 border border-black/3 rounded-md p-2 bg-black/2">
         @forelse ($students as $student)    
-        <div class="flex justify-between gap-7 p-2 border-b border-black/10 {{ $loop->iteration == 2 ? 'bg-white' : '' }}">
-            <div class="w-15 h-15 rounded-md bg-black/5 overflow-hidden">
+        <div class="flex justify-between gap-7 p-2 border rounded bg-white/70 border-black/3">
+            <div class="w-12 h-12 rounded-md bg-black/5 overflow-hidden">
                 <img src="{{ $student->image ? asset('images/' . $student->image) : asset('images/avatar.jpg') }}"
                     alt="{{ $student->name }}"
                     class="w-full h-full object-cover">
@@ -38,8 +32,8 @@
                 </div>
             </div>
             <div class="">
-                <a href="{{route('admin.student.show', $student->id)}}" class="text-vert border border-black/10 rounded px-1">
-                    <i class="fa-solid fa-book-open"></i>
+                <a href="{{route('student.statexam',[$slug, $student->student->id] )}}" class="text-vert bg-black/3 w-7 h-7 flex justify-center items-center rounded p-1">
+                    <i class="fa-solid fa-info"></i>
                 </a>
             </div>
         </div>

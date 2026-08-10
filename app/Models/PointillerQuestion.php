@@ -22,6 +22,8 @@ class PointillerQuestion extends Model
         return $this->belongsTo(Pointiller::class);
     }
 
+    
+
     // "trou" iray (position + reponse_correcte) ho an'ity question ity
     public function reponses()
     {

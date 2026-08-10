@@ -1,74 +1,68 @@
-<div class="">
-    <div class="relative container flex justify-between items-center border-b-2 border-black/8 py-2 md:py-3 lg:py-4 gap-3">
-        <div class="font-bold  text-5xl text-vert flex-1">
-            Hopes
+
+<header class="absolute top-0 left-0 w-full pb-2">
+    <div class="container flex justify-between">
+        <div class="flex items-center gap-15">
+            <div class="bg-vert p-3 w-[5cm] text-white px-5 rounded-b-xl">
+                <h2 class="font-bold text-4xl">Hopes</h2>
+            </div>
+            <nav class="flex items-center gap-5">
+                <a href=" {{route('home')}} ">Accueil</a>
+                <a href="{{ $mySlug ? route('student.examen.show', $mySlug) :  route('login') }}" class="...">
+                    examen
+                </a>
+                <a href="">Contact</a>
+            </nav>
         </div>
-        
-        <nav id="navLinks" class="hidden absolute lg:sticky top-[110%] right-0 rounded-md p-4 bg-gray-100 lg:bg-transparent border border-black/8 lg:border-0 lg:block">
-            <ul class="flex justify-between items-center flex-col lg:flex-row gap-2">
-                <li>
-                    <a href="" class="p-1 px-3 uppercase font-semibold hover:text-[rgb(250,131,51)] transition">Accueil</a>
-                </li>
+        <div class="flex justify-between">
+            <nav class="flex items-center gap-3">
+                <a href="{{ route('student.dashboard') }}" class="shadow bg-white rounded-full px-5 border border-black/5 p-1 inline-block">
+                    Dashboard
+                </a>
 
-                <li id="examToggle" class="relative uppercase font-semibold lg:header-link-examen">
-                    <span class="hover:text-[rgb(250,131,51)] transition inline-block px-3 cursor-pointer">
-                        Examen <i class="fa-solid fa-angle-down -me-2"></i>
-                    </span>
-                    <ul id="examLinks" class="hidden absolute top-full left-0 bg-white p-4 shadow rounded border border-black/3 lg:links-examen">
-                        <li>
-                            <a href="" class="p-1 uppercase font-semibold inline-block border-b-2 border-black/5 hover:text-[rgb(250,131,51)] transition">Français</a>
-                        </li>
-                        <li>
-                            <a href="" class="p-1 uppercase font-semibold inline-block border-b-2 border-black/5 hover:text-[rgb(250,131,51)] transition">Anglais</a>
-                        </li>
-                        <li>
-                            <a href="" class="p-1 uppercase font-semibold inline-block border-b-2 border-black/5 hover:text-[rgb(250,131,51)] transition">Dev</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="{{route('student.dashboard')}}" 
-                        class="p-1 px-3 uppercase font-semibold hover:text-[rgb(250,131,51)] transition">Dashboard
+                @auth
+                    <div class="shadow relative rounded-full bg-white border border-black/5 p-1 inline-flex items-center gap-2 cursor-pointer" id="profil-dropdown-toggle">
+                        <i class="fa-solid fa-bars-progress ms-2"></i>
+                        <div class="w-6 h-6 rounded-full overflow-hidden">
+                            <img src="{{ Auth::user()->image ? asset('images/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
+                                alt="" class="w-full h-full object-cover">
+                        </div>
+                        <div id="profil-dropdown-menu" class="hidden absolute right-0 top-[120%] bg-white p-2 rounded shadow border border-black/3 z-50">
+                            <a href="" class="flex items-center gap-2 px-2 p-1 border-y border-black/5">
+                                <i class="fa-solid fa-user"></i> Profil
+                            </a>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="flex items-center gap-2 px-2 p-1 border-y border-black/5 w-full text-left">
+                                    <i class="fa-solid fa-arrow-up-from-bracket"></i> Déconnecter
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="shadow rounded-full bg-rouge text-white px-5 border border-black/5 p-1 inline-block">
+                        Se connecter
                     </a>
-                </li>
-                <form action="{{ route('logout') }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="hover:underline bg-rouge px-4 font-semibold uppercase rounded-md">
-                        Deconnexion
-                    </button>
-                </form>
-            </ul>
-        </nav>
-        <div class="ms-[5%] flex justify-end gap-3 items-center cursor-pointer">
-            <span class=" uppercase font-semibold hover:text-[rgb(250,131,51)] transition">Pofil</span>
-            <img src="" alt="" class="w-7 h-7 md:w-10 md:h-10 rounded-full bg-black/5">
+                @endauth
+            </nav>
         </div>
-        <button id="navToggle" class="border border-black/5 rounded-md px-1 md:text-xl lg:hidden focus:outline-none" >
-            <i class="fa-solid fa-chart-bar"></i>
-        </button>
     </div>
-</div>
+</header>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const navToggle = document.getElementById('navToggle');
-        const navLinks = document.getElementById('navLinks');
+document.addEventListener('DOMContentLoaded', function () {
+    const toggle = document.getElementById('profil-dropdown-toggle');
+    const menu = document.getElementById('profil-dropdown-menu');
 
-        if (navToggle && navLinks) {
-            navToggle.addEventListener('click', function () {
-                navLinks.classList.toggle('hidden');
-            });
-        }
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation(); 
+        menu.classList.toggle('hidden');
+    });
 
-        const examToggle = document.getElementById('examToggle');
-        const examLinks = document.getElementById('examLinks');
-
-        if (examToggle && examLinks) {
-            examToggle.addEventListener('click', function (e) {
-                e.stopPropagation(); 
-                examLinks.classList.toggle('hidden');
-            });
+    
+    document.addEventListener('click', function (e) {
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+            menu.classList.add('hidden');
         }
     });
+});
 </script>

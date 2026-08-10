@@ -17,6 +17,7 @@ class CodeReponse extends Model
         'exam_attempt_id',
         'student_id',
         'code_soumis',
+        'code_annote',
         'points_obtenus',
         'commentaire_prof',
         'est_corrige',

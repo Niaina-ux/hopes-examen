@@ -100,7 +100,6 @@ class StudentExamenGlisserDeposerController extends Controller
             ]);
         }
 
-        $attempt->recalculerScore();
 
         $totalQuestions = $glisserdeposer->questions()->count();
         $nextQIndex = $validated['q_index'] + 1;
