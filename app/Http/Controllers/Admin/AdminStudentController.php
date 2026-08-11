@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Categorie;
+use App\Models\ExamAttempt;
 use App\Models\Student;
+use App\Models\StudentExamen;
 use App\Models\User;
+use App\Traits\CalculeStatistiquesExamen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +16,9 @@ use Illuminate\Validation\Rules\Password;
 
 class AdminStudentController extends Controller
 {
+
+    use CalculeStatistiquesExamen;
+    
     public function index(Request $request)
     {
 
@@ -85,31 +91,6 @@ class AdminStudentController extends Controller
         return view('admin.student.assign-categorie', compact('student', 'categories'));
     }
 
-    // public function storeCategorie(Request $request, User $student)
-    // {
-    //     $validated = $request->validate([
-    //         'matricule' => ['required', 'string', 'digits:6', 'unique:students,matricule'],
-    //         'categorie_id' => ['required', 'exists:categories,id'],
-    //     ], [
-    //         'matricule.required' => 'Le matricule est obligatoire.',
-    //         'matricule.digits' => 'Le matricule doit contenir exactement 10 chiffres.',
-    //         'matricule.unique' => 'Ce matricule est déjà utilisé par un autre étudiant.',
-    //         'categorie_id.required' => 'Veuillez sélectionner une catégorie.',
-    //         'categorie_id.exists' => 'La catégorie sélectionnée est invalide.',
-    //     ]);
-
-    //     Student::updateOrCreate(
-    //         ['user_id' => $student->id],
-    //         [
-    //             'matricule' => $validated['matricule'],
-    //             'categorie_id' => $validated['categorie_id'],
-    //         ]
-    //     );
-
-    //     return redirect()
-    //         ->route('admin.student.index')
-    //         ->with('success',  $student->name . 'est ajouté dans un damine d\'examen!' );
-    // }
 
     public function storeCategorie(Request $request, User $student)
     {
@@ -148,12 +129,65 @@ class AdminStudentController extends Controller
             ->route('admin.student.index')
             ->with('success', 'Etudiant effacé avec succes.');
     }
+
+
     //detail d'un etudiant
-    public function show(User $student)
+    public function examenallstudent(int $studentId)
     {
+        $student = User::find($studentId);
+
+        if (!$student) {
+            return redirect()
+                ->route('admin.student.index');
+        }
+
         $student->load('student.categorie');
-    
-        return view('admin.student.show', compact('student'));
+        $userStudent = $student->student;
+
+        if (!$userStudent) {
+            return redirect()
+                ->route('admin.student.index')
+                ->with('error', 'Profil étudiant introuvable.');
+        }
+
+        $slug = $userStudent->categorie?->slug;
+
+        $attempts = ExamAttempt::where('student_id', $userStudent->id)
+            ->where('numero_tentative', 1)
+            ->where('status', '!=', 'en_cours')
+            ->with('examen.categorie')
+            ->latest('date_fin')
+            ->get();
+
+        $statistiques = $attempts
+            ->filter(fn($attempt) => $attempt->status === 'corrige')
+            ->map(function ($attempt) {
+                return [
+                    'titre' => $attempt->examen->titre,
+                    'date' => $attempt->date_fin?->format('d/m/Y'),
+                    'pourcentage' => $this->calculerPourcentageAttempt($attempt->examen, $attempt),
+                ];
+            })
+            ->filter(fn($s) => $s['pourcentage'] !== null)
+            ->sortBy('date')
+            ->values();
+
+        $moyenneGenerale = $statistiques->isNotEmpty()
+            ? round($statistiques->avg('pourcentage'), 1)
+            : null;
+
+        $examen_planifie = StudentExamen::with('examen.categorie')
+            ->where('user_id', $student->id)
+            ->where('termine', false)
+            ->whereHas('examen', function ($query) {
+                $query->where('status', '!=', 'brouillon');
+            })
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return view('admin.student.examenallstudent', compact(
+            'student', 'userStudent', 'slug', 'attempts', 'examen_planifie', 'statistiques', 'moyenneGenerale'
+        ));
     }
     
 }

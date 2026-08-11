@@ -11,5 +11,6 @@
 </head>
 <body class="text-black/60">
     @include('layouts.admin-layouts.layoutsed')
+    @stack('scripts')
 </body>
 </html>

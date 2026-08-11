@@ -1,8 +1,8 @@
-<div class="bg-white h-full p-2 px-3 w-[6cm] rounded-md relative">
+<div class="bg-white h-full p-2 px-3 w-[6cm] rounded-md ">
     <div class="text-vert font-bold text-3xl px-2">
         Hopes
     </div>
-    <div class="mt-3">
+    <div class="mt-3 w-full">
         <span class="uppercase text-sm border-b text-black/50 border-black/10 pb-1 inline-block px-2 py-1">
             <i class="fa-solid fa-table-cells-large text-xl me-2"></i>
             Menu

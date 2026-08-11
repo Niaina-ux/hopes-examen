@@ -39,7 +39,7 @@ Route::controller(AdminStudentController::class)->group(function(){
         ->name('admin.student.assignCategorie');
     Route::post('/admin/student/{student}/assign-categorie',  'storeCategorie')
         ->name('admin.student.storeCategorie');
-    Route::get('admin/student/{student}/show', 'show')
+    Route::get('admin/student/{studentId}/show', 'examenallstudent')
         ->name('admin.student.show');
 });
 
