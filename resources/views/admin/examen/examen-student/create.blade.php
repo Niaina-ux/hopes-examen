@@ -3,10 +3,10 @@
 <div class="w-full py-3">
     <div class="bg-white rounded-md">
         <a href="">
-            <i class="fa-solid fa-arrow-left-long"></i>
+            Etudiant /
         </a>
-        <div class="w-[60%]">
-            <h2 class="text-2xl font-semibold mb-1 text-vert">Assigner des étudiants — {{ $examen->titre }}</h2>
+        <div class="w-[60%] mt-1">
+            <h2 class="text-2xl font-semibold  text-vert">Assigner des étudiants — {{ $examen->titre }}</h2>
             <p class="text-black/50">
                 Seuls les étudiants de la catégorie <strong>{{ $examen->categorie->nom ?? '' }}</strong> sont affichés ci-dessous.
             </p>

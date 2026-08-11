@@ -40,7 +40,7 @@
                         </div>
                         <div class="mt-2 p-2 px-3 bg-black/3 rounded-md ">
                             <h3 class="text-base font-semibold mt-2">Sujet</h3>
-                            <p class=""> {{$redaction->sujet}} </p>
+                            <p class=" whitespace-pre-line "> {{$redaction->sujet}} </p>
                             <h3 class="text-base font-semibold mt-2">Instruction</h3>
                             <p class=""> {{$redaction->instruction}}</p>
                             

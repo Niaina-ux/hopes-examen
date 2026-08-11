@@ -1,11 +1,11 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')
-    <div class="py-3">
-        <a href="{{ route('admin.examen.show', $slug) }}">
-            <i class="fa-solid fa-arrow-left-long"></i>
+    <div class="py-3 me-2">
+        <a href="">
+            Examen /
         </a>
-        <div class="w-[60%]">
-            <h2 class="text-2xl font-semibold text-vert">{{ $examen->titre }}</h2>
+        <div class="w-[60%] mt-1">
+            <h2 class="text-2xl font-semibold text-vert ">{{ $examen->titre }}</h2>
             <p>{{ $examen->description }}</p>
         </div>
 
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="mt-2 border border-black/10 rounded-md p-2 bg-black/3 ">
+        <div class="mt-2 border border-black/3 rounded-md p-2 bg-black/2 ">
             @forelse($studentwithexam as $se)
                 @php
                     $user = $se->user;
@@ -81,12 +81,15 @@
                     </div>
                 </div>
             @empty
-                <p class="text-black/50 text-sm p-4 text-center">Aucun étudiant pour cette date.</p>
+            <div class=" bg-white/70 border border-black/3 p-20 text-center rounded-md">
+                <i class="fa-solid fa-user-xmark"></i>
+                <p class="text-black/50  text-center">Aucun étudiant pour cette date.</p>
+            </div>
             @endforelse
         </div>
 
         <div class="flex justify-end mt-5 sticky bottom-10">
-            <a href="{{ route('admin.examen.student.create', [$slug, $examen->id]) }}" class="p-2 px-5 rounded-md bg-rouge text-white">
+            <a href="{{ route('admin.examen.student.create', [$slug, $examen->id]) }}" class="p-2 px-5 rounded-full bg-rouge text-white">
                 + Ajouter Student
             </a>
         </div>
