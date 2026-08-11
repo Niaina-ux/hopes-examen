@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-    <div class="py-3">
+    <div class="py-3 me-2">
         @include('layouts.admin-layouts.examen.layout-exam')
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">
@@ -45,10 +45,12 @@
                                     </button>
                                 </form>
                             </div>
+                            @if ($examen->status === 'brouillon')     
                             <a href="{{ route('prof.examen.code.question.create', [$slug, $examen->id, $code->id]) }}" 
                                 class="bg-vert p-1 px-4 rounded-md text-white">
                                 + Créer code
                             </a>
+                            @endif
                         </div>
                         <div class="bg-black/3 rounded-md p-2 px-3 mt-2">
                             @forelse($code->codeQuestions as $index => $question)
@@ -106,11 +108,13 @@
                     <p>Aucun QCM n'a encore été créé pour cet examen.</p>
                 </div>
             @endforelse
+            @if ($examen->status === 'brouillon')    
             <div class=" flex sticky bottom-5 justify-end mt-4 me-2">
                 <a href="{{route('prof.examen.code.create', [$slug,$examen->id])}}" class="p-2 text-white px-3 inline-block rounded-md bg-rouge ">
                     Créer nouveau exercice
                 </a>
             </div>
+            @endif
         </div>
     </div>
 @endsection

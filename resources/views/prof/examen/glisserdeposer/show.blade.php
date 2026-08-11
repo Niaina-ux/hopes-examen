@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-    <div class="py-3">
+    <div class="py-3 me-2">
         @include('layouts.admin-layouts.examen.layout-exam')
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md my-4 flex justify-between items-center">
@@ -46,9 +46,11 @@
                                     </button>
                                 </form>
                             </div>
+                            @if ($examen->status === 'brouillon')    
                             <a href="{{ route('prof.examen.glisserdeposer.question.create', [$slug, $examen->id, $exercice->id]) }}" class="p-1 px-2 rounded-md bg-vert text-white">
                                 + Créer question
                             </a>
+                            @endif
                         </div>
                         <div class="mt-2 p-2 px-3 bg-black/3 rounded-md">
                             @forelse($exercice->questions as $qIndex => $question)
@@ -131,12 +133,13 @@
                     <p>Aucun exercice « glisser-déposer » n'a encore été créé pour cet examen.</p>
                 </div>
             @endforelse
-
+            @if ($examen->status === 'brouillon')   
             <div class="flex justify-end mt-4 me-2 sticky bottom-5">
                 <a href="{{ route('prof.examen.glisserdeposer.create', [$slug, $examen->id]) }}" class="p-2 px-3 inline-block rounded-md bg-rouge text-white">
                     Créer nouvel exercice
                 </a>
             </div>
+            @endif
         </div>
     </div>
 

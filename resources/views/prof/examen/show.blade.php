@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="py-3">
+<div class="py-3 me-2">
     <div class="flex justify-between items-end mb-2 pb-2">
         <div class="w-[70%]">
             <h2 class="text-2xl font-semibold text-vert mb-2">Examens {{$categorie->nom}} </h2>

@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-    <div class="py-3">
+    <div class="py-3 me-2">
         @include('layouts.admin-layouts.examen.layout-exam')
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md my-2 flex justify-between items-center">
@@ -50,9 +50,11 @@
                             <p class="whitespace-pre-line bg-white/60 rounded-md p-2 mb-2">{{$text->texte}}</p>
                             <div class="flex justify-between items-center my-2">
                                 <span class="font-semibold">Question</span>
+                                @if ($examen->status === 'brouillon')   
                                 <a href="{{ route('prof.examen.text.question.create', [$slug, $examen->id, $text->id]) }}" class="bg-vert text-white px-4 py-1 rounded-md text-nowrap">
                                     + Ajouter question
                                 </a>
+                                @endif
                             </div>
                             <div class="border border-black/10 rounded-md p-2 bg-white/60">
                                 @forelse ($text->textQuestions as $question)  
@@ -91,12 +93,13 @@
                     <p>Aucun comprehension du text n'a encore été créé pour cet examen.</p>
                 </div>
             @endforelse
-
+            @if ($examen->status === 'brouillon')  
             <div class="sticky bottom-5 flex justify-end mt-4 me-2">
                 <a href="{{route('prof.examen.text.create', [$slug, $examen->id])}}" class="p-2 text-white px-3 inline-block rounded-md bg-rouge ">
                     Créer nouveau exercice
                 </a>
             </div>
+            @endif
         </div>
     </div>
 @endsection

@@ -119,12 +119,13 @@
             <p class="text-black/50">Aucun exercice mots croisés pour cet examen.</p>
         </div>
         @endforelse
-
+        @if ($examen->status === 'brouillon')     
         <div class="flex justify-end  mt-4 sticky bottom-5 me-2">
             <a href="{{ route('prof.examen.motscroises.create', [$slug, $examen->id]) }}" class="bg-rouge text-white px-4 py-2 rounded-full">
                 + Créer un exercice
             </a>
         </div>
+        @endif
     </div>
 </div>
 @endsection

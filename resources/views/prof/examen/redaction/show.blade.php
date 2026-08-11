@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-    <div class="py-3">
+    <div class="py-3 me-2">
         @include('layouts.admin-layouts.examen.layout-exam')
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md my-4 flex justify-between items-center">
@@ -53,12 +53,13 @@
                     <p>Aucun QCM n'a encore été créé pour cet examen.</p>
                 </div>
             @endforelse
-
+            @if ($examen->status === 'brouillon')       
             <div class=" flex justify-end mt-4 me-2 sticky bottom-5">
                 <a href="{{route('prof.examen.redaction.create', [$slug, $examen->id])}}" class="p-2 px-3 inline-block rounded-full bg-rouge text-white">
                     Créer nouveau redaction
                 </a>
             </div>
+            @endif
         </div>
     </div>
 @endsection

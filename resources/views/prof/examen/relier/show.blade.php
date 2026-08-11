@@ -38,10 +38,12 @@
                                         </button>
                                     </form>
                                 </div>
+                                @if ($examen->status === 'brouillon')   
                                 <a href="{{ route('prof.examen.relier.question.create', [$slug, $examen->id, $relier->id]) }}" 
                                     class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     + Créer question
                                 </a>
+                                @endif
                             </div>
                         </div> 
                         @forelse($relier->relierQuestions as $index => $question)    
@@ -116,12 +118,13 @@
                     <p>Aucun QCM n'a encore été créé pour cet examen.</p>
                 </div>
             @endforelse
-
+            @if ($examen->status === 'brouillon')    
             <div class=" flex justify-end mt-4 me-2 sticky bottom-5">
                 <a href="{{route('prof.examen.relier.create', [$slug, $examen->id])}}" class="p-2 text-white px-3 inline-block rounded-full bg-rouge ">
                     Créer nouveau exercice
                 </a>
             </div>
+            @endif
         </div>
     </div>
 @endsection

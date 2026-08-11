@@ -31,9 +31,11 @@
                                     <button type="submit" class="text-rouge"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </div>
+                            @if ($examen->status === 'brouillon')    
                             <a href="{{ route('prof.examen.image.question.create', [$slug, $examen->id, $exercice->id]) }}" class="bg-vert text-white px-4 py-1 rounded">
                                 + Ajouter image
                             </a>
+                            @endif
                         </div>
                         <div class="mt-2">
                             @forelse($exercice->questions as $question)
@@ -74,10 +76,12 @@
                 </div>
             @endforelse
         </div>
+        @if ($examen->status === 'brouillon')   
         <div class="flex justify-end gap-3 mt-4 sticky bottom-5">
             <a href="{{ route('prof.examen.image.create', [$slug, $examen->id]) }}" class="bg-rouge text-white px-4 py-2 rounded">
                 + Créer un exercice
             </a>
         </div>
+        @endif
     </div>
 @endsection

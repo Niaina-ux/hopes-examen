@@ -48,10 +48,12 @@
                                         </button>
                                     </form>
                                 </div>
+                                @if ($examen->status === 'brouillon') 
                                 <a href="{{ route('prof.examen.qcm.question.create', [$slug, $examen->id, $qcm->id]) }}" 
                                     class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     Créer question
                                 </a>
+                                @endif
                             </div>
                         </div>
                         <div class="">
@@ -137,11 +139,13 @@
                 </div>
             @endforelse
         </div>
+        @if ($examen->status === 'brouillon')     
         <div class=" flex justify-end sticky bottom-5 mt-4 pe-2">
             <a href="{{route('prof.examen.qcm.create', [$slug, $examen->id])}}" class="p-2 text-white px-5 inline-block rounded-full bg-rouge ">
                 Créer nouveau quiz
             </a>
         </div>
+        @endif
         
     </div>
 @endsection
