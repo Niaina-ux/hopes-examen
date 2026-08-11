@@ -34,13 +34,13 @@
     <form action="{{ route('prof.examen.storeTypes',[$slug, $examen->id]) }}" method="POST">
         @csrf
 
-        <div class="mb-10 mt-5 border border-black/10 rounded-md p-2 bg-black/3">
+        <div class="my-5 border border-black/3 rounded-md p-2 bg-black/2">
             @foreach($typesExercice as $type)
                 @php
                     $isChecked = in_array($type->id, old('type_exercice_id', $examen->typesExercice->pluck('id')->toArray()));
                     $ordreActuel = old('ordre.' . $type->id, $examen->typesExercice->firstWhere('id', $type->id)?->pivot?->ordre ?? 0);
                 @endphp
-                <label class="flex items-center justify-between gap-3 border-b border-black/20 p-2 cursor-pointer {{ $loop->iteration == 2 ? ' bg-white/70' : '' }}">
+                <label class="flex items-center justify-between gap-3 border border-black/3 rounded p-2 cursor-pointer bg-white/70">
                     <div class="gap-2 w-8 h-8 bg-black/5 rounded-md flex justify-center items-center">
                         <i class="{{ $type->icone ?? 'fa-solid fa-shapes' }} text-vert"></i>
                     </div>

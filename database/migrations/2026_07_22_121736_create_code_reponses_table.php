@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('code_question_id')->constrained('code_questions')->cascadeOnDelete();
             $table->foreignId('exam_attempt_id')->constrained('exam_attempts')->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
-            $table->longText('code_soumis'); // ny code nosoratan'ny mpianatra
+            $table->longText('code_soumis'); 
+            $table->longText('code_annote')->nullable();
             $table->decimal('points_obtenus', 5, 2)->nullable(); // ✅ null = mbola tsy notsimbina
             $table->text('commentaire_prof')->nullable(); // fanamarihan'ny mpampianatra
             $table->boolean('est_corrige')->default(false); // ✅ manamarina raha efa nozahan'ny prof

@@ -55,7 +55,7 @@
             @endforelse
 
             <div class=" flex justify-end mt-4 me-2 sticky bottom-5">
-                <a href="{{route('prof.examen.redaction.create', [$slug, $examen->id])}}" class="p-2 px-3 inline-block rounded-md bg-rouge text-white">
+                <a href="{{route('prof.examen.redaction.create', [$slug, $examen->id])}}" class="p-2 px-3 inline-block rounded-full bg-rouge text-white">
                     Créer nouveau redaction
                 </a>
             </div>

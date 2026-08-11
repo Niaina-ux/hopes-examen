@@ -6,7 +6,7 @@
             <h2 class="text-2xl font-semibold text-vert">Types d'exercice</h2>
             <p>Gérez les types d'exercice disponibles pour les examens.</p>
         </div>
-        <a href="{{ route('admin.typeExercice.create') }}" class="bg-rouge text-white px-4 py-1 rounded-md">
+        <a href="{{ route('admin.typeExercice.create') }}" class="bg-rouge text-white px-4 py-1 rounded-full">
             + Ajouter nouveau
         </a>
     </div>

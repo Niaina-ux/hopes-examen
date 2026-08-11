@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-    <div class="py-3">
+    <div class="py-3 me-2">
         @include('layouts.admin-layouts.examen.layout-exam')
         <div class="">
             @forelse($reliers as $index => $relier)
@@ -15,11 +15,10 @@
                                 <p>{{ $relier->description }}</p>
                                 <div class="flex gap-4">
                                     <div class="flex text-sm text-rouge">
-                                        Durée Libre
+                                         {{$relier->note_totale}} Pts
                                     </div>
                                     <div class="flex text-sm text-vert">
                                         Il y a {{ $relier->relier_questions_count }} Questions 
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +39,7 @@
                                     </form>
                                 </div>
                                 <a href="{{ route('prof.examen.relier.question.create', [$slug, $examen->id, $relier->id]) }}" 
-                                    class="bg-vert p-1 px-4 inline-block rounded-md text-white">
+                                    class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     + Créer question
                                 </a>
                             </div>
@@ -119,7 +118,7 @@
             @endforelse
 
             <div class=" flex justify-end mt-4 me-2 sticky bottom-5">
-                <a href="{{route('prof.examen.relier.create', [$slug, $examen->id])}}" class="p-2 text-white px-3 inline-block rounded-md bg-rouge ">
+                <a href="{{route('prof.examen.relier.create', [$slug, $examen->id])}}" class="p-2 text-white px-3 inline-block rounded-full bg-rouge ">
                     Créer nouveau exercice
                 </a>
             </div>

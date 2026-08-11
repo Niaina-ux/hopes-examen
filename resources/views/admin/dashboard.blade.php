@@ -67,7 +67,7 @@
                         <canvas id="chart-general" class="w-60 h-60"></canvas>
                         <span class="text-2xl absolute top-[50%] left-[50%] -translate-[50%] font-bold text-vert mt-2">{{ $moyenneGenerale }}%</span>
                     @else
-                        <div class="flex-1 flex items-center justify-center text-black/40">
+                        <div class="flex-1 p-5 text-center flex items-center justify-center text-black/40">
                             Pas encore de moyenne.
                         </div>
                     @endif

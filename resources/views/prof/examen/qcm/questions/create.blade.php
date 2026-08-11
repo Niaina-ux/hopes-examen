@@ -3,7 +3,7 @@
 <div class="py-3">
     <div class="w-full ">
         <div class="">
-            <a href="{{ route('prof.examen.qcm.question.show', [$slug, $examen->id, $qcm->id]) }}">
+            <a href="{{ route('prof.examen.qcm', [$slug, $examen->id]) }}">
                 Retour / 
             </a>
             <span class="font-semibold">Creation</span>

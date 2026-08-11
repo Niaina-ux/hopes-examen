@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('exam_attempt_id')->constrained('exam_attempts')->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
             $table->longText('reponse_texte');
+            $table->longText('reponse_annotee')->nullable();
             $table->timestamp('submitted_at')->nullable();
             $table->decimal('note_obtenue', 5, 2)->nullable(); // NULL mandra-pahavitan'ny correction manuel
             $table->text('commentaire_prof')->nullable();

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('date_debut')->nullable();
             $table->timestamp('date_fin')->nullable();
             $table->decimal('score', 8, 2)->default(0);
+            $table->decimal('note_total', 8, 2)->nullable();
             $table->timestamps();
         });
     }

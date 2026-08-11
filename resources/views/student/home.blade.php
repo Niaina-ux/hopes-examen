@@ -52,19 +52,24 @@
         {{-- ✅ Swiper --}}
         <div class="swiper categorie-swiper">
             <div class="swiper-wrapper">
-                @foreach($categories as $categorie)
-                    <div class="swiper-slide">
-                        <div class="p-3 m-2 border border-black/5 rounded-xl bg-black/3">
-                            <img src="{{ $categorie->image ? asset('images/' . $categorie->image) : asset('images/call.PNG') }}" alt="" class="rounded-md w-full">
-                            <div class="p-2 text-center mt-2 border border-black/5 rounded-md bg-black/3">
-                                <h3 class="font-semibold text-xl">{{ $categorie->nom }}</h3>
-                                <div class="">
-                                    {{ $categorie->examens_count }} Examen créé(s)
-                                </div>
+                @forelse ($categories as $categorie)
+                <div class="swiper-slide">
+                    <div class="p-3 m-2 border border-black/5 rounded-xl bg-black/3">
+                        <img src="{{ $categorie->image ? asset('images/' . $categorie->image) : asset('images/call.PNG') }}" alt="" class="rounded-md w-full">
+                        <div class="p-2 text-center mt-2 border border-black/5 rounded-md bg-black/3">
+                            <h3 class="font-semibold text-xl">{{ $categorie->nom }}</h3>
+                            <div class="">
+                                {{ $categorie->examens_count }} Examen créé(s)
                             </div>
                         </div>
                     </div>
-                @endforeach
+                </div>
+                @empty
+                    <div class="p-20 bg-black/3 w-full text-center border border-black/3 rounded-md">
+                        <i class="fa-solid fa-box-open text-2xl"></i>
+                        <p>Aucun catégorie ajouté!</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>

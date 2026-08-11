@@ -12,9 +12,9 @@
                 </div>
             </a>
             <a href="" class="relative bg-black/2 flex items-center  rounded-xl p-4 border border-black/2">
-                <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">Nombre d'étudiants</div>
+                <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">Nombre d'examens</div>
                 <div class="w-[40%] text-center px-2 flex items-center gap-2">
-                    <i class="fa-solid fa-graduation-cap"></i>
+                    <i class="fa-solid fa-book-open-reader"></i>
                     <span class="text-3xl font-bold text-vert">{{ $totalExamens }}</span>
                 </div>
             </a>

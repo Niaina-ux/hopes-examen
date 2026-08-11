@@ -1,6 +1,6 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')  
-<div class="bg-white h-full rounded-md ">
+<div class="bg-white h-full rounded-md py-3 me-2">
     <div class="bg-white sticky top-0">
         <div class="flex justify-between items-end">
             <div class="w-[70%]">
@@ -9,8 +9,8 @@
             </div>
             <div class="">
                 <a href="{{ route('admin.prof.create') }}" 
-                    class="bg-rouge p-1 px-4 rounded-md bg-rouge-hover mt-1">
-                    Ajouter prof
+                    class="bg-rouge p-2 px-4 rounded-full text-white bg-rouge-hover mt-1">
+                    Ajouter nouveau prof
                 </a>
             </div>
         </div>
@@ -76,7 +76,7 @@
             </div>
         </div>
         @empty
-            <div class="p-20 rounded-md bg-black/1">
+            <div class="p-20 border border-black/3 rounded-md bg-black/2 text-center">
                 <i class="fa-solid fa-box-open text-3xl"></i>
                 <p class="">Il n'y a pas encore de Proffesseur!</p>
             </div>

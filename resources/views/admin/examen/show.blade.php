@@ -7,7 +7,7 @@
             <p>Liste des examens créés pour cette catégorie.</p>
         </div>
         <div>
-            <a href="{{ route('admin.examen.create', $slug) }}" class="p-1 px-5 rounded-md bg-rouge inline-block text-white">
+            <a href="{{ route('admin.examen.create', $slug) }}" class="p-1 px-5 rounded-full bg-rouge inline-block text-white">
                 + Créer examen
             </a>
         </div>

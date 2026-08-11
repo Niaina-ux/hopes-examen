@@ -33,7 +33,7 @@
                 </div> 
             </div>
             <div class="flex justify-end mt-4 text-white">
-                <a href="{{ route('prof.examen.assignTypes', [$slug, $examen->id]) }}" class="inline-block p-1 px-5 rounded-md bg-rouge">
+                <a href="{{ route('prof.examen.assignTypes', [$slug, $examen->id]) }}" class="inline-block p-1 px-5 rounded-full bg-rouge">
                     @if($examen->typesExercice->isEmpty())
                         + Ajouter type d'exercice
                     @else

@@ -1,14 +1,14 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')
-    <div class="py-3">
+    <div class="py-3 me-2">
         <div class="flex justify-between items-end">
             <div class="w-[60%]">
                 <h3 class="text-2xl font-semibold text-vert">Categorie existent</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore dolore possimus fuga.</p>
             </div>
             <div class="">
-                <a href="{{ route('admin.categorie.create') }}" class="p-1 px-5 rounded-md bg-rouge inline-block">
-                    Créer nouveaux
+                <a href="{{ route('admin.categorie.create') }}" class="p-1 px-5 rounded-full text-white bg-rouge inline-block">
+                    Créer catégorie
                 </a>
             </div>
         </div>

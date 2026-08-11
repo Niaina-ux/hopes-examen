@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-    <div class="py-3">
+    <div class="py-3 me-2">
         @include('layouts.admin-layouts.examen.layout-exam')
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md my-4 flex justify-between items-center">
@@ -49,7 +49,7 @@
                                     </form>
                                 </div>
                                 <a href="{{ route('prof.examen.qcm.question.create', [$slug, $examen->id, $qcm->id]) }}" 
-                                    class="bg-vert p-1 px-4 inline-block rounded-md text-white">
+                                    class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     Créer question
                                 </a>
                             </div>
@@ -138,7 +138,7 @@
             @endforelse
         </div>
         <div class=" flex justify-end sticky bottom-5 mt-4 pe-2">
-            <a href="{{route('prof.examen.qcm.create', [$slug, $examen->id])}}" class="p-2 text-white px-3 inline-block rounded-md bg-rouge ">
+            <a href="{{route('prof.examen.qcm.create', [$slug, $examen->id])}}" class="p-2 text-white px-5 inline-block rounded-full bg-rouge ">
                 Créer nouveau quiz
             </a>
         </div>

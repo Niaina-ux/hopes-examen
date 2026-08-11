@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="w-full py-3 ">
+<div class=" py-3 me-2">
     @include('layouts.admin-layouts.examen.layout-exam')
     <div class="bg-white mt-2 rounded-md me-2">
         @if(session('success'))
@@ -121,7 +121,7 @@
         @endforelse
 
         <div class="flex justify-end  mt-4 sticky bottom-5 me-2">
-            <a href="{{ route('prof.examen.motscroises.create', [$slug, $examen->id]) }}" class="bg-rouge text-white px-4 py-2 rounded">
+            <a href="{{ route('prof.examen.motscroises.create', [$slug, $examen->id]) }}" class="bg-rouge text-white px-4 py-2 rounded-full">
                 + Créer un exercice
             </a>
         </div>
