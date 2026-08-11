@@ -47,7 +47,7 @@
                             </div>
                             @if ($examen->status === 'brouillon')     
                             <a href="{{ route('prof.examen.code.question.create', [$slug, $examen->id, $code->id]) }}" 
-                                class="bg-vert p-1 px-4 rounded-md text-white">
+                                class="bg-vert p-1 px-4 rounded-full text-white">
                                 + Créer code
                             </a>
                             @endif
@@ -110,7 +110,7 @@
             @endforelse
             @if ($examen->status === 'brouillon')    
             <div class=" flex sticky bottom-5 justify-end mt-4 me-2">
-                <a href="{{route('prof.examen.code.create', [$slug,$examen->id])}}" class="p-2 text-white px-3 inline-block rounded-md bg-rouge ">
+                <a href="{{route('prof.examen.code.create', [$slug,$examen->id])}}" class="p-2 text-white px-3 inline-block rounded-full bg-rouge ">
                     Créer nouveau exercice
                 </a>
             </div>

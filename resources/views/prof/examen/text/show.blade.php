@@ -51,7 +51,7 @@
                             <div class="flex justify-between items-center my-2">
                                 <span class="font-semibold">Question</span>
                                 @if ($examen->status === 'brouillon')   
-                                <a href="{{ route('prof.examen.text.question.create', [$slug, $examen->id, $text->id]) }}" class="bg-vert text-white px-4 py-1 rounded-md text-nowrap">
+                                <a href="{{ route('prof.examen.text.question.create', [$slug, $examen->id, $text->id]) }}" class="bg-vert text-white px-4 py-1 rounded-full text-nowrap">
                                     + Ajouter question
                                 </a>
                                 @endif
@@ -95,7 +95,7 @@
             @endforelse
             @if ($examen->status === 'brouillon')  
             <div class="sticky bottom-5 flex justify-end mt-4 me-2">
-                <a href="{{route('prof.examen.text.create', [$slug, $examen->id])}}" class="p-2 text-white px-3 inline-block rounded-md bg-rouge ">
+                <a href="{{route('prof.examen.text.create', [$slug, $examen->id])}}" class="p-2 text-white px-3 inline-block rounded-full bg-rouge ">
                     Créer nouveau exercice
                 </a>
             </div>

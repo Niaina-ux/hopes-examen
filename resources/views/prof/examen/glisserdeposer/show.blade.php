@@ -47,7 +47,7 @@
                                 </form>
                             </div>
                             @if ($examen->status === 'brouillon')    
-                            <a href="{{ route('prof.examen.glisserdeposer.question.create', [$slug, $examen->id, $exercice->id]) }}" class="p-1 px-2 rounded-md bg-vert text-white">
+                            <a href="{{ route('prof.examen.glisserdeposer.question.create', [$slug, $examen->id, $exercice->id]) }}" class="p-1 px-2 rounded-full bg-vert text-white">
                                 + Créer question
                             </a>
                             @endif
@@ -135,7 +135,7 @@
             @endforelse
             @if ($examen->status === 'brouillon')   
             <div class="flex justify-end mt-4 me-2 sticky bottom-5">
-                <a href="{{ route('prof.examen.glisserdeposer.create', [$slug, $examen->id]) }}" class="p-2 px-3 inline-block rounded-md bg-rouge text-white">
+                <a href="{{ route('prof.examen.glisserdeposer.create', [$slug, $examen->id]) }}" class="p-2 px-3 inline-block rounded-full bg-rouge text-white">
                     Créer nouvel exercice
                 </a>
             </div>

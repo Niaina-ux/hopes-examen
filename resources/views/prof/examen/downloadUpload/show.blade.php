@@ -51,7 +51,7 @@
                                 </div>
                                 @if ($examen->status === 'brouillon')     
                                 <a href="{{ route('prof.examen.fichier.qeustion.create', [$slug, $examen->id, $fichier->id]) }}" 
-                                    class="bg-vert p-1 px-4 inline-block rounded-md text-white">
+                                    class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     + Créer question
                                 </a>
                                 @endif
@@ -116,7 +116,7 @@
             @endforelse
             @if ($examen->status === 'brouillon')   
             <div class=" flex justify-end mt-4 sticky bottom-5">
-                <a href="{{route('prof.examen.fichier.create', [$slug,$examen->id])}}" class="p-2 px-3 text-white inline-block rounded-md bg-rouge ">
+                <a href="{{route('prof.examen.fichier.create', [$slug,$examen->id])}}" class="p-2 px-3 text-white inline-block rounded-full bg-rouge ">
                     Créer nouveau exercice
                 </a>
             </div>
