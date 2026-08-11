@@ -66,10 +66,9 @@
                             <i class="fa-solid fa-envelope"></i>
                         </a>
                         @if($attempt)
-                        {{-- {{ route('admin.examen.student.detail', [$slug, $examen->id, $user->id]) }} --}}
-                            <a href="#">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                            </a>
+                        <a href="{{route('admin.examen.student.examenwherestudent',[$slug, $examen->id, $user->id])}}">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
                         @endif
                         <form action="{{ route('admin.examen.student.destroy', [$slug, $examen->id, $se->id]) }}" method="POST" onsubmit="return confirm('Retirer cet étudiant ?')">
                             @csrf

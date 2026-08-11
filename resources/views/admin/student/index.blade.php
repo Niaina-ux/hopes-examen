@@ -1,6 +1,6 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')  
-<div class="bg-white h-full rounded-md py-3">
+<div class="bg-white me-2 rounded-md py-3">
     <div class="bg-white sticky top-0">
         <div class="flex justify-between items-end">
             <div class="w-[70%]">
@@ -9,7 +9,7 @@
             </div>
             <div class="">
                 <a href="{{ route('admin.student.create') }}" 
-                    class="bg-rouge p-1 px-4 rounded-md bg-rouge-hover mt-1">
+                    class="bg-rouge p-2 text-white px-4 rounded-full bg-rouge-hover ">
                     Ajouter étudiant
                 </a>
             </div>
@@ -47,9 +47,9 @@
             @endforeach
         </div>
     </div>
-    <div class="w-full  mt-4 border border-black/10 rounded-md p-2 bg-black/3">
+    <div class="w-full  mt-4 border border-black/3 rounded-md p-2 bg-black/2">
         @forelse ($students as $student)    
-        <div class="flex justify-between gap-7 p-2 border-b border-black/10 {{ $loop->iteration == 2 ? 'bg-white' : '' }}">
+        <div class="flex justify-between gap-7 p-2 border border-black/3 bg-white/70 rounded ">
             <div class="w-15 h-15 rounded-md bg-black/5 overflow-hidden">
                 <img src="{{ $student->image ? asset('images/' . $student->image) : asset('images/avatar.jpg') }}"
                     alt="{{ $student->name }}"
@@ -95,7 +95,7 @@
             </div>
         </div>
         @empty
-            <div class="p-20 rounded-md bg-black/1">
+            <div class="p-20 rounded-md bg-white/70 border border-black/3 text-center">
                 <i class="fa-solid fa-box-open text-3xl"></i>
                 <p class="">Il n'y a pas encore de Proffesseur!</p>
             </div>

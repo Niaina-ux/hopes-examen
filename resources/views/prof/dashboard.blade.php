@@ -23,9 +23,9 @@
         <h3 class="text-xl font-semibold mt-6 mb-3">Statistique</h3>
 
         <div class="flex gap-5">
-            <div class="flex-1 bg-black/2 border border-black/3 rounded-md p-4 h-[60vh]">
+            <div class="flex-1 bg-black/2 border border-black/3 rounded-xl p-4 h-[60vh]">
                 <div class="flex justify-between items-center mb-2">
-                    <h4 class="font-semibold">Courbe d'évaluation par mois</h4>
+                    <h4 class="text-xl">Courbe d'évaluation par mois</h4>
                     <form method="GET" action="{{ url()->current() }}">
                         <select name="annee" onchange="this.form.submit()" class="border rounded p-1 text-sm">
                             @foreach($anneesDisponibles as $annee)
@@ -36,7 +36,7 @@
                         </select>
                     </form>
                 </div>
-                <div class="bg-white rounded-md h-[80%] p-2">
+                <div class="bg-white rounded-md h-[87%] p-2">
                     @if($statistiquesParMois->contains(fn($s) => $s['moyenne'] !== null))
                         <canvas id="chart-par-mois"></canvas>
                     @else
@@ -47,16 +47,18 @@
                 </div>
             </div>
 
-            <div class="w-[30%] bg-black/3 border border-black/3 rounded-md p-4 h-[50vh] flex flex-col items-center justify-center">
-                <h4 class="font-semibold mb-2 self-start">Moyenne générale</h4>
-                @if($moyenneGenerale !== null)
-                    <canvas id="chart-general" class="max-h-[80%]"></canvas>
-                    <p class="text-2xl font-bold text-vert mt-2">{{ $moyenneGenerale }}%</p>
-                @else
-                    <div class="flex-1 flex items-center justify-center text-black/40">
-                        Pas encore de moyenne.
-                    </div>
-                @endif
+            <div class="w-[30%] bg-black/2 border border-black/3 rounded-xl p-4 h-[60vh] ">
+                <h4 class="text-xl text-center mb-2">Moyenne générale</h4>
+                <div class="h-65 w-65 m-auto">
+                    @if($moyenneGenerale !== null)
+                        <canvas id="chart-general" class="h-50 w-50"></canvas>
+                        <p class="text-2xl text-center font-bold text-vert mt-2">{{ $moyenneGenerale }}%</p>
+                    @else
+                        <div class="flex-1 flex items-center justify-center text-black/40">
+                            Pas encore de moyenne.
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

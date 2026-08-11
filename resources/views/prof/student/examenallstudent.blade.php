@@ -20,31 +20,35 @@
         </div>
         <div class="flex justify-between items-center mt-3 mb-2">
             <h3 class="text-xl mb-2 font-semibold flex items-center gap-3">Statistique <hr class="w-[2cm] border-2 mt-[3px] border-black/20"></h3>
-            <a href="" class="p-1 px-4 rounded-md text-white bg-rouge">Voir detail</a>
+            {{-- <a href="" class="p-1 px-4 rounded-md text-white bg-rouge">Voir detail</a> --}}
         </div>
         <div class="flex gap-7">
-           <div class="flex-1 bg-black/2  border border-black/3 h-[60vh] rounded-md p-4">
+           <div class="flex-1 bg-black/2  border border-black/3 h-[60vh] rounded-xl p-4">
                 <h4 class="text-xl mb-2">Évolution par examen</h4>
-                @if($statistiques->isNotEmpty())
-                    <div id="chart-scroll-container" class="overflow-x-auto h-[calc(100%-2rem)]">
-                        <canvas id="chart-par-examen"></canvas>
-                    </div>
-                @else
-                    <div class="h-full flex items-center justify-center text-black/40">
-                        Aucun examen corrigé pour l'instant.
-                    </div>
-                @endif
+                <div class="bg-white/90 rounded-md h-[90%] p-2">
+                    @if($statistiques->isNotEmpty())
+                        <div id="chart-scroll-container" class="overflow-x-auto h-full">
+                            <canvas id="chart-par-examen"></canvas>
+                        </div>
+                    @else
+                        <div class="h-full flex items-center justify-center text-black/40">
+                            Aucun examen corrigé pour l'instant.
+                        </div>
+                    @endif
+                </div>
             </div>
-            <div class="w-[30%] bg-black/2 border border-black/3 h-[60vh] rounded-md p-4 flex flex-col items-center justify-center">
-                <h4 class="text-xl mb-2 self-start">Moyenne générale</h4>
-                @if($moyenneGenerale !== null)
-                    <canvas id="chart-general" class="max-h-[80%]"></canvas>
-                    <p class="text-2xl font-bold text-vert mt-2">{{ $moyenneGenerale }}%</p>
-                @else
-                    <div class="flex-1 flex items-center justify-center text-black/40">
-                        Pas encore de moyenne.
-                    </div>
-                @endif
+            <div class="w-[30%] bg-black/2 border border-black/3 h-[60vh] rounded-xl p-4 ">
+                <h4 class="text-xl mb-2 text-center">Moyenne générale</h4>
+                <div class="h-65 w-65 m-auto">
+                    @if($moyenneGenerale !== null)
+                        <canvas id="chart-general" class=""></canvas>
+                        <p class="text-2xl text-center font-bold text-vert mt-2">{{ $moyenneGenerale }}%</p>
+                    @else
+                        <div class="flex-1 flex items-center justify-center text-black/40">
+                            Pas encore de moyenne.
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
         <div class=" mt-5 flex gap-5 pb-10">

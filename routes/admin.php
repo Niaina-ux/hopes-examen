@@ -27,20 +27,13 @@ Route::controller(AdminProfController::class)->group(function(){
 });
 
 Route::controller(AdminStudentController::class)->group(function(){
-    Route::get('/admin/student/index',  'index')
-        ->name('admin.student.index');
-    Route::get('admin/student/create', 'create')
-        ->name('admin.student.create');
-    Route::post('/admin/student/store',  'store')
-        ->name('admin.student.store');
-    Route::delete('/admin/student/{student}',  'destroy')
-        ->name('admin.student.destroy');
-    Route::get('/admin/student/{student}/assign-categorie',  'assignCategorie')
-        ->name('admin.student.assignCategorie');
-    Route::post('/admin/student/{student}/assign-categorie',  'storeCategorie')
-        ->name('admin.student.storeCategorie');
-    Route::get('admin/student/{studentId}/show', 'examenallstudent')
-        ->name('admin.student.show');
+    Route::get('/admin/student/index',  'index')->name('admin.student.index');
+    Route::get('admin/student/create', 'create')->name('admin.student.create');
+    Route::post('/admin/student/store',  'store')->name('admin.student.store');
+    Route::delete('/admin/student/{student}',  'destroy')->name('admin.student.destroy');
+    Route::get('/admin/student/{student}/assign-categorie',  'assignCategorie')->name('admin.student.assignCategorie');
+    Route::post('/admin/student/{student}/assign-categorie',  'storeCategorie')->name('admin.student.storeCategorie');
+    Route::get('admin/student/{studentId}/show', 'examenallstudent')->name('admin.student.show');
 });
 
 Route::get('/admin/student/examen/{examen}/qcm', [AdminStudentExameQcmController::class, 'index'])
@@ -81,4 +74,5 @@ Route::controller(AdminExamenStudentController::class)->group(function () {
     Route::get('admin/examen/{slug}/{examen}/student/create', 'create')->name('admin.examen.student.create');
     Route::post('admin/examen/{slug}/{examen}/student/store', 'store')->name('admin.examen.student.store');
     Route::delete('admin/examen/{slug}/{examen}/student/{studentExamen}', 'destroy')->name('admin.examen.student.destroy');
+    Route::get('admin/examen/{slug}/{examen}/student/{studentId}',  'examenwherestudent')->name('admin.examen.student.examenwherestudent');
 });

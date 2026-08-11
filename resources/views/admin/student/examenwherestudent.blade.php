@@ -1,5 +1,5 @@
-@extends('layouts.prof-layouts.proflayoutshead')
-@section('contenue-prof')
+@extends('layouts.admin-layouts.layouthead')
+@section('contenue-admin')
     <div class="py-3 me-2">
         <div class="">
             <a href="{{ route('prof.examen.studentswithexamen', [$slug, $examen->id]) }}" class="hover:underline">Retour / </a>

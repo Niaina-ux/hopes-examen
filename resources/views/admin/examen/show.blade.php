@@ -40,9 +40,6 @@
                     <a href="{{route('admin.examen.student.show', [$slug, $examen->id])}}" class="text-vert">
                         <i class="fa-solid fa-graduation-cap"></i>
                     </a>
-                    <a href="{{ route('prof.examen.show', [$slug, $examen->id]) }}" class="text-vert">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
                     <a href="{{ route('admin.examen.edit', [$slug, $examen->id]) }}" class="text-black/60">
                         <i class="fa-solid fa-pen"></i>
                     </a>

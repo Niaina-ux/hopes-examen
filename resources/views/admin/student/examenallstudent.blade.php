@@ -20,23 +20,25 @@
         </div>
         <div class="flex justify-between items-center mt-3 mb-2">
             <h3 class="text-xl mb-2 font-semibold flex items-center gap-3">Statistique <hr class="w-[2cm] border-2 mt-[3px] border-black/20"></h3>
-            <a href="" class="p-1 px-4 rounded-md text-white bg-rouge">Voir detail</a>
+            {{-- <a href="" class="p-1 px-4 rounded-md text-white bg-rouge">Voir detail</a> --}}
         </div>
         <div class="flex gap-7">
-           <div class="flex-1 bg-black/2  border border-black/3 h-[60vh] rounded-md p-4">
+           <div class="flex-1 bg-black/2  border border-black/3 h-[60vh] rounded-xl p-4">
                 <h4 class="text-xl mb-2">Évolution par examen</h4>
-                @if($statistiques->isNotEmpty())
-                    <div id="chart-scroll-container" class="overflow-x-auto h-[calc(100%-2rem)]">
-                        <canvas id="chart-par-examen"></canvas>
-                    </div>
-                @else
-                    <div class="h-full flex items-center justify-center text-black/40">
-                        Aucun examen corrigé pour l'instant.
-                    </div>
-                @endif
+                <div class="p-2 rounded-md bg-white/70 h-[90%]">
+                    @if($statistiques->isNotEmpty())
+                        <div id="chart-scroll-container" class="overflow-x-auto h-full">
+                            <canvas id="chart-par-examen"></canvas>
+                        </div>
+                    @else
+                        <div class="h-full flex items-center justify-center text-black/40">
+                            Aucun examen corrigé pour l'instant.
+                        </div>
+                    @endif
+                </div>
             </div>
-            <div class="w-[30%] bg-black/2 border border-black/3 h-[60vh] rounded-md p-4 flex flex-col items-center justify-center">
-                <h4 class="text-xl mb-2 self-start">Moyenne générale</h4>
+            <div class="w-[30%] bg-black/2 border border-black/3 h-[60vh] rounded-xl p-4 flex flex-col items-center justify-center">
+                <h4 class="text-xl mb-2 text-center">Moyenne générale</h4>
                 @if($moyenneGenerale !== null)
                     <canvas id="chart-general" class="max-h-[80%]"></canvas>
                     <p class="text-2xl font-bold text-vert mt-2">{{ $moyenneGenerale }}%</p>
@@ -48,7 +50,7 @@
             </div>
         </div>
         <div class=" mt-5 flex gap-5 pb-10">
-            <div class="flex-1 min-h-60 border border-black/3 bg-black/2 rounded-md p-4">
+            <div class="flex-1 min-h-60 border border-black/3 bg-black/2 rounded-xl p-4">
                 <h3 class=" text-xl mb-3">Examens planifiés</h3>
                 @php
                     $today = \Carbon\Carbon::today();
@@ -106,7 +108,7 @@
                     </div>
                 @endforelse
             </div>
-            <div class="flex-1 min-h-60 bg-black/3 border border-black/3 rounded-md p-4">
+            <div class="flex-1 min-h-60 bg-black/3 border border-black/3 rounded-xl p-4">
                 <h3 class=" text-xl mb-3">Mes examens terminés</h3>
                 @forelse ($attempts as $attempt)
                     <div class=" border border-black/5 rounded-md p-2 flex gap-4 bg-white/80">
@@ -123,7 +125,7 @@
                                 <span> Finis le {{\Carbon\Carbon::parse($attempt->date_fin)->translatedFormat('d M Y \à H\hi');}} </span>
                             </div>
                         </div>
-                        <a href="{{route('prof.examen.examenwherestudent',[$slug, $attempt->examen->id, $userStudent->user->id])}}" class="w-8 h-8 bg-black/3 rounded-md flex justify-center items-center text-vert">
+                        <a href="{{route('admin.examen.student.examenwherestudent',[$slug, $attempt->examen->id, $userStudent->user->id])}}" class="w-8 h-8 bg-black/3 rounded-md flex justify-center items-center text-vert">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </a>
                     </div>

@@ -1,15 +1,15 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof') 
-<div class="bg-white h-full rounded-md py-3 me-2">
-    <div class="flex gap-3 items-center my-2">
-        <span class="font-semibold">
+<div class="bg-white rounded-md py-3 me-2">
+    <div class="flex gap-3 items-center">
+        <span class="">
             Etudiants /
         </span>
     </div>
     <div class="bg-white sticky top-0">
         <div class="flex justify-between items-end">
             <div class="w-[70%]">
-                <h2 class="text-vert text-2xl font-semibold">Tous les étudiants</h2>
+                <h2 class="text-vert text-2xl mt-1 font-semibold">Tous les étudiants</h2>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae aliquid, delectus modi dolore consequatur at?</p>
             </div>
         </div>
