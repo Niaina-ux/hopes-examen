@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Prof;
 use App\Http\Controllers\Controller;
 use App\Models\Categorie;
 use App\Models\Code;
+use App\Models\ExamAttempt;
 use App\Models\Examen;
 use App\Models\Fichier;
 use App\Models\GlisserDeposer;
@@ -32,11 +33,16 @@ class ProfExamenController extends Controller
         return view('prof.examen.show', compact('categorie', 'examens', 'slug'));
     }
 
-
-    public function assignTypes(string $slug, Examen $examen)
+    public function assignTypes(string $slug, int $examenId)
     {
-        $typesExercice = TypeExercice::all();
-
+        $examen = Examen::find($examenId);
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+        $examen->loadMissing('categorie');
+        $typesExercice = $examen->categorie->typesExerciceAutorises;
         return view('prof.examen.assign-types', compact('slug', 'examen', 'typesExercice'));
     }
 
@@ -50,9 +56,7 @@ class ProfExamenController extends Controller
         ], [
             'type_exercice_id.required' => 'Veuillez sélectionner au moins un type d\'exercice.',
             'ordre.required'            => 'Veuillez indiquer l\'ordre pour chaque type d\'exercice sélectionné.',
-        ]);
-
-        
+        ]); 
         $ordresSelectionnes = [];
         foreach ($validated['type_exercice_id'] as $typeId) {
             if (!isset($validated['ordre'][$typeId]) || $validated['ordre'][$typeId] === '' || $validated['ordre'][$typeId] === null) {
@@ -60,7 +64,6 @@ class ProfExamenController extends Controller
                     'ordre' => "Veuillez indiquer l'ordre pour chaque type d'exercice sélectionné.",
                 ])->withInput();
             }
-
             $ordresSelectionnes[] = (int) $validated['ordre'][$typeId];
         }
 
@@ -70,41 +73,52 @@ class ProfExamenController extends Controller
                 'ordre' => 'Deux types d\'exercice ne peuvent pas avoir le même ordre. Veuillez attribuer un ordre unique à chacun.',
             ])->withInput();
         }
-
         $syncData = [];
         foreach ($validated['type_exercice_id'] as $typeId) {
             $syncData[$typeId] = ['ordre' => $validated['ordre'][$typeId]];
         }
-
         $examen->typesExercice()->sync($syncData);
-
         return redirect()
             ->route('prof.examen.showtypes',[$slug, $examen->id] )
             ->with('success', 'Types d\'exercice ajoutés avec succès.');
     }
     
 
-    public function showTypes(string $slug, Examen $examen)
+    public function showTypes(string $slug, int $examenId)
     {
-        $categorie = Categorie::where('slug', $slug)->firstOrFail();
-        
+        $categorie = Categorie::where('slug', $slug)->first();
+        if (!$categorie) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Catégorie introuvable.");
+        }
+        $examen = Examen::find($examenId);
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
         $examen->load('typesExercice');
 
         return view('prof.examen.examen-type', compact('examen', 'slug'));
     }
 
 
-    public function terminerCreation(string $slug, Examen $examen)
+    public function terminerCreation(string $slug, int $examenId)
     {
+        $examen = Examen::find($examenId);
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
         $examen->load('typesExercice');
         $erreurs = [];
-
         foreach ($examen->typesExercice as $type) {
             switch ($type->slug) {
                 case 'qcm':
                     $qcms = Qcm::where('examen_id', $examen->id)->with('qcmQuestions')->get();
 
-                    
                     if ($qcms->isEmpty()) {
                         $erreurs[] = "Aucun exercice « QCM » n'a été créé pour ce type d'exercice.";
                         break;
@@ -279,11 +293,36 @@ class ProfExamenController extends Controller
             return back()->with('error', "Impossible de terminer : " . implode(' | ', $erreurs));
         }
 
-        $examen->update(['status' => 'archive']);
+        $examen->update(['status' => 'publie']);
 
         return redirect()
             ->route('prof.examen.show', $slug)
             ->with('success', 'Examen finalisé avec succès.');
+    }
+
+    public function remettreEnBrouillon(string $slug, int $examenId)
+    {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $aDejaDesAttempts = ExamAttempt::where('examen_id', $examen->id)->exists();
+
+        if ($aDejaDesAttempts) {
+            return redirect()
+                ->back()
+                ->with('error', "Impossible de modifier : des étudiants ont déjà passé ou commencé cet examen.");
+        }
+
+        $examen->update(['status' => 'brouillon']);
+
+        return redirect()
+            ->back()
+            ->with('success', "L'examen est repassé en mode modification.");
     }
     
 }

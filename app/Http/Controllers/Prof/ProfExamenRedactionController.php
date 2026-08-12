@@ -10,14 +10,28 @@ use Illuminate\Http\Request;
 
 class ProfExamenRedactionController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
-        $categorie = Categorie::where('slug', $slug)->FirstOrFail();
-        
+        $categorie = Categorie::where('slug', $slug)->first();
+
+        if (!$categorie) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Catégorie introuvable.");
+        }
+
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
         $redactions = Redaction::where('categorie_id', $categorie->id)
-                    ->where('examen_id', $examen->id)
-                    ->get();
-        
+            ->where('examen_id', $examen->id)
+            ->get();
+
         return view('prof.examen.redaction.show', compact('slug', 'examen', 'redactions'));
     }
 
@@ -67,8 +81,24 @@ class ProfExamenRedactionController extends Controller
     /**
      * Mampiseho ny form fanovana
      */
-    public function edit(string $slug, Examen $examen, Redaction $redaction)
+    public function edit(string $slug, int $examenId, int $redactionId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $redaction = Redaction::where('examen_id', $examen->id)->find($redactionId);
+
+        if (!$redaction) {
+            return redirect()
+                ->route('prof.examen.redaction', [$slug, $examen->id])
+                ->with('error', "Cette rédaction est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.redaction.edit', compact('slug', 'examen', 'redaction'));
     }
 

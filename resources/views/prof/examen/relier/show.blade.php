@@ -23,6 +23,7 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
+                                @if ($examen->status === 'brouillon')   
                                 <div class="flex gap-4">
                                     <a href="{{route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id])}}" class="text-vert">
                                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -38,7 +39,6 @@
                                         </button>
                                     </form>
                                 </div>
-                                @if ($examen->status === 'brouillon')   
                                 <a href="{{ route('prof.examen.relier.question.create', [$slug, $examen->id, $relier->id]) }}" 
                                     class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     + Créer question
@@ -62,6 +62,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if ($examen->status === 'brouillon') 
                                         <div class="flex gap-3">
                                             <a href="{{ route('prof.examen.relier.question.edit', [$slug, $examen->id, $relier->id, $question->id]) }}" class="text-vert">
                                                 <i class="fa-solid fa-pen"></i>
@@ -74,6 +75,7 @@
                                                 </button>
                                             </form>
                                         </div>
+                                        @endif
                                     </div>
                                     <div class="grid grid-cols-2 gap-15 mt-1 bg-black/2 border border-black/3 p-2 px-3 rounded-md">
                                         <div>

@@ -60,12 +60,12 @@
                 </div>
             </div>
 
-            <div class="w-[30%] bg-black/2 border border-black/3 rounded-xl p-4 h-[60vh] flex flex-col items-center justify-center">
+            <div class="w-[30%] bg-black/2 border border-black/3 rounded-xl p-4 h-[60vh] ">
                 <h4 class="text-xl mb-2  text-center">Moyenne générale</h4>
-                <div class="h-[90%] relative">
+                <div class="w-60 h-60 m-auto text-center">
                     @if($moyenneGenerale !== null)
-                        <canvas id="chart-general" class="w-60 h-60"></canvas>
-                        <span class="text-2xl absolute top-[50%] left-[50%] -translate-[50%] font-bold text-vert mt-2">{{ $moyenneGenerale }}%</span>
+                        <canvas id="chart-general" class=""></canvas>
+                        <p class="text-2xl  font-bold text-vert mt-2">{{ $moyenneGenerale }}%</p>
                     @else
                         <div class="flex-1 p-5 text-center flex items-center justify-center text-black/40">
                             Pas encore de moyenne.

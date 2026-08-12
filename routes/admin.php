@@ -53,19 +53,22 @@ Route::controller(AdminCategoryController::class)->group(function(){
     Route::get('/admin/categorie', 'index')->name('admin.categorie.index');
     Route::get('/admin/categorie/create', 'create')->name('admin.categorie.create');
     Route::post('/admin/categorie/store', 'store')->name('admin.categorie.store');
-    Route::get('/admin/categorie/{categorie}/edit', 'edit')->name('admin.categorie.edit');
-    Route::put('/admin/categorie/{categorie}/update', 'update')->name('admin.categorie.update');
+    Route::get('/admin/categorie/{categorie:id}/edit', 'edit')->name('admin.categorie.edit');
+    Route::put('/admin/categorie/{categorie:id}/update', 'update')->name('admin.categorie.update');
     Route::delete('/admin/categorie/{categorie}', 'destroy')->name('admin.categorie.destroy');
-
+    
 });
 
 Route::controller(AdminTypeExerciceController::class)->group(function(){
-    Route::get('/admin/type-exercice', 'index')->name('admin.typeExercice.index');
+    // Route::get('/admin/type-exercice', 'index')->name('admin.typeExercice.index');
     Route::get('/admin/type-exercice/create', 'create')->name('admin.typeExercice.create');
     Route::post('/admin/type-exercice/store', 'store')->name('admin.typeExercice.store');
     Route::get('/admin/type-exercice/{typeExercice}/edit', 'edit')->name('admin.typeExercice.edit');
     Route::put('/admin/type-exercice/{typeExercice}', 'update')->name('admin.typeExercice.update');
     Route::delete('/admin/type-exercice/{typeExercice}', 'destroy')->name('admin.typeExercice.destroy');
+    Route::get('admin/categorie/{categorie:id}/types-exercice', 'editTypesExercice')->name('admin.categorie.editTypesExercice');
+    Route::post('admin/categorie/{categorie:id}/types-exercice', 'updateTypesExercice')->name('admin.categorie.updateTypesExercice');
+    Route::get('/admin/type-exercice', 'index')->name('admin.typeExercice.index');
 });
 
 

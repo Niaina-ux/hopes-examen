@@ -34,6 +34,7 @@
                                     </span>
                                 </div>
                             </div>
+                            @if ($examen->status === 'brouillon')    
                             <div class="flex gap-4">
                                 <a href="{{ route('prof.examen.glisserdeposer.edit', [$slug, $examen->id, $exercice->id]) }}" class="text-black/60">
                                     <i class="fa-solid fa-pen"></i>
@@ -46,7 +47,6 @@
                                     </button>
                                 </form>
                             </div>
-                            @if ($examen->status === 'brouillon')    
                             <a href="{{ route('prof.examen.glisserdeposer.question.create', [$slug, $examen->id, $exercice->id]) }}" class="p-1 px-2 rounded-full bg-vert text-white">
                                 + Créer question
                             </a>
@@ -73,6 +73,7 @@
                                                 </span>
                                             </div>
                                         </div>
+                                        @if ($examen->status === 'brouillon') 
                                         <div class="flex gap-3">
                                             <a href="{{ route('prof.examen.glisserdeposer.question.edit', [$slug, $examen->id, $exercice->id, $question->id]) }}" class="text-black/60">
                                                 <i class="fa-solid fa-pen"></i>
@@ -85,6 +86,7 @@
                                                 </button>
                                             </form>
                                         </div>
+                                        @endif
                                     </div>
                                     <div class="flex gap-5 items-start border border-black/5 rounded-md p-2 bg-white/60 mt-1 {{ !$loop->last ? 'border-b border-black/10' : '' }}">
                                         @if($question->image)

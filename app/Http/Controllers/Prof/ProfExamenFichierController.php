@@ -10,17 +10,31 @@ use Illuminate\Http\Request;
 
 class ProfExamenFichierController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
-        $categorie = Categorie::where('slug', $slug)->firstOrFail();
-        // $fichierWebs = Fichier::where('examen_id', $examen->id)->get();
-        $fichiers = $examen->fichier()
-                    ->where('categorie_id', $categorie->id)
-                    ->with('fichierQuestions')
-                    ->latest()
-                    ->get();
+        $categorie = Categorie::where('slug', $slug)->first();
 
-        return view('prof.examen.downloadUpload.show', compact('slug','examen', 'fichiers'));
+        if (!$categorie) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Catégorie introuvable.");
+        }
+
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $fichiers = $examen->fichier()
+            ->where('categorie_id', $categorie->id)
+            ->with('fichierQuestions')
+            ->latest()
+            ->get();
+
+        return view('prof.examen.downloadUpload.show', compact('slug', 'examen', 'fichiers'));
     }
 
     public function create(string $slug, Examen $examen)
@@ -58,8 +72,24 @@ class ProfExamenFichierController extends Controller
             ->with('success', 'Exercice compoléter le pointiller créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 
-    public function edit(string $slug, Examen $examen, Fichier $fichier)
+    public function edit(string $slug, int $examenId, int $fichierId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $fichier = Fichier::where('examen_id', $examen->id)->find($fichierId);
+
+        if (!$fichier) {
+            return redirect()
+                ->route('prof.examen.fichier', [$slug, $examen->id])
+                ->with('error', "Ce devoir est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.downloadUpload.edit', compact('slug', 'examen', 'fichier'));
     }
 

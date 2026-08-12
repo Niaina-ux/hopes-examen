@@ -10,9 +10,23 @@ use Illuminate\Http\Request;
 
 class ProfExamenImageController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
-        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+        $categorie = Categorie::where('slug', $slug)->first();
+
+        if (!$categorie) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Catégorie introuvable.");
+        }
+
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
 
         $exercices = ImageExercice::where('examen_id', $examen->id)
             ->where('categorie_id', $categorie->id)
@@ -58,8 +72,24 @@ class ProfExamenImageController extends Controller
             ->with('success', 'Exercice créé avec succès. Ajoutez maintenant des images.');
     }
 
-    public function edit(string $slug, Examen $examen, ImageExercice $image)
+    public function edit(string $slug, int $examenId, int $imageId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $image = ImageExercice::where('examen_id', $examen->id)->find($imageId);
+
+        if (!$image) {
+            return redirect()
+                ->route('prof.examen.imageExercice', [$slug, $examen->id])
+                ->with('error', "Cet exercice d'image est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.image.edit', compact('slug', 'examen', 'image'));
     }
 

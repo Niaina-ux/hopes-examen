@@ -36,6 +36,7 @@
                                 </div>
                             </div>
                             <div class="flex gap-5 items-start">
+                                @if ($examen->status === 'brouillon') 
                                 <div class="flex gap-4">
                                     <a href="{{route('prof.examen.qcm.edit', [$slug, $examen->id, $qcm->id])}}" class="text-black/60">
                                         <i class="fa-solid fa-pen"></i>
@@ -48,7 +49,6 @@
                                         </button>
                                     </form>
                                 </div>
-                                @if ($examen->status === 'brouillon') 
                                 <a href="{{ route('prof.examen.qcm.question.create', [$slug, $examen->id, $qcm->id]) }}" 
                                     class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     Créer question
@@ -79,6 +79,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                @if ($examen->status === 'brouillon') 
                                                 <div class="flex gap-3 items-center">
                                                     <a href="{{ route('prof.examen.qcm.question.edit', [$slug, $examen->id, $qcm->id, $question->id]) }}" class="text-vert">
                                                         <i class="fa-solid fa-pen"></i>
@@ -91,6 +92,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
+                                                @endif
                                             </div>
                                             <div class="mb-4">
                                                 @if($question->image)

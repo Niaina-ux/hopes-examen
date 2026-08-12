@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Categorie;
+use App\Models\TypeExercice;
 use Illuminate\Http\Request;
 
 class AdminCategoryController extends Controller
@@ -13,6 +14,7 @@ class AdminCategoryController extends Controller
         $categories = Categorie::latest()->paginate(10);
         return view('admin.category.index', compact('categories'));
     }
+
 
     public function create()
     {
@@ -90,4 +92,5 @@ class AdminCategoryController extends Controller
             ->route('admin.categorie.index')
             ->with('success', 'Catégorie supprimée.');
     }
+
 }

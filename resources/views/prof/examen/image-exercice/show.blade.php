@@ -22,6 +22,7 @@
                                 <h3 class="font-semibold">{{ $exercice->titre }}</h3>
                                 <p class="text-sm text-black/50">{{ $exercice->questions_count }} image(s) — {{ $exercice->note_totale }} pts</p>
                             </div>
+                            @if ($examen->status === 'brouillon')    
                             <div class="flex gap-3">
                                 <a href="{{ route('prof.examen.image.edit', [$slug, $examen->id, $exercice->id]) }}" class="text-vert">
                                     <i class="fa-solid fa-pen"></i>
@@ -31,7 +32,6 @@
                                     <button type="submit" class="text-rouge"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </div>
-                            @if ($examen->status === 'brouillon')    
                             <a href="{{ route('prof.examen.image.question.create', [$slug, $examen->id, $exercice->id]) }}" class="bg-vert text-white px-4 py-1 rounded-full">
                                 + Ajouter image
                             </a>
@@ -48,6 +48,7 @@
                                             <p>{{ $question->instruction }}</p>
                                             <span class="text-xs text-rouge">{{ $question->points }} pts</span>
                                         </div>
+                                        @if ($examen->status === 'brouillon') 
                                         <div class="flex gap-3">
                                             <a href="{{ route('prof.examen.image.question.edit', [$slug, $examen->id, $exercice->id, $question->id]) }}" class="text-vert">
                                                 <i class="fa-solid fa-pen"></i>
@@ -57,6 +58,7 @@
                                                 <button type="submit" class="text-rouge"><i class="fa-solid fa-trash"></i></button>
                                             </form>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

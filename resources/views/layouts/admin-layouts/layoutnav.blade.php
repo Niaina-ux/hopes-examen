@@ -9,7 +9,7 @@
         </span>
         <ul class="my-2">
             <li>
-                <a href=""
+                <a href=" {{route('admin.dashboard')}} "
                     class="inline-block px-2 py-1">
                     <i class="fa-solid fa-user-tie me-2"></i>
                     Dashboard

@@ -11,10 +11,18 @@ use Illuminate\Validation\Rule;
 
 class ProfExamenTextController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, Examen $examenId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
         $categorie = Categorie::where('slug', $slug)->firstOrFail();
-        // $fichierWebs = Fichier::where('examen_id', $examen->id)->get();
+        
         $texts = $examen->texts()
                     ->where('categorie_id', $categorie->id)
                     ->with('textQuestions')
@@ -60,8 +68,24 @@ class ProfExamenTextController extends Controller
             ->with('success', 'Texte créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 
-    public function edit(string $slug, Examen $examen, Text $text)
+    public function edit(string $slug, Examen $examenId, Text $textId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $relier = Text::where('examen_id', $examen->id)->find($textId);
+
+        if (!$relier) {
+            return redirect()
+                ->route('prof.examen.text', [$slug, $examen->id])
+                ->with('error', "Cette text est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.text.edit', compact('slug', 'examen', 'text'));
     }
 

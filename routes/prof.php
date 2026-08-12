@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('prof/examen/{slug}/{examen}/assign-types', 'assignTypes')->name('prof.examen.assignTypes');
         Route::post('prof/examen/{slug}/{examen}/assign-types', 'storeTypes')->name('prof.examen.storeTypes');
         Route::post('prof/examen/{slug}/{examen}/terminer-creation', 'terminerCreation')->name('prof.examen.terminerCreation');
+        Route::post('prof/examen/{slug}/{examenId}/modifier', 'remettreEnBrouillon')->name('prof.examen.remettreEnBrouillon');
     });
 
     Route::controller(ProfExamenQcmController::class)->group(function(){

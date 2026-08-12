@@ -39,6 +39,7 @@
                                         @endif
                                     </div>
                                 </div>
+                                @if ($examen->status === 'brouillon') 
                                 <div class="flex gap-4">
                                     <a href="{{ route('prof.examen.motscroises.edit', [$slug, $examen->id, $motCroise->id]) }}" class="text-vert" title="Modifier">
                                         <i class="fa-solid fa-pen"></i>
@@ -51,6 +52,7 @@
                                         </button>
                                     </form>
                                 </div>
+                                @endif
                             </div>
                             <div class="">
                                 @if($apercu['largeur'] > 0)

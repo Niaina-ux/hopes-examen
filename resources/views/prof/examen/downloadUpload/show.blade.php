@@ -34,6 +34,7 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
+                                @if ($examen->status === 'brouillon')     
                                 <div class="flex gap-4">
                                     <a href="{{route('prof.examen.fichier.qeustion.show', [$slug, $examen->id, $fichier->id])}}" class="text-vert">
                                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -49,7 +50,6 @@
                                         </button>
                                     </form>
                                 </div>
-                                @if ($examen->status === 'brouillon')     
                                 <a href="{{ route('prof.examen.fichier.qeustion.create', [$slug, $examen->id, $fichier->id]) }}" 
                                     class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                                     + Créer question
@@ -76,6 +76,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if ($examen->status === 'brouillon') 
                                         <div class="flex gap-3">
                                             <a href="{{ route('prof.examen.fichier.qeustion.edit', [$slug, $examen->id, $fichier->id, $question->id]) }}" class="text-black/60">
                                                 <i class="fa-solid fa-pen"></i>
@@ -88,6 +89,7 @@
                                                 </button>
                                             </form>
                                         </div>
+                                        @endif
                                     </div>
                                     @if($question->fichier_prof)
                                         <div class="p-2  px-3 rounded-md bg-white/90 mt-1">

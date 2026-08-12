@@ -1,6 +1,6 @@
 <div class="">
     @if(session('success'))
-        <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mb-4 flex justify-between items-center">
+        <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mb-2 flex justify-between items-center">
             <span>{{ session('success') }}</span>
             <button type="button" onclick="document.getElementById('success-alert').remove()">
                 <i class="fa-solid fa-xmark"></i>
@@ -9,7 +9,7 @@
     @endif
 
     @if(session('error'))
-        <div id="error-alert" class="bg-red-100/50 text-rouge px-4 py-2 rounded-md mb-4 flex justify-between items-center">
+        <div id="error-alert" class="bg-red-100/50 text-rouge px-4 py-2 rounded-md mb-2 flex justify-between items-center">
             <span>{{ session('error') }}</span>
             <button type="button" onclick="document.getElementById('error-alert').remove()">
                 <i class="fa-solid fa-xmark"></i>
@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <div class="flex items-center my-2">
+    <div class="flex items-center mb-2">
         <a href="{{ route('prof.examen.show', $slug) }}" class="hover:underline">
             Examen/
         </a>
@@ -26,20 +26,43 @@
     <div class="flex justify-between items-end">
         <div class="w-[70%]">
             <h2 class="text-2xl font-semibold text-vert">{{ $examen->titre }}</h2>
-            <p>{{ $examen->description }}</p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque consequatur, aliquam autem laboriosam optio sequi?</p>
         </div>
 
-        @if($examen->status !== 'archive')
-            <form action="{{ route('prof.examen.terminerCreation', [$slug, $examen->id]) }}" method="POST">
-                @csrf
-                <button type="submit" class="p-2 px-5 rounded-md bg-black/10 border-2 border-black/20">
-                    Terminer la création
-                </button>
-            </form>
+       @if($examen->status === 'brouillon')
+            <button type="button" onclick="openModal('terminer-creation-modal')" class="rounded-md px-3 p-2 bg-vert text-white">
+                Terminer
+            </button>
+
+            <x-confirm-modal
+                id="terminer-creation-modal"
+                title="Terminer la création"
+                action="{{ route('prof.examen.terminerCreation', [$slug, $examen->id]) }}"
+                confirmText="Oui, terminer"
+                cancelText="Annuler">
+                Confirmez-vous la fin de la création de cet examen ? Une fois finalisé, il ne sera plus modifiable.
+            </x-confirm-modal>
         @else
-            <span class="p-2 px-5 rounded-md bg-vert/10 text-vert font-semibold">
+        <div class="">
+            <div class="p-2 flex items-center gap-3 px-5 rounded-md bg-vert/10 text-vert ">
+                @if($examen->status === 'archive')
+                    <button type="button" onclick="openModal('remettre-brouillon-modal')" class="rounded-full w-8 h-8 flex justify-center items-center bg-black/2 border border-black/3">
+                        <i class="fa-solid fa-repeat"></i>
+                    </button>
+    
+                    <x-confirm-modal
+                        id="remettre-brouillon-modal"
+                        title="Modifier l'examen"
+                        action="{{ route('prof.examen.remettreEnBrouillon', [$slug, $examen->id]) }}"
+                        confirmText="Oui, modifier"
+                        cancelText="Annuler">
+                        Cet examen est finalisé. Le remettre en modification le rendra à nouveau accessible aux étudiants comme "en préparation" — voulez-vous continuer ?
+                    </x-confirm-modal>
+                @endif
                 <i class="fa-solid fa-circle-check"></i> Finalisé
-            </span>
+            </div>
+
+        </div>
         @endif
     </div>
 </div>

@@ -32,6 +32,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @if ($examen->status === 'brouillon') 
                             <div class="flex gap-4">
                                 <a href="{{route('prof.examen.text.edit', [$slug, $examen->id, $text->id])}}" class="text-black/60">
                                     <i class="fa-solid fa-pen"></i>
@@ -44,6 +45,7 @@
                                     </button>
                                 </form>
                             </div>
+                            @endif
                         </div>
                         <div class="bg-black/3 rounded-md p-2 px-3 mt-2">
                             <span class="font-semibold">Text</span>
@@ -64,6 +66,7 @@
                                         <p class="flex-1">{{ $question->enonce }}</p>
                                         <span class="text-sm mt-1 text-black/40 ml-2">({{ $question->points }} pts)</span>
                                     </div>
+                                    @if ($examen->status === 'brouillon') 
                                     <div class="flex gap-3">
                                         <a href="{{ route('prof.examen.text.question.edit', [$slug, $examen->id, $text->id, $question->id]) }}" class="text-black/60">
                                             <i class="fa-solid fa-pen"></i>
@@ -76,6 +79,7 @@
                                             </button>
                                         </form>
                                     </div>
+                                    @endif
                                 </div>
                                 @empty
                                 <div class="p-10 rounded-md bg-black/5 text-center mt-4">

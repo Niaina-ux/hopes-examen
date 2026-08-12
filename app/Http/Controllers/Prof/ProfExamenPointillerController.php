@@ -11,16 +11,31 @@ use Illuminate\Http\Request;
 
 class ProfExamenPointillerController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
-        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+        $categorie = Categorie::where('slug', $slug)->first();
+
+        if (!$categorie) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Catégorie introuvable.");
+        }
+
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
 
         $pointillers = $examen->pointiller()
-                    ->where('categorie_id', $categorie->id)
-                    ->with('pointillerQuestions')
-                    ->latest()
-                    ->get();
-        return view('prof.examen.pointiller.show', compact('pointillers','examen','slug'));
+            ->where('categorie_id', $categorie->id)
+            ->with('pointillerQuestions')
+            ->latest()
+            ->get();
+
+        return view('prof.examen.pointiller.show', compact('pointillers', 'examen', 'slug'));
     }
 
     public function create(string $slug, Examen $examen)
@@ -58,8 +73,24 @@ class ProfExamenPointillerController extends Controller
             ->with('success', 'Exercice compoléter le pointiller créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 
-    public function edit(string $slug, Examen $examen, Pointiller $pointiller)
+    public function edit(string $slug, int $examenId, int $pointillerId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $pointiller = Pointiller::where('examen_id', $examen->id)->find($pointillerId);
+
+        if (!$pointiller) {
+            return redirect()
+                ->route('prof.examen.pointiller', [$slug, $examen->id])
+                ->with('error', "Cet exercice de pointillé est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.pointiller.edit', compact('slug', 'examen', 'pointiller'));
     }
 

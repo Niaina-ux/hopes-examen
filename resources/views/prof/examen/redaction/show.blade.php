@@ -25,6 +25,7 @@
                                     <span class="border border-black/10 rounded-full px-3 text-rouge "> {{$redaction->note_totale}} Points  </span>
                                 </div>
                             </div>
+                            @if ($examen->status === 'brouillon') 
                             <div class="flex gap-4">
                                 <a href="{{route('prof.examen.redaction.edit', [$slug, $examen->id, $redaction->id])}}" class="text-black/60">
                                     <i class="fa-solid fa-pen"></i>
@@ -37,6 +38,7 @@
                                     </button>
                                 </form>
                             </div>
+                            @endif
                         </div>
                         <div class="mt-2 p-2 px-3 bg-black/3 rounded-md ">
                             <h3 class="text-base font-semibold mt-2">Sujet</h3>

@@ -10,14 +10,22 @@ use Illuminate\Http\Request;
 
 class ProfExamenRelierController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
         $reliers = $examen->relier()
             ->with('relierQuestions')
             ->latest()
             ->get();
-        
-        return view('prof.examen.relier.show', compact('slug','examen', 'reliers'));
+
+        return view('prof.examen.relier.show', compact('slug', 'examen', 'reliers'));
     }
 
     public function create(string $slug, Examen $examen, )
@@ -55,8 +63,24 @@ class ProfExamenRelierController extends Controller
             ->with('success', 'QCM créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 
-    public function edit(string $slug, Examen $examen, Relier $relier)
+    public function edit(string $slug, Examen $examenId, Relier $relierId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $relier = Relier::where('examen_id', $examen->id)->find($relierId);
+
+        if (!$relier) {
+            return redirect()
+                ->route('prof.examen.relier', [$slug, $examen->id])
+                ->with('error', "Cette rélier est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.relie.edit', compact('slug', 'examen', 'relier'));
     }
 

@@ -31,15 +31,6 @@
             <input type="number" name="duree_minutes" value="{{ old('duree_minutes') }}" class="border rounded w-full p-2">
         </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium">Statut</label>
-            <select name="status" class="border rounded w-full p-2">
-                <option value="brouillon" {{ old('status') == 'brouillon' ? 'selected' : '' }}>Brouillon</option>
-                <option value="publie" {{ old('status') == 'publie' ? 'selected' : '' }}>Publié</option>
-                <option value="archive" {{ old('status') == 'archive' ? 'selected' : '' }}>Archivé</option>
-            </select>
-        </div>
-
         <button type="submit" class="bg-rouge text-white px-4 py-2 rounded">Créer l'examen</button>
     </form>
 </div>

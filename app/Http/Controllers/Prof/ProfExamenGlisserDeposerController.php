@@ -10,13 +10,27 @@ use Illuminate\Http\Request;
 
 class ProfExamenGlisserDeposerController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
-        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+        $categorie = Categorie::where('slug', $slug)->first();
+
+        if (!$categorie) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Catégorie introuvable.");
+        }
+
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
 
         $exercices = GlisserDeposer::where('examen_id', $examen->id)
             ->where('categorie_id', $categorie->id)
-            ->with('questions.zones.item') // ✅ eager load feno
+            ->with('questions.zones.item')
             ->orderBy('ordre')
             ->get();
 
@@ -58,8 +72,24 @@ class ProfExamenGlisserDeposerController extends Controller
             ->with('success', 'Exercice créé avec succès. Ajoutez maintenant des questions.');
     }
 
-    public function edit(string $slug, Examen $examen, GlisserDeposer $glisserdeposer)
+    public function edit(string $slug, int $examenId, int $glisserdeposerId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $glisserdeposer = GlisserDeposer::where('examen_id', $examen->id)->find($glisserdeposerId);
+
+        if (!$glisserdeposer) {
+            return redirect()
+                ->route('prof.examen.glisserdeposer', [$slug, $examen->id])
+                ->with('error', "Cet exercice de glisser-déposer est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.glisserdeposer.edit', compact('slug', 'examen', 'glisserdeposer'));
     }
 

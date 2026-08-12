@@ -12,9 +12,23 @@ use Illuminate\Support\Facades\DB;
 
 class ProfExamenMotsCroisesController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
-        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+        $categorie = Categorie::where('slug', $slug)->first();
+
+        if (!$categorie) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Catégorie introuvable.");
+        }
+
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
 
         $motscroises = MotsCroises::where('examen_id', $examen->id)
             ->where('categorie_id', $categorie->id)
@@ -26,54 +40,54 @@ class ProfExamenMotsCroisesController extends Controller
         $apercus = [];
 
         foreach ($motscroises as $motCroise) {
-        $mots = $motCroise->motsCroisesMots;
+            $mots = $motCroise->motsCroisesMots;
 
-        $largeur = 0;
-        $hauteur = 0;
+            $largeur = 0;
+            $hauteur = 0;
 
-        foreach ($mots as $mot) {
-            if ($mot->direction === 'horizontal') {
-                $largeur = max($largeur, $mot->position_x + strlen($mot->reponse));
-                $hauteur = max($hauteur, $mot->position_y + 1);
-            } else {
-                $largeur = max($largeur, $mot->position_x + 1);
-                $hauteur = max($hauteur, $mot->position_y + strlen($mot->reponse));
-            }
-        }
-
-        $grille = [];
-        for ($y = 0; $y < $hauteur; $y++) {
-            for ($x = 0; $x < $largeur; $x++) {
-                $grille[$y][$x] = ['lettre' => null, 'lettre_visible' => false, 'numero' => null]; // ✅ ampio 'numero'
-            }
-        }
-
-        foreach ($mots as $mot) {
-            $longueur = strlen($mot->reponse);
-            $positionsVisibles = $mot->positions_lettres_visibles ?? [];
-
-            for ($i = 0; $i < $longueur; $i++) {
-                $x = $mot->direction === 'horizontal' ? $mot->position_x + $i : $mot->position_x;
-                $y = $mot->direction === 'horizontal' ? $mot->position_y : $mot->position_y + $i;
-
-                $grille[$y][$x]['lettre'] = $mot->reponse[$i];
-
-                if ($i === 0) {
-                    $grille[$y][$x]['numero'] = $mot->numero; // ✅ ampio
-                }
-
-                if (in_array($i, $positionsVisibles)) {
-                    $grille[$y][$x]['lettre_visible'] = true;
+            foreach ($mots as $mot) {
+                if ($mot->direction === 'horizontal') {
+                    $largeur = max($largeur, $mot->position_x + strlen($mot->reponse));
+                    $hauteur = max($hauteur, $mot->position_y + 1);
+                } else {
+                    $largeur = max($largeur, $mot->position_x + 1);
+                    $hauteur = max($hauteur, $mot->position_y + strlen($mot->reponse));
                 }
             }
-        }
 
-        $apercus[$motCroise->id] = [
-            'grille'  => $grille,
-            'largeur' => $largeur,
-            'hauteur' => $hauteur,
-        ];
-    }
+            $grille = [];
+            for ($y = 0; $y < $hauteur; $y++) {
+                for ($x = 0; $x < $largeur; $x++) {
+                    $grille[$y][$x] = ['lettre' => null, 'lettre_visible' => false, 'numero' => null];
+                }
+            }
+
+            foreach ($mots as $mot) {
+                $longueur = strlen($mot->reponse);
+                $positionsVisibles = $mot->positions_lettres_visibles ?? [];
+
+                for ($i = 0; $i < $longueur; $i++) {
+                    $x = $mot->direction === 'horizontal' ? $mot->position_x + $i : $mot->position_x;
+                    $y = $mot->direction === 'horizontal' ? $mot->position_y : $mot->position_y + $i;
+
+                    $grille[$y][$x]['lettre'] = $mot->reponse[$i];
+
+                    if ($i === 0) {
+                        $grille[$y][$x]['numero'] = $mot->numero;
+                    }
+
+                    if (in_array($i, $positionsVisibles)) {
+                        $grille[$y][$x]['lettre_visible'] = true;
+                    }
+                }
+            }
+
+            $apercus[$motCroise->id] = [
+                'grille'  => $grille,
+                'largeur' => $largeur,
+                'hauteur' => $hauteur,
+            ];
+        }
 
         return view('prof.examen.motscroises.show', compact('slug', 'examen', 'motscroises', 'apercus'));
     }
@@ -160,8 +174,24 @@ class ProfExamenMotsCroisesController extends Controller
             ->with('success', 'Exercice mots croisés créé avec succès.');
     }
 
-    public function edit(string $slug, Examen $examen, MotsCroises $motscroises) // ✅ anarana parameter "motscroises"
+    public function edit(string $slug, int $examenId, int $motscroisesId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $motscroises = MotsCroises::where('examen_id', $examen->id)->find($motscroisesId);
+
+        if (!$motscroises) {
+            return redirect()
+                ->route('prof.examen.motscroises', [$slug, $examen->id])
+                ->with('error', "Cet exercice de mots croisés est introuvable pour cet examen.");
+        }
+
         $mots = $motscroises->motsCroisesMots()->orderBy('numero')->get();
 
         $largeur = 10;

@@ -10,14 +10,22 @@ use Illuminate\Http\Request;
 
 class ProfExamenCodeController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
         $codes = $examen->code()
             ->with('codeQuestions')
             ->latest()
             ->get();
 
-        return view('prof.examen.code.show', compact('slug','examen', 'codes'));
+        return view('prof.examen.code.show', compact('slug', 'examen', 'codes'));
     }
 
     public function create(string $slug, Examen $examen)
@@ -56,8 +64,24 @@ class ProfExamenCodeController extends Controller
     }
 
 
-    public function edit(string $slug, Examen $examen, Code $code)
+    public function edit(string $slug, int $examenId, int $codeId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $code = Code::where('examen_id', $examen->id)->find($codeId);
+
+        if (!$code) {
+            return redirect()
+                ->route('prof.examen.code', [$slug, $examen->id])
+                ->with('error', "Cet exercice de code est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.code.edit', compact('slug', 'examen', 'code'));
     }
 

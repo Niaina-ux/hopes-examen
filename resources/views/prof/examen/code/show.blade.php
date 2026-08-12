@@ -30,6 +30,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @if ($examen->status === 'brouillon') 
                             <div class="flex gap-4">
                                 <a href="{{route('prof.examen.code.edit', [$slug, $examen->id, $code->id])}}" 
                                     class="text-black/60">
@@ -44,8 +45,7 @@
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>
                                 </form>
-                            </div>
-                            @if ($examen->status === 'brouillon')     
+                            </div>  
                             <a href="{{ route('prof.examen.code.question.create', [$slug, $examen->id, $code->id]) }}" 
                                 class="bg-vert p-1 px-4 rounded-full text-white">
                                 + Créer code
@@ -62,6 +62,7 @@
                                         <div class="flex-1">
                                             <div class="flex justify-between">
                                                 <h4 class="text-base font-semibold">{{ $question->instruction }}</h4>
+                                                @if ($examen->status === 'brouillon') 
                                                 <div class="flex gap-3 items-center">
                                                     <a href="{{ route('prof.examen.code.question.edit', [$slug, $examen->id, $code->id, $question->id]) }}" class="text-black/60">
                                                         <i class="fa-solid fa-pen"></i>
@@ -74,6 +75,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
+                                                @endif
                                             </div>
                                             <div class="flex gap-3 mt-1">
                                                 <div class="flex text-sm">

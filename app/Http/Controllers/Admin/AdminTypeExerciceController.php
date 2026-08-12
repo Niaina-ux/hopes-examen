@@ -3,16 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorie;
 use App\Models\TypeExercice;
 use Illuminate\Http\Request;
 
 class AdminTypeExerciceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $typesExercice = TypeExercice::latest()->paginate(10);
+        $categories = Categorie::orderBy('nom')->get();
+        $categorieSlug = $request->input('categorie'); 
 
-        return view('admin.type-exercice.index', compact('typesExercice'));
+        if ($categorieSlug) {
+            $categorie = Categorie::where('slug', $categorieSlug)->firstOrFail();
+            $typesExercice = $categorie->typesExerciceAutorises()->paginate(10);
+        } else {
+            $categorie = null;
+            $typesExercice = TypeExercice::paginate(10);
+        }
+
+        return view('admin.type-exercice.index', compact('typesExercice', 'categories', 'categorieSlug', 'categorie'));
     }
 
     public function create()
@@ -78,5 +88,28 @@ class AdminTypeExerciceController extends Controller
         return redirect()
             ->route('admin.typeExercice.index')
             ->with('success', 'Type d\'exercice supprimé.');
+    }
+
+
+    public function editTypesExercice(Categorie $categorie)
+    {
+        $categorie->loadMissing('typesExerciceAutorises');
+        $typesExerciceTous = TypeExercice::orderBy('nom')->get();
+
+        return view('admin.type-exercice.types-exercice', compact('categorie', 'typesExerciceTous'));
+    }
+
+    public function updateTypesExercice(Request $request, Categorie $categorie)
+    {
+        $validated = $request->validate([
+            'types' => ['nullable', 'array'],
+            'types.*' => ['integer', 'exists:types_exercice,id'],
+        ]);
+
+        $categorie->typesExerciceAutorises()->sync($validated['types'] ?? []);
+
+        return redirect()
+            ->route('admin.typeExercice.index', ['categorie' => $categorie->slug])
+            ->with('success', "Types d'exercice mis à jour pour {$categorie->nom}.");
     }
 }

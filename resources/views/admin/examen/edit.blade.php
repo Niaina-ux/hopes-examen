@@ -37,7 +37,6 @@
             <select name="status" class="border rounded w-full p-2">
                 <option value="brouillon" {{ old('status', $examen->status) == 'brouillon' ? 'selected' : '' }}>Brouillon</option>
                 <option value="publie" {{ old('status', $examen->status) == 'publie' ? 'selected' : '' }}>Publié</option>
-                <option value="archive" {{ old('status', $examen->status) == 'archive' ? 'selected' : '' }}>Archivé</option>
             </select>
         </div>
 

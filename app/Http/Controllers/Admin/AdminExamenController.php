@@ -43,7 +43,6 @@ class AdminExamenController extends Controller
             ],
             'description' => ['nullable', 'string'],
             'duree_minutes' => ['nullable', 'integer', 'min:1'],
-            'status' => ['required', 'in:brouillon,publie,archive'],
         ], [
             'titre.required' => 'Le titre est obligatoire.',
             'titre.unique' => 'Un examen avec ce titre existe déjà dans cette catégorie.',
@@ -55,7 +54,6 @@ class AdminExamenController extends Controller
             'description' => $validated['description'] ?? null,
             'categorie_id' => $categorie->id,
             'duree_minutes' => $validated['duree_minutes'] ?? null,
-            'status' => $validated['status'],
         ]);
 
         return redirect()
@@ -79,19 +77,25 @@ class AdminExamenController extends Controller
                     ->where('categorie_id', $examen->categorie_id)
                     ->ignore($examen->id),
             ],
-            'description' => ['nullable', 'string'],
+            'description'   => ['nullable', 'string'],
             'duree_minutes' => ['nullable', 'integer', 'min:1'],
-            'status' => ['required', 'in:brouillon,publie,archive'],
+            'status'        => ['required', 'in:brouillon,publie,archive'],
         ], [
             'titre.required' => 'Le titre est obligatoire.',
-            'titre.unique' => 'Un examen avec ce titre existe déjà dans cette catégorie.',
+            'titre.unique'   => 'Un examen avec ce titre existe déjà dans cette catégorie.',
         ]);
 
+        if ($validated['status'] === 'publie' && $examen->status !== 'archive') {
+            return back()->withErrors([
+                'status' => 'Vous ne pouvez publier un examen que s\'il est finalisé (archivé). Veuillez d\'abord terminer sa création.',
+            ])->withInput();
+        }
+
         $examen->update([
-            'titre' => $validated['titre'],
-            'description' => $validated['description'] ?? null,
+            'titre'         => $validated['titre'],
+            'description'   => $validated['description'] ?? null,
             'duree_minutes' => $validated['duree_minutes'] ?? null,
-            'status' => $validated['status'],
+            'status'        => $validated['status'],
         ]);
 
         return redirect()

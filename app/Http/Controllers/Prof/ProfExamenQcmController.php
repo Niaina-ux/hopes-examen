@@ -10,12 +10,20 @@ use Illuminate\Http\Request;
 
 class ProfExamenQcmController extends Controller
 {
-    public function show(string $slug, Examen $examen)
+    public function show(string $slug, int $examenId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
         $qcms = $examen->qcm()
-                ->with('qcmQuestions')
-                ->latest()
-                ->get();
+            ->with('qcmQuestions')
+            ->latest()
+            ->get();
 
         return view('prof.examen.qcm.show', compact('examen', 'qcms', 'slug'));
     }
@@ -67,8 +75,24 @@ class ProfExamenQcmController extends Controller
             ->with('success', 'QCM créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 
-    public function edit(string $slug, Examen $examen, Qcm $qcm)
+    public function edit(string $slug, int $examenId, int $qcmId)
     {
+        $examen = Examen::find($examenId);
+
+        if (!$examen) {
+            return redirect()
+                ->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $qcm = Qcm::where('examen_id', $examen->id)->find($qcmId);
+
+        if (!$qcm) {
+            return redirect()
+                ->route('prof.examen.qcm', [$slug, $examen->id])
+                ->with('error', "Ce QCM est introuvable pour cet examen.");
+        }
+
         return view('prof.examen.qcm.edit', compact('slug', 'examen', 'qcm'));
     }
 

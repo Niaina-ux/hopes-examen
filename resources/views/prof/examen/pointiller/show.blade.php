@@ -24,6 +24,7 @@
                                 </div>
                             </div>
                         </div>
+                        @if ($examen->status === 'brouillon')
                         <div class="flex gap-4">
                             <a href="{{route('prof.examen.pointiller.edit', [$slug, $examen->id, $pointiller->id])}}" class="text-black/60">
                                 <i class="fa-solid fa-pen"></i>
@@ -36,7 +37,6 @@
                                 </button>
                             </form>
                         </div>
-                        @if ($examen->status === 'brouillon')
                         <a href="{{ route('prof.examen.pointiller.question.create', [$slug, $examen->id, $pointiller->id]) }}" 
                             class="bg-vert p-1 px-4 inline-block rounded-full text-white">
                             Créer question
@@ -75,6 +75,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if ($examen->status === 'brouillon') 
                                         <div class="flex gap-3 items-center">
                                             <a href="{{ route('prof.examen.pointiller.question.edit', [$slug, $examen->id, $pointiller->id, $question->id]) }}" class="text-vert">
                                                 <i class="fa-solid fa-pen"></i>
@@ -88,6 +89,7 @@
                                                 </button>
                                             </form>
                                         </div>
+                                        @endif
                                     </div>
                                     <div class="reponse-wrapper">
                                         <div class="border border-black/3  mt-1 rounded bg-black/2 p-2 reponse ">
