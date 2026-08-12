@@ -30,10 +30,12 @@
                 </div>
                 <div class="flex-1">
                     <h3 class="text-base font-semibold">{{ $examen->titre }}</h3>
-                    <p class="text-sm text-black/50">{{ $examen->description }}</p>
+                    <p class="text-black/50">{{ $examen->description }}</p>
                     <div class="flex gap-3 text-sm mt-1">
-                        <span class="border border-black/10 rounded-full px-3 text-rouge">{{ $examen->status }}</span>
-                        <span class="border border-black/10 rounded-full px-3 text-vert">{{ $examen->types_exercice_count }} types d'exercice</span>
+                        <span class="border border-black/10 rounded-full px-3 {{$examen->status == 'brouillon' ? 'text-black/70' : 'text-rouge'}} ">
+                            {{ $examen->status }}
+                        </span>
+                        <span class="border border-black/10 rounded-full text-vert px-3">{{ $examen->types_exercice_count }} types d'exercice</span>
                     </div>
                 </div>
                 <div class="flex gap-4">

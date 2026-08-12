@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Prof;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorie;
 use App\Models\ExamAttempt;
 use App\Models\Examen;
 use App\Models\Student;
@@ -20,7 +21,7 @@ class ProfDashboardController extends Controller
         abort_if(!$prof, 403, 'Accès réservé aux professeurs.');
 
         $categorieId = $prof->categorie_id;
-
+        $slug = Categorie::find($categorieId);
         $totalEtudiants = Student::where('categorie_id', $categorieId)->count();
         $totalExamens = Examen::where('categorie_id', $categorieId)->count();
 
@@ -63,10 +64,20 @@ class ProfDashboardController extends Controller
 
         $moyenneGenerale = $toutesLesMoyennes->isNotEmpty() ? round($toutesLesMoyennes->avg(), 1) : null;
 
+        $nouveauExamens = Examen::where('categorie_id', $categorieId)
+            ->where('status', 'brouillon')
+            ->get();
+
+        $examenPublies = Examen::where('categorie_id', $categorieId)
+            ->where('status', '!=','brouillon')
+            ->orderBy('id', 'desc')
+            ->get();
+
         return view('prof.dashboard', compact(
             'totalEtudiants', 'totalExamens',
             'statistiquesParMois', 'moyenneGenerale',
-            'anneeSelectionnee', 'anneesDisponibles'
+            'anneeSelectionnee', 'anneesDisponibles',
+            'nouveauExamens', 'examenPublies','slug'
         ));
     }
 }

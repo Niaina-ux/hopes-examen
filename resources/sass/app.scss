@@ -65,3 +65,10 @@
     cursor: pointer;
     accent-color: $vert; /* loko maitso (vert) */
 }
+
+.formulaire{
+    outline: none;
+    &:focus{
+        border: solid 1px $vert;
+    }
+}

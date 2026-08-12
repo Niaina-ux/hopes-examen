@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="py-3">
+<div class="py-3 me-2">
     <div class="w-full ">
         <div class="">
             <a href="{{ route('prof.examen.qcm', [$slug, $examen->id]) }}">
@@ -9,7 +9,7 @@
             <span class="font-semibold">Creation</span>
         </div>
         <div class="bg-white  rounded-md me-2">
-            <h2 class="text-xl font-semibold my-2 text-vert">Ajouter une question — {{ $qcm->titre }}</h2>
+            <h2 class="text-2xl border-b-2 border-black/20 pb-1 font-semibold mt-2 mb-4 text-vert">Ajouter une question — {{ $qcm->titre }}</h2>
             @if(session('success'))
                 <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">
                     <span>{{ session('success') }}</span>
@@ -24,18 +24,19 @@
                 </div>
             @endif
 
-            <form action="{{ route('prof.examen.qcm.question.store', [$slug, $examen->id, $qcm->id]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('prof.examen.qcm.question.store', [$slug, $examen->id, $qcm->id]) }}" method="POST" enctype="multipart/form-data" 
+                class="bg-black/1 rounded-md border border-black/3 p-4">
                 @csrf
 
                 <div class="question-block rounded-md mb-4">
                     <div class="mb-2">
-                        <label class="block text-sm font-medium">Énoncé</label>
-                        <textarea name="questions[0][enonce]" rows="2" class="border border-black/20 rounded w-full p-2" required placeholder="Combien de ...example de question">{{ old('questions.0.enonce') }}</textarea>
+                        <label class="block font-medium">Énoncé</label>
+                        <textarea name="questions[0][enonce]" rows="2" class="formulaire border bg-white border-black/20 rounded w-full p-2" required placeholder="Combien de ...example de question">{{ old('questions.0.enonce') }}</textarea>
                         @error('questions.0.enonce') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="mb-2">
-                        <label class="block text-sm font-medium mb-1">Média (optionnel)</label>
+                        <label class="block  font-medium mb-1">Média (optionnel)</label>
                         <div class="flex gap-4 mb-2">
                             <label class="flex items-center gap-2 border rounded-md p-2 px-4 bg-black/3 border-black/20">
                                 <input type="radio" name="media_type_0" value="aucun" class="media-type-radio" data-index="0" checked>
@@ -52,32 +53,32 @@
                         </div>
 
                         <div class="media-image-block hidden my-4">
-                            <label for="" class="text-sm">Choisir le fichier</label>
-                            <input type="file" name="questions[0][image]" accept="image/*" class="border border-black/20 rounded w-full p-2">
+                            <label for="" class="">Choisir le fichier</label>
+                            <input type="file" name="questions[0][image]" accept="image/*" class="formulaire bg-white border border-black/20 rounded w-full p-2">
                             @error('questions.0.image') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div class="media-video-block hidden my-4">
-                            <label for="" class="text-sm">Choisir le fichier</label>
-                            <input type="file" name="questions[0][video]" accept="video/*" class="border border-black/20 rounded w-full p-2">
+                            <label for="" class="">Choisir le fichier</label>
+                            <input type="file" name="questions[0][video]" accept="video/*" class="bg-white formulaire border border-black/20 rounded w-full p-2">
                             @error('questions.0.video') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                     <div class="w-[15cm] my-2 mt-3">
                         <div class="flex gap-5 ">
                             <div class=" w-[3cm]">
-                                <label class="block text-sm font-medium">Points</label>
-                                <input type="number" name="questions[0][points]" value="{{ old('questions.0.points') }}" min="0.1" step="0.1" class="border border-black/20 rounded w-full p-2" placeholder="1">
+                                <label class="block  font-medium">Points</label>
+                                <input type="text" name="questions[0][points]" value="{{ old('questions.0.points') }}" min="0.1" step="0.1" class="border bg-white formulaire border-black/20 rounded w-full p-2" placeholder="1">
                                 @error('questions.0.points') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                                 
                             </div>
                             <div class=" w-[3cm]">
-                                <label class="block text-sm font-medium">Duree seconde</label>
-                                <input type="number" name="questions[0][duree_seconde]" value="{{ old('questions.0.duree_seconde') }}" min="0.5" step="0.1" class="border border-black/20 rounded w-full p-2" placeholder="10">
+                                <label class="block  font-medium">Duree seconde</label>
+                                <input type="text" name="questions[0][duree_seconde]" value="{{ old('questions.0.duree_seconde') }}" min="0.5" step="0.1" class="bg-white formulaire border border-black/20 rounded w-full p-2" placeholder="10">
                                 @error('questions.0.duree_seconde') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div class=" flex-1">
-                                <label class="block text-sm font-medium">Type de réponse</label>
-                                <select name="questions[0][reponse_type]" class="reponse-type border border-black/20 rounded w-full p-2" onchange="toggleReponseType(this, 0)">
+                                <label class="block font-medium">Type de réponse</label>
+                                <select name="questions[0][reponse_type]" class="bg-white formulaire reponse-type border border-black/20 rounded w-full p-2" onchange="toggleReponseType(this, 0)">
                                     <option value="single" {{ old('questions.0.reponse_type', 'single') == 'single' ? 'selected' : '' }}>Réponse simple</option>
                                     <option value="multiple" {{ old('questions.0.reponse_type') == 'multiple' ? 'selected' : '' }}>Réponse multiple</option>
                                     <option value="true_false" {{ old('questions.0.reponse_type') == 'true_false' ? 'selected' : '' }}>Vrai / Faux</option>
@@ -91,23 +92,20 @@
                             </div>
                         @enderror
                     </div>
-
-
-
                     <label class="block font-medium mb-1 mt-2">Choix</label>
                     <div class="choices-block border border-black/20 bg-black/2 rounded-md p-2 ">
                         <div class="choices-container space-y-2">
                             <div>
-                                <div class="flex gap-2 items-center border border-black/20 rounded px-2">
+                                <div class="flex gap-2  items-center border border-black/20 rounded ps-2">
                                     <input type="radio" class="est-correcte-input p-2" name="questions[0][correct_choice]" value="0">
-                                    <input type="text" name="questions[0][choices][0][texte]" placeholder="Choix 1" class="p-2 flex-1 border-s-2 bg-white border-black/20" value="{{ old('questions.0.choices.0.texte') }}">
+                                    <input type="text" name="questions[0][choices][0][texte]" placeholder="Choix 1" class="p-2 flex-1 border-s-2 bg-white outline-0 border-black/20" value="{{ old('questions.0.choices.0.texte') }}">
                                 </div>
                                 @error('questions.0.choices.0.texte') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
-                                <div class="flex gap-2 items-center border border-black/20 rounded px-2">
+                                <div class="flex gap-2 formulaire items-center border border-black/20 rounded ps-2">
                                     <input type="radio" class="est-correcte-input" name="questions[0][correct_choice]" value="1">
-                                    <input type="text" name="questions[0][choices][1][texte]" placeholder="Choix 2" class="border-s-2 bg-white border-black/20 p-2 flex-1" value="{{ old('questions.0.choices.1.texte') }}">
+                                    <input type="text" name="questions[0][choices][1][texte]" placeholder="Choix 2" class="border-s-2 bg-white border-black/20 outline-0 p-2 flex-1" value="{{ old('questions.0.choices.1.texte') }}">
                                 </div>
                                 @error('questions.0.choices.1.texte') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                             </div>
@@ -131,7 +129,7 @@
                 </div>
 
                 <div class="">
-                    <button type="submit" class="bg-rouge text-white mt-2 px-4 py-2 rounded">Enregistrer la question</button>
+                    <button type="submit" class="bg-rouge text-white mt-2 px-4 py-2 rounded-full">Enregistrer la question</button>
                 </div>
             </form>
         </div>
@@ -211,9 +209,9 @@ document.addEventListener('click', function (e) {
         const div = document.createElement('div');
         div.className = 'flex gap-2 items-center';
         div.innerHTML = `
-        <div class="flex gap-2 w-full items-center border border-black/20 rounded px-2">
+        <div class="flex gap-2 w-full items-center border border-black/20 rounded ps-2">
             <input type="${inputType}" class="est-correcte-input" name="${inputName}" value="${inputValue}">
-            <input type="text" name="questions[0][choices][${choiceIndex}][texte]" placeholder="Choix ${choiceIndex + 1}" class=" p-2 flex-1 border-s-2 bg-white border-black/20">
+            <input type="text" name="questions[0][choices][${choiceIndex}][texte]" placeholder="Choix ${choiceIndex + 1}" class=" p-2 flex-1 border-s-2 outline-0 bg-white border-black/20">
         </div>
         `;
         container.appendChild(div);

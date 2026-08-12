@@ -8,7 +8,7 @@
         <span class="font-semibold">Création</span>
     </div>
     <div class="bg-white rounded-md me-2">
-        <h2 class="text-xl font-semibold my-2 text-vert">Créer un exercice mots croisés</h2>
+        <h2 class="text-2xl font-semibold mb-4 pb-1 text-vert border-b-2 border-black/10">Créer un exercice mots croisés</h2>
         @if($errors->any())
             <div class="mb-4 p-3 rounded-md bg-red-50 border border-rouge text-rouge text-sm">
                 @foreach($errors->all() as $error)
@@ -16,26 +16,27 @@
                 @endforeach
             </div>
         @endif
-        <form id="mc-form" action="{{ route('prof.examen.motscroises.store', [$slug, $examen->id]) }}" method="POST">
+        <form id="mc-form" action="{{ route('prof.examen.motscroises.store', [$slug, $examen->id]) }}" method="POST"
+            class="bg-black/1 border border-black/3 rounded-md p-4">
             @csrf
             <div class="mb-4">
                 <label class="block text-base font-medium">Titre</label>
-                <input type="text" name="titre" value="{{ old('titre') }}" class="border border-black/10 rounded w-full p-2" placeholder="Ex: Mots croisés - Vocabulaire">
+                <input type="text" name="titre" value="{{ old('titre') }}" class="formulaire border border-black/10 bg-white rounded w-full p-2" placeholder="Ex: Mots croisés - Vocabulaire">
             </div>
 
             <div class="mb-4">
                 <label class="block text-base font-medium">Description (optionnel)</label>
-                <textarea name="description" rows="2" class="border border-black/10 rounded w-full p-2">{{ old('description') }}</textarea>
+                <textarea name="description" rows="2" class="formulaire border border-black/10 bg-white rounded w-full p-2">{{ old('description') }}</textarea>
             </div>
 
             <div class="flex gap-4 mb-4 w-[5cm]">
                 <div class="flex-1 hidden">
                     <label class="block text-base font-medium">Durée (minutes)</label>
-                    <input type="number" name="duree_minutes" value="{{ old('duree_minutes') }}" min="1" class="border border-black/10 rounded w-full p-2">
+                    <input type="text" name="duree_minutes" value="{{ old('duree_minutes') }}" min="1" class="formulaire border bg-white border-black/10 rounded w-full p-2">
                 </div>
                 <div class="flex-1">
                     <label class="block text-base font-medium">Note totale</label>
-                    <input type="number" name="note_totale" value="{{ old('note_totale', 10) }}" min="0.1" step="0.1" class="border border-black/10 rounded w-full p-2">
+                    <input type="text" name="note_totale" value="{{ old('note_totale', 10) }}" min="0.1" step="0.1" class="formulaire border bg-white border-black/10 rounded w-full p-2">
                 </div>
             </div>
 
@@ -46,11 +47,11 @@
                 <div class="flex gap-3 items-end">
                     <div>
                         <label class="block text-xs text-black/50">Largeur (colonnes)</label>
-                        <input type="number" id="grille-largeur" value="10" min="2" max="20" class="border border-black/10 rounded p-2 w-24">
+                        <input type="text" id="grille-largeur" value="10" min="2" max="20" class="formulaire border bg-white border-black/10 rounded p-2 w-24">
                     </div>
                     <div>
                         <label class="block text-xs text-black/50">Hauteur (lignes)</label>
-                        <input type="number" id="grille-hauteur" value="10" min="2" max="20" class="border border-black/10 rounded p-2 w-24">
+                        <input type="text" id="grille-hauteur" value="10" min="2" max="20" class="formulaire border bg-white border-black/10 rounded p-2 w-24">
                     </div>
                     <button type="button" id="btn-generer-grille" class="bg-black/5 border rounded-md px-4 py-2">
                         Générer la grille
@@ -78,24 +79,24 @@
                 <div class="flex gap-4 mb-3">
                     <div class="flex-1">
                         <label class="block text-xs text-black/50">Direction</label>
-                        <select id="input-direction" class="border border-black/10 rounded w-full p-2">
+                        <select id="input-direction" class="formulaire border border-black/10 rounded bg-white w-full p-2">
                             <option value="horizontal">Horizontal</option>
                             <option value="vertical">Vertical</option>
                         </select>
                     </div>
                     <div class="flex-1">
                         <label class="block text-xs text-black/50">Réponse (mot)</label>
-                        <input type="text" id="input-reponse" class="border border-black/10 rounded w-full p-2 uppercase" maxlength="20" placeholder="Ex: PARIS">
+                        <input type="text" id="input-reponse" class="formulaire border border-black/10 bg-white rounded w-full p-2 uppercase" maxlength="20" placeholder="Ex: PARIS">
                     </div>
                     <div class="flex-1">
                         <label class="block text-xs text-black/50">Points</label>
-                        <input type="number" id="input-points" value="1" min="0.1" step="0.1" class="border border-black/10 rounded w-full p-2">
+                        <input type="text" id="input-points" value="1" min="0.1" step="0.1" class="formulaire border bg-white border-black/10 rounded w-full p-2">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="block text-xs text-black/50">Indice</label>
-                    <input type="text" id="input-indice" class="border border-black/10 rounded w-full p-2" placeholder="Ex: Capitale de la France">
+                    <input type="text" id="input-indice" class="formulaire border border-black/10 bg-white rounded w-full p-2" placeholder="Ex: Capitale de la France">
                 </div>
 
                 <div class="mb-3">

@@ -145,7 +145,7 @@
         </div>
     </div>
 
-    {{-- ✅ Modal zoom, miaraka amin'ny zones --}}
+    
     <div id="image-zoom-modal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-6" style="cursor: zoom-out;">
         <button type="button" id="close-zoom-modal" class="absolute top-4 right-6 text-white text-3xl">
             <i class="fa-solid fa-xmark"></i>

@@ -2,7 +2,7 @@
 @section('contenue-prof')
 <div class=" py-3 me-2">
     @include('layouts.admin-layouts.examen.layout-exam')
-    <div class="bg-white mt-2 rounded-md me-2">
+    <div class="bg-white mt-2 rounded-md">
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">
                 <span>{{ session('success') }}</span>
@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                 @else
-                                <div class="text-center p-10 rounded-md bg-black/3">
+                                <div class="text-center  p-10 rounded-md bg-black/3">
                                     <i class="fa-solid fa-box-open"></i>
                                     <p class="text-xs text-black/40 ">Aucun mot ajouté pour le moment.</p>
                                 </div>
@@ -116,8 +116,8 @@
                     </div>
             </div>
         @empty
-        <div class="text-center p-10 rounded-md bg-black/3">
-            <i class="fa-solid fa-box-open"></i>
+        <div class="text-center p-10 rounded-md mt-4 bg-black/3">
+            <i class="fa-solid fa-box-open text-2xl"></i>
             <p class="text-black/50">Aucun exercice mots croisés pour cet examen.</p>
         </div>
         @endforelse
