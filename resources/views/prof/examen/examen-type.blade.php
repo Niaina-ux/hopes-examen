@@ -2,13 +2,9 @@
 @section('contenue-prof')
 <div class="py-3 me-2">
     <div class="">
-        <a href="" 
-            class="flex gap-3 items-center font-semibold">
-            <span class="">Examens</span>
-        </a>
         <div class="flex justify-between items-end">    
             <div class="w-[70%]">
-                <h2 class="text-2xl flex gap-2 items-center font-semibold text-vert my-1">
+                <h2 class="text-2xl flex gap-2 items-center font-semibold text-vert mb-1">
                     {{ $examen->titre }}
                 </h2>
                 <p>{{ $examen->description }}</p>

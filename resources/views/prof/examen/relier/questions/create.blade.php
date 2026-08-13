@@ -19,23 +19,23 @@
             </div>
         @endif
         <form method="POST" action="{{ route('prof.examen.relier.question.store', [$slug, $examen->id, $relier->id]) }}"
-            class="mt-2">
+            class="mt-4 p-4 rounded-md border border-black/3 bg-black/1">
             @csrf
             <div class="w-full pb-4 border-b-2 border-black/20">
                 <div class="mb-2">
                     <label class="inline-block w-full">Question</label>
-                    <textarea name="enonce" class="form-control w-full p-2 border border-black/20 rounded-md ">{{ old('enonce') }}</textarea>
+                    <textarea name="enonce" class="form-control bg-white/90 formulaire w-full p-2 border border-black/20 rounded-md ">{{ old('enonce') }}</textarea>
                     @error('enonce') <small class="text-red-600">{{ $message }}</small> @enderror
                 </div>
                 <div class="w-[11cm] flex justify-between gap-5">
                     <div class="flex-1">
                         <label>Points</label>
-                        <input type="text" name="points" value="{{ old('points', 1) }}" class="border border-black/20 rounded-md  p-2">
+                        <input type="text" name="points" value="{{ old('points', 1) }}" class="border bg-white/90 formulaire border-black/20 rounded-md  p-2">
                         @error('points') <small class="text-red-600">{{ $message }}</small> @enderror
                     </div>
                     <div class="flex-1">
                         <label>Ordre Question</label>
-                        <input type="text" name="ordre" value="{{ old('ordre', 1) }}" class="border border-black/20 rounded-md  p-2">
+                        <input type="text" name="ordre" value="{{ old('ordre', 1) }}" class="border bg-white/90 formulaire border-black/20 rounded-md  p-2">
                         @error('ordre') <small class="text-red-600">{{ $message }}</small> @enderror
                     </div>
                 </div>
@@ -64,7 +64,6 @@
 <script>
 const table = document.getElementById('tablePaires');
 
-// ✅ Valeurs "old" envoyées par le serveur (si une validation a échoué)
 const oldElementGauche = @json(old('element_gauche', []));
 const oldElementDroit  = @json(old('element_droit', []));
 const oldOrderLeft     = @json(old('order_left', []));
@@ -75,12 +74,12 @@ function creerLigne(valGauche = '', valDroit = '', ordreGauche = 1, ordreDroit =
     div.className = 'paire flex justify-between gap-10 mt-3 relative';
     div.innerHTML = `
         <div class="flex-1 flex gap-2">
-            <input class="border w-full border-black/20 rounded-md p-2 " name="element_gauche[]" value="${valGauche}">
-            <input class="border border-black/20 rounded-md p-2 w-[1cm] text-center bg-black/10" type="text" name="order_left[]" value="${ordreGauche}">
+            <input class="border w-full bg-white/90 formulaire border-black/20 rounded-md p-2 " name="element_gauche[]" value="${valGauche}">
+            <input class="border border-black/20 bg-white/90 formulaire rounded-md p-2 w-[1cm] text-center bg-black/10" type="text" name="order_left[]" value="${ordreGauche}">
         </div>
         <div class="flex-1 flex gap-2">
-            <input class="border border-black/20 rounded-md p-2 w-[1cm] text-center bg-black/10" type="text" name="order_right[]" value="${ordreDroit}">
-            <input class="border w-full border-black/20 rounded-md p-2 " name="element_droit[]" value="${valDroit}">
+            <input class="border border-black/20 bg-white/90 formulaire rounded-md bg-white/90 formulaire p-2 w-[1cm] text-center bg-black/10" type="text" name="order_right[]" value="${ordreDroit}">
+            <input class="border w-full border-black/20 rounded-md p-2 bg-white/90 formulaire" name="element_droit[]" value="${valDroit}">
         </div>
         <button type="button" class="remove absolute top-0 -right-10 bg-red-500/70 text-white px-2 rounded">X</button>
     `;
@@ -97,8 +96,7 @@ document.addEventListener('click', function (e) {
     }
 });
 
-// ✅ Au chargement de la page : recrée les lignes avec les anciennes valeurs si elles existent,
-// sinon affiche une ligne vide par défaut
+
 if (oldElementGauche.length > 0) {
     oldElementGauche.forEach(function (valGauche, index) {
         creerLigne(
@@ -109,7 +107,7 @@ if (oldElementGauche.length > 0) {
         );
     });
 } else {
-    creerLigne(); // ligne vide par défaut, au premier chargement
+    creerLigne(); 
 }
 </script>
 @endsection

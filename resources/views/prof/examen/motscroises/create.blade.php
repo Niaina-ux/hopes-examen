@@ -108,7 +108,7 @@
                     <button type="button" id="btn-valider-mot" class="bg-vert text-white px-4 py-2 rounded">
                         Ajouter ce mot à la grille
                     </button>
-                    <button type="button" id="btn-annuler-mot" class="border px-4 py-2 rounded">
+                    <button type="button" id="btn-annuler-mot" class="border px-4 py-2 ">
                         Annuler
                     </button>
                 </div>
@@ -124,7 +124,7 @@
             <input type="hidden" name="hauteur" id="hidden-hauteur">
             <div id="hidden-mots-container"></div>
 
-            <button type="submit" id="submit-btn" class="bg-rouge text-white px-4 py-2 rounded">
+            <button type="submit" id="submit-btn" class="bg-rouge text-white rounded-full px-5 py-2">
                 Enregistrer l'exercice
             </button>
         </form>

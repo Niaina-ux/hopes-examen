@@ -65,11 +65,14 @@
             <div class="flex-1 rounded-xl bg-black/2 border border-black/3 p-4 min-h-[50vh]">
                 <h3 class="text-xl mb-2">Examen pour detailer</h3>
                 @forelse ($nouveauExamens as $index => $nouveauExamen)
-                <div class="flex gap-3 items-center bg-white/90 border border-black/3 p-2 rounded">
-                    <div class="font-semibold w-8 h-8 flex justify-center items-center bg-black/3 rounded-md">
+                <div class="flex gap-3 bg-white/90 border border-black/3 p-2 rounded">
+                    <div class="font-semibold w-9 h-9 flex justify-center items-center bg-black/3 rounded-md">
                         {{$index + 1}}
                     </div>
-                    <h3 class="flex-1"> {{$nouveauExamen->titre}} </h3>
+                    <div class="flex-1">
+                        <h3 class="-mt-1"> {{$nouveauExamen->titre}} </h3>
+                        <p class="text-sm">Creé le {{ \Carbon\Carbon::parse($nouveauExamen->creat_at)->translatedFormat('d M Y') }}</p>
+                    </div>
                     <a href="{{route('prof.examen.showtypes',[$slug, $nouveauExamen->id])}}"
                     class="text-vert"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
@@ -85,16 +88,19 @@
             <div class="flex-1 rounded-xl bg-black/2 border border-black/3 p-4 min-h-[50vh]">
                 <h3 class="text-xl mb-2">Examen pour detailer</h3>
                 @forelse ($examenPublies as $index => $examenPublie)
-                <div class="flex gap-3 items-center bg-white/90 border border-black/3 p-2 rounded">
-                    <div class="font-semibold w-8 h-8 flex justify-center items-center bg-black/3 rounded-md">
+                <div class="flex gap-3 bg-white/90 border border-black/3 p-2 rounded">
+                    <div class="font-semibold w-9 h-9 flex justify-center items-center bg-black/3 rounded-md">
                         {{$index + 1}}
                     </div>
-                    <h3 class="flex-1"> {{$examenPublie->titre}} 
-                        <span class="text-sm px-2 p-1 text-white rounded-full {{$examenPublie->status == 'archive' ? 'bg-rouge' : 'bg-vert'}} ">
-                            {{$examenPublie->status == 'archive' ? 'Archive' : 'Publié'}}
-                        </span>
-                    </h3>
-                    <div class="flex items-center gap-3">
+                    <div class="flex-1">
+                        <h3 class=" -mt-1"> {{$examenPublie->titre}} 
+                            <span class="text-sm px-2 border-2 border-black/3 text-white rounded-full {{$examenPublie->status == 'archive' ? 'bg-rouge' : 'bg-vert'}} ">
+                                {{$examenPublie->status == 'archive' ? 'Archive' : 'Publié'}}
+                            </span>
+                        </h3>
+                        <p class="text-sm">Creé le {{ \Carbon\Carbon::parse($nouveauExamen->creat_at)->translatedFormat('d M Y') }}</p>
+                    </div>
+                    <div class="flex gap-3">
                         <a href="{{route('prof.examen.studentswithexamen', [$slug, $examenPublie->id])}}"><i class="fa-solid fa-user-graduate"></i></a>
                         <a href="{{route('prof.examen.showtypes',[$slug, $examenPublie->id])}}"
                         class="text-vert"><i class="fa-solid fa-arrow-up-right-from-square"></i>

@@ -29,31 +29,29 @@
     @endif
     <div class="border border-black/3 rounded-md p-2 bg-black/2">  
         @forelse ($examens as $index => $examen)
-        <div class="flex justify-between gap-7 p-2 border border-black/3 bg-white/80 rounded">
-            <div class="w-15 h-15 rounded-md bg-black/5 overflow-hidden font-semibold flex justify-center items-center">
+        <div class="flex justify-between gap-7 p-3 border border-black/3 bg-white/80 rounded">
+            <div class="w-10 h-10 rounded-md bg-black/5 overflow-hidden font-semibold flex justify-center items-center">
                 <span>{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
             </div>
             <div class="flex-1">
-                <a href="{{route('prof.examen.showtypes',[$slug, $examen->id])}}" class="font-semibold hover:underline"> {{$examen->titre}} </a>
-                <p class="text-sm">  </p>
+                <a href="{{route('prof.examen.showtypes',[$slug, $examen->id])}}" 
+                    class="hover:underline font-medium block -mt-1"> 
+                    {{$examen->titre}} 
+                    <span @class([
+                        'rounded-4xl text-white border-2 font-normal text-sm border-black/5 px-2',
+                        'bg-vert' => $examen->status == 'publie',
+                        'bg-black/40' => $examen->status == 'brouillon',
+                        'bg-rouge' => $examen->status == 'archive',
+                    ])>
+                    {{ $examen->status }}
+                    </span>
+                </a>
                 <div class="flex gap-4 text-sm">
                     <div class="flex   ">
                         Il y a <span class="inline-block  px-2 text-vert">3</span> types d'exercice
                     </div>
                     <div class="flex ">
                         Durée:  <span class=" px-3 text-rouge"> {{$examen->duree_minutes}} Minutes</span>
-                    </div>
-                </div>
-                <div class="flex gap-3 text-sm mt-1">
-                    <div class="flex">
-                        <span @class([
-                            'rounded-4xl border border-black/10 px-3',
-                            'text-vert' => $examen->status == 'publie',
-                            'text-black/50' => $examen->status == 'brouillon',
-                            'text-rouge' => $examen->status == 'archive',
-                        ])>
-                        {{ $examen->status }}
-                        </span>
                     </div>
                 </div>
             </div>

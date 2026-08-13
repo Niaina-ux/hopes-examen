@@ -129,7 +129,7 @@
         @if ($examen->status === 'brouillon')  
         <div class=" flex justify-end sticky bottom-5 mt-4">
             <a href="{{route('prof.examen.pointiller.create', [$slug,  $examen->id])}}" class="p-2 px-3 text-white inline-block rounded-full bg-rouge ">
-                Créer nouveau quiz
+                Créer nouveau exercice
             </a>
         </div>
         @endif
