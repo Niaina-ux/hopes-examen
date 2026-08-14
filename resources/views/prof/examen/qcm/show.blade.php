@@ -13,24 +13,24 @@
         <div class=" mt-2">
             @forelse($qcms as $index => $qcm)
                 <div class="p-2  flex gap-5 justify-between border border-black/10 rounded-md my-2">
-                    <div class="w-15 h-15 rounded-md bg-black/3 flex justify-center items-center">
+                    <div class="w-12 h-12 rounded-md bg-black/3 flex justify-center items-center">
                         <span class="font-bold">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                     </div>
                     <div class="flex-1">
                         <div class="flex justify-between gap-3">
                             <div class="">
-                                <h3 class="text-xl font-semibold">{{ $qcm->titre }}</h3>
+                                <h3 class="text-lg font-semibold">{{ $qcm->titre }}</h3>
                                 <p>{{ $qcm->description }}</p>
                                 <div class="flex gap-3">
-                                    <div class="flex text-sm text-rouge">
+                                    <div class="flex text-sm text-vert">
                                         Durée {{ $qcm->duree_minutes ?? 'N/A' }} minutes
                                     </div>
-                                    <div class="flex text-sm">
-                                        {{ $qcm->note_totale }} Points
+                                    <div class="flex text-sm text-rouge">
+                                        {{ $qcm->note_totale }} Pts
                                     </div>
-                                    <div class="flex text-sm text-vert">
+                                    <div class="flex text-sm ">
                                         Il y a 
-                                        {{ $qcm->qcm_questions_count }}
+                                        {{ $qcm->qcmQuestions->count() }}
                                         Questions
                                     </div>
                                 </div>
@@ -56,11 +56,11 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="">
+                        <div class="mt-1">
                             @forelse($qcm->qcmQuestions as $index => $question)
-                                <div class="border-b border-black/5 bg-black/3 mt-2 rounded-md p-2">
-                                    <div class="flex gap-5 justify-between py-2">
-                                        <div class="w-10 h-10 bg-black/5 rounded-sm flex justify-center items-center">
+                                <div class="border-y border-black/5 d py-2">
+                                    <div class="flex gap-4 justify-between ">
+                                        <div class="w-9 h-9 bg-black/5 rounded-sm flex justify-center items-center">
                                             <span class="text-vert">{{ $index + 1 }}</span>
                                         </div>
                                         <div class="flex-1">
@@ -94,7 +94,7 @@
                                                 </div>
                                                 @endif
                                             </div>
-                                            <div class="mb-4">
+                                            <div class="mb-2">
                                                 @if($question->image)
                                                     <div class="w-40 h-30 border border-black/2 rounded-md bg-black/10 mt-3 overflow-hidden">
                                                         <img src="{{ asset('images/questions/' . $question->image) }}" alt="" class="w-full h-full object-cover">
@@ -108,7 +108,7 @@
                                                     </video>
                                                 @endif
                                             </div>
-                                            <div class=" rounded-md p-2  px-3 reponse bg-black/3 mt-1">
+                                            <div class=" rounded-md p-2   px-3 reponse bg-black/2 border border-black/3 ">
                                                 @foreach($question->qcmChoices as $choice)
                                                     <div class="flex justify-between gap-4 border-b border-black/5 py-1 {{ $loop->even ? 'bg-white/60' : '' }}">
                                                         <p class="flex-1 text-sm">- {{ $choice->texte }}</p>

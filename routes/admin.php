@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDasboardController;
+use App\Http\Controllers\Admin\AdminEmailStudentController;
 use App\Http\Controllers\Admin\AdminExamenController;
 use App\Http\Controllers\Admin\AdminExamenStudentController;
 use App\Http\Controllers\Admin\AdminProfController;
@@ -78,4 +79,9 @@ Route::controller(AdminExamenStudentController::class)->group(function () {
     Route::post('admin/examen/{slug}/{examen}/student/store', 'store')->name('admin.examen.student.store');
     Route::delete('admin/examen/{slug}/{examen}/student/{studentExamen}', 'destroy')->name('admin.examen.student.destroy');
     Route::get('admin/examen/{slug}/{examen}/student/{studentId}',  'examenwherestudent')->name('admin.examen.student.examenwherestudent');
+});
+
+Route::controller(AdminEmailStudentController::class)->group(function(){
+    Route::post('admin/examen/{slug}/{examenId}/student/{studentId}/notifier', 'notifierEtudiant')->name('admin.examen.student.notifier');
+    Route::post('admin/examen/{slug}/{examenId}/notifier-groupe', 'notifierGroupe')->name('admin.examen.student.notifierGroupe');
 });

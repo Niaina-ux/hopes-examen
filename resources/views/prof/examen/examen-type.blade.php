@@ -10,23 +10,12 @@
                 <p>{{ $examen->description }}</p>
                 <div class="flex gap-3 text-sm">
                     <div class="flex   ">
-                        Il y a <span class="inline-block  px-2 text-vert">3</span> types d'exercice
+                        Il y a <span class="inline-block  px-2 text-vert"> {{$examen->typesExercice->count()}} </span> types d'exercice
                     </div>
                     <div class="flex ">
                         Durée:  <span class=" px-3 text-rouge"> {{$examen->duree_minutes}} Minutes</span>
                     </div>
                 </div>
-                <div class="flex text-sm mt-1">
-                    Status
-                    <span @class([
-                        'rounded-4xl border border-black/10 px-3',
-                        'text-vert' => $examen->status == 'publie',
-                        'text-black/50' => $examen->status == 'brouillon',
-                        'text-rouge' => $examen->status == 'archive',
-                    ])>
-                        {{ $examen->status }}
-                    </span>
-                </div> 
             </div>
             <div class="flex justify-end mt-4 text-white">
                 <a href="{{ route('prof.examen.assignTypes', [$slug, $examen->id]) }}" class="inline-block p-1 px-5 rounded-full bg-rouge">

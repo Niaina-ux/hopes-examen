@@ -68,19 +68,40 @@
 </div>
 
 @if($examen->typesExercice->isNotEmpty())
-    <div class="flex gap-1 border-b border-black/10 mt-2 py-2">
-        @foreach($examen->typesExercice as $type)
-            @if(\Illuminate\Support\Facades\Route::has('prof.examen.' . $type->slug))
-                <a href="{{ route('prof.examen.' . $type->slug, [$slug, $examen->id]) }}"
-                    class="inline-block p-1 px-3 rounded-full border {{ request()->routeIs('prof.examen.' . $type->slug .'*') ? 'bg-vert text-white border-vert border-transparent' : 'bg-black/5 border-black/5' }}">
-                    {{ $type->nom }}
-                </a>
-            @else
-                <span class="inline-block p-1 px-5 border border-black/10 bg-black/5 text-black/40 rounded-md" title="Bientôt disponible">
-                    {{ $type->nom }}
-                </span>
-            @endif
-        @endforeach
+    <div class="border-b flex justify-between  border-black/10 mt-2 py-2">
+        <div class="flex gap-1 ">
+            @foreach($examen->typesExercice as $type)
+                @if(\Illuminate\Support\Facades\Route::has('prof.examen.' . $type->slug))
+                    <a href="{{ route('prof.examen.' . $type->slug, [$slug, $examen->id]) }}"
+                        class="inline-block p-1 px-3 rounded-full border {{ request()->routeIs('prof.examen.' . $type->slug .'*') ? 'bg-vert text-white border-vert border-transparent' : 'bg-black/5 border-black/5' }}">
+                        {{ $type->nom }}
+                    </a>
+                @else
+                    <span class="inline-block p-1 px-5 border border-black/10 bg-black/5 text-black/40 rounded-md" title="Bientôt disponible">
+                        {{ $type->nom }}
+                    </span>
+                @endif
+            @endforeach
+        </div>
+        @php
+            $totalPointsExamen = collect([
+                \App\Models\Qcm::class,
+                \App\Models\Pointiller::class,
+                \App\Models\Relier::class,
+                \App\Models\Code::class,
+                \App\Models\Text::class,
+                \App\Models\Redaction::class,
+                \App\Models\Fichier::class,
+                \App\Models\ImageExercice::class,
+                \App\Models\GlisserDeposer::class,
+                \App\Models\MotsCroises::class,
+            ])->sum(function ($modelClass) use ($examen) {
+                return $modelClass::where('examen_id', $examen->id)->sum('note_totale');
+            });
+        @endphp
+        <div class="p-1 px2 rounded-md border border-black/20 ">
+            Total: <span class="text-rouge">{{ $totalPointsExamen }}</span> Pts
+        </div>
     </div>
 @else
     <div class="p-10 rounded-md bg-black/3 mt-4">

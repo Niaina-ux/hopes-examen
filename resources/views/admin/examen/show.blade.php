@@ -25,15 +25,20 @@
     <div class="p-2 border border-black/3 rounded-md mt-4 bg-black/2">
         @forelse($examens as $index => $examen)
             <div class="flex justify-between gap-7 border  border-black/3 rounded bg-white/70 p-2 {{ $loop->iteration == 2 ? 'bg-white' : '' }}">
-                <div class="w-10 h-10 rounded bg-black/5 flex justify-center items-center font-semibold">
+                <div class="w-10 h-10 rounded-md bg-black/5 flex justify-center items-center font-semibold">
                     {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
                 </div>
                 <div class="flex-1">
-                    <h3 class="text-base font-semibold">{{ $examen->titre }}</h3>
+                    <h3 class="text-lg -mt-1">{{ $examen->titre }}</h3>
                     <p class="text-black/50">{{ $examen->description }}</p>
                     <div class="flex gap-3 text-sm mt-1">
                         <span class="border border-black/10 rounded-full px-3 {{$examen->status == 'brouillon' ? 'text-black/70' : 'text-rouge'}} ">
-                            {{ $examen->status }}
+                           {{ match($examen->status) {
+                                'brouillon' => 'Brouillon',
+                                'publie' => 'Publié',
+                                'archive' => 'Archivé',
+                                default => 'Inconnu'
+                            } }}
                         </span>
                         <span class="border border-black/10 rounded-full text-vert px-3">{{ $examen->types_exercice_count }} types d'exercice</span>
                     </div>

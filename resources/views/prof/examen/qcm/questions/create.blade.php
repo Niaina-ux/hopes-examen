@@ -11,7 +11,7 @@
         <div class="bg-white  rounded-md me-2">
             <h2 class="text-2xl border-b-2 border-black/20 pb-1 font-semibold mt-2 mb-4 text-vert">Ajouter une question — {{ $qcm->titre }}</h2>
             @if(session('success'))
-                <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">
+                <div id="success-alert" class="bg-green-100/50 mb-2 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">
                     <span>{{ session('success') }}</span>
                     <button type="button" onclick="document.getElementById('success-alert').remove()">
                         <i class="fa-solid fa-xmark"></i>
@@ -19,7 +19,7 @@
                 </div>
             @endif
             @if($errors->any())
-                <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                <div class="bg-red-100 text-red-700 p-3 mb-2 rounded mb-4">
                     <p class=" mb-1">Veuillez corriger les erreurs suivantes :</p>
                 </div>
             @endif

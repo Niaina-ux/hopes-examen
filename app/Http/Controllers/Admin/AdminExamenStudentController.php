@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmailLog;
 use App\Models\ExamAttempt;
 use App\Models\Examen;
 use App\Models\Student;
@@ -50,9 +51,15 @@ class AdminExamenStudentController extends Controller
             ->get()
             ->keyBy('student_id');
 
+        $emailsEnvoyes = EmailLog::where('examen_id', $examen->id)
+            ->where('type', 'invitation_examen')
+            ->pluck('user_id')
+            ->toArray();
+
         return view('admin.examen.examen-student.show', compact(
             'slug', 'examen', 'studentwithexam', 'datesDisponibles',
-            'dateSelectionnee', 'students', 'attempts', 'nombreParDate'
+            'dateSelectionnee', 'students', 'attempts', 'nombreParDate',
+            'emailsEnvoyes'
         ));
     }
 

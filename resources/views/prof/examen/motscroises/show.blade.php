@@ -15,7 +15,7 @@
             @php $apercu = $apercus[$motCroise->id]; @endphp
             <div class="border border-black/10 rounded-md p-2 mb-4">
                     <div class="flex gap-5 justify-between">
-                        <div class="w-10 h-10 rounded-md bg-black/5 flex justify-center items-center font-semibold">
+                        <div class="w-12 h-12 rounded-md bg-black/5 flex justify-center items-center font-semibold">
                             {{$motCroise->ordre}}
                         </div>
                         <div class="flex-1 ">
@@ -24,16 +24,11 @@
                                     <h3 class="font-semibold text-lg">{{ $motCroise->titre }}</h3>
                                     <p class="text-sm text-black/50">{{ $motCroise->description }}</p>
                                     <div class="flex gap-3 text-sm">
-                                        <span class="rounded-full border border-black/10 px-3 ">
-                                            {{ $motCroise->mots_croises_mots_count }} mot(s)
+                                        <span class="text-vert">
+                                            {{ $motCroise->mots_croises_mots_count }} mot(s)_
                                         </span>
-                                        @if($motCroise->duree_minutes)
-                                            <span class="rounded-full border border-black/10 px-3 ">
-                                                {{ $motCroise->duree_minutes }} min
-                                            </span>
-                                        @endif
                                         @if($motCroise->note_totale)
-                                            <span class="rounded-full border border-black/10 text-rouge px-3 ">
+                                            <span class="text-rouge  ">
                                                 {{ $motCroise->note_totale }} pts
                                             </span>
                                         @endif

@@ -3,21 +3,18 @@
     <div class="py-3 me-2">
         @include('layouts.admin-layouts.examen.layout-exam')
         @forelse($pointillers as $index => $pointiller)
-            <div class="p-2 flex gap-7 justify-between border rounded-md border-black/10 my-2">
-                <div class="w-15 h-15 rounded-md bg-black/3 flex justify-center items-center">
+            <div class="p-2 flex gap-5 justify-between border rounded-md border-black/10 my-2">
+                <div class="w-12 h-12 rounded-md bg-black/3 flex justify-center items-center">
                     <span class="font-bold">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                 </div>
                 <div class="flex-1">
                     <div class="flex items-start gap-3 mb-2">
                         <div class="flex-1">
-                            <h3 class="text-base font-semibold">{{ $pointiller->titre }}</h3>
+                            <h3 class="text-lg font-semibold">{{ $pointiller->titre }}</h3>
                             <p>{{ $pointiller->description }}</p>
                             <div class="flex gap-4">
                                 <div class="flex text-sm text-rouge">
-                                    Durée {{ $pointiller->duree_minutes ?? 'N/A' }} minutes
-                                </div>
-                                <div class="flex text-sm ">
-                                    {{ $pointiller->note_totale }} Points
+                                    {{ $pointiller->note_totale }} Pts
                                 </div>
                                 <div class="flex text-sm text-vert">
                                     Il y a {{ $pointiller->pointiller_questions_count }} questions
@@ -58,8 +55,8 @@
                                 </video>
                             @endif
         
-                            <div class="flex gap-5 justify-between border-y border-black/5 py-2">
-                                <div class="w-8 h-8 bg-black/5 rounded-sm flex justify-center items-center ">
+                            <div class="flex gap-4 justify-between border-y border-black/5 py-2">
+                                <div class="w-9 h-9 bg-black/5 rounded-sm flex justify-center items-center ">
                                     <span class="text-vert">{{ $index + 1 }}</span>
                                 </div>
                                 <div class="flex-1">

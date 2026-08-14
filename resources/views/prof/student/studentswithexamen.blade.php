@@ -35,29 +35,26 @@
                     // ✅ Manamarina ny status: corrige > termine > en_cours/tsy misy
                     if ($attempt?->status === 'corrige') {
                         $statutLabel = 'Corrigé';
-                        $statutClass = 'text-rouge';
+                        $statutClass = 'bg-rouge';
                     } elseif ($attempt?->status === 'termine') {
                         $statutLabel = 'Finis';
-                        $statutClass = 'text-vert';
+                        $statutClass = 'bg-vert';
                     } else {
                         $statutLabel = 'En attente';
-                        $statutClass = 'text-black/40';
+                        $statutClass = 'bg-black/40';
                     }
                 @endphp
-                <div class="flex gap-5 p-2 rounded bg-white/70 border border-black/3">
-                    <div class="w-11 h-11 rounded-md bg-black/3 overflow-hidden">
+                <div class="flex gap-5 p-3 rounded bg-white/70 border border-black/3">
+                    <div class="w-10 h-10 rounded-md bg-black/3 overflow-hidden border border-black/2">
                         <img src="{{ $user->image ? asset('images/' . $user->image) : '' }}" alt="" class="w-full h-full object-cover">
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-base  font-semibold">{{ $user->name }} 
-                            <span class="border font-light text-sm border-black/10 rounded-full px-3 {{ $statutClass }}">
+                    <div class="flex-1  -mt-1">
+                        <h3 class="text-base">{{ $user->name }} 
+                            <span class="border font-light text-sm text-white border-black/10 rounded-full px-2 {{ $statutClass }}">
                                 {{ $statutLabel }}
                             </span>
                         </h3>
                         <p class="text-sm">{{ $user->email }}</p>
-                        <span class=" font-light text-sm ">
-                            N° Matricule: {{$user->student->matricule}}
-                        </span>
                     </div>
                     <div class="flex gap-3">
                         <a href="{{route('prof.examen.examenwherestudent', [$slug, $examen->id, $user->id])}}">

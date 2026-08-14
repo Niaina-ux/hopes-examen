@@ -4,14 +4,14 @@
         @include('layouts.admin-layouts.examen.layout-exam')
         <div class="">
             @forelse($reliers as $index => $relier)
-                <div class="p-2 flex gap-7 justify-between border rounded border-black/10 my-2">
-                    <div class="w-15 h-15 rounded-md bg-black/3 flex justify-center items-center">
+                <div class="p-2 flex gap-5 justify-between border rounded border-black/10 my-2">
+                    <div class="w-12 h-12 rounded-md bg-black/3 flex justify-center items-center">
                         <span class="font-bold">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                     </div>
                     <div class="flex-1 ">
                         <div class="flex gap-3 mb-2">
                             <div class="flex-1">
-                                <h3 class="text-base font-semibold">{{ $relier->titre }}</h3>
+                                <h3 class="text-lg font-semibold">{{ $relier->titre }}</h3>
                                 <p>{{ $relier->description }}</p>
                                 <div class="flex gap-4">
                                     <div class="flex text-sm text-rouge">
@@ -25,9 +25,6 @@
                             <div class="flex items-start gap-4">
                                 @if ($examen->status === 'brouillon')   
                                 <div class="flex gap-4">
-                                    <a href="{{route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id])}}" class="text-vert">
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </a>
                                     <a href="" class="text-black/60">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>

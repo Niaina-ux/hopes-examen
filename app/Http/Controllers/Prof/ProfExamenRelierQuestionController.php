@@ -32,11 +32,7 @@ class ProfExamenRelierQuestionController extends Controller
     public function store(Request $request, string $slug, Examen $examen, Relier $relier)
     {
         $validated = $request->validate([
-            'enonce' => [
-                'required',
-                'string',
-                Rule::unique('relier_questions', 'enonce')->where('relier_id', $relier->id),
-            ],
+            'enonce' => ['required','string',],
             'points' => ['required', 'numeric', 'min:0.1'],
             'ordre' => ['required', 'integer'],
 
@@ -121,13 +117,7 @@ class ProfExamenRelierQuestionController extends Controller
     public function update(Request $request, string $slug, Examen $examen, Relier $relier, RelierQuestion $question)
     {
         $validated = $request->validate([
-            'enonce' => [
-                'required',
-                'string',
-                Rule::unique('relier_questions', 'enonce')
-                    ->where('relier_id', $relier->id)
-                    ->ignore($question->id),
-            ],
+            'enonce' => ['required','string',],
             'points' => ['required', 'numeric', 'min:0.1'],
             'ordre' => ['required', 'integer'],
 
@@ -203,7 +193,7 @@ class ProfExamenRelierQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id])
+            ->route('prof.examen.relier', [$slug, $examen->id])
             ->with('success', 'Question modifiée avec succès.');
     }
 
