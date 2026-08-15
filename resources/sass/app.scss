@@ -75,3 +75,114 @@
 .font-medium{
     font-weight: 500;
 }
+
+.nav-hover{
+    position: relative;
+    padding: 6px 0;
+    &::after{
+        position: absolute;
+        content: '';
+        width: 0;
+        height: 3px;
+        bottom: 0;
+        left: 50%;
+        translate: -50% -50%;
+        background-color: $vert;
+        border-radius: 20px;
+        transition: 0.3s;
+    }
+    &:hover{
+        &::after{
+            width: 100%;
+        }
+    }
+}
+
+.hover-rouge{
+    border: solid 1px transparent;
+    transition: 0.3s;
+    &:hover{
+        background-color: rgb(250, 157, 51);
+        border: solid 1px white;
+        box-shadow: 0 1px 2px 0px rgb(196, 194, 194);
+    }
+}
+
+.hover-white{
+    border: solid 1px rgb(221, 220, 220);
+    transition: 0.3s;
+    &:hover{
+        background-color: rgb(248, 248, 248);
+        border: solid 1px rgb(104, 167, 2);
+        box-shadow: 0 1px 2px 0px rgb(196, 194, 194);
+    }
+}
+
+.hover-vert{
+    border: solid 1px transparent;
+    transition: 0.3s;
+    &:hover{
+        background-color: rgb(152, 202, 16);
+        border: solid 1px white;
+        box-shadow: 0 1px 2px 0px rgb(196, 194, 194);
+    }
+}
+
+.animation-1{
+    opacity: 0;
+    transform: translateY(10px);
+    animation: 1s forwards animation-1;
+}
+
+.examen{
+    animation-delay: 0.5s;
+}
+
+.consigne{
+    animation-delay: 1s;
+}
+
+@keyframes animation-1 {
+    0%{
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.animation-rond{
+    transform: translateY(40px);
+    animation: 3s forwards animation-2;
+}
+
+@keyframes animation-2 {
+    0%{
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+
+
+.rond{
+    animation: 10s infinite animation-3;
+}
+@keyframes animation-3 {
+    0%{
+        transform: translateY(-10px);
+    }
+    50%{
+        transform: translateY(10px);
+    }
+    100%{
+        transform: translateY(-10px);
+    }
+    
+}

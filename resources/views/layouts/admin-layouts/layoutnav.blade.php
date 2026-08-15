@@ -1,4 +1,4 @@
-<div class="bg-white h-full p-2 px-3 w-[6cm] rounded-md ">
+<div class="bg-white h-full p-2 px-3 lg:w-[6cm] rounded-md ">
     <div class="text-vert font-bold text-3xl px-2">
         Hopes
     </div>

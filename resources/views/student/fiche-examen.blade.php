@@ -2,33 +2,44 @@
 @extends('layouts.student-layouts.layouthead')
 @section('contenue-student')
 <div class="container py-25">
-    <div class="bg-white z-50 sticky top-0">
-        <div class="flex justify-between py-2">
-            <div class="rounded-md">
-                <h2 class="text-2xl font-semibold text-vert">{{ $examen->titre }}</h2>
-                <p class="py-1">{{ $examen->description }}</p>
-                <p class="text-sm text-black/50">Finis le {{ $attempt->date_fin?->format('d/m/Y à H:i') }}</p>
+    <div class="bg-white z-50">
+        <div class="flex flex-col sm:flex-row justify-between gap-2 py-2">
+            <div class="rounded-md min-w-0">
+                <h2 class="text-xl sm:text-2xl font-semibold text-vert">
+                    {{ $examen->titre }}
+                </h2>
+                <p class="py-1 text-sm sm:text-base">
+                    {{ $examen->description }}
+                </p>
+                <p class="text-xs sm:text-sm text-black/50">
+                    Finis le {{ $attempt->date_fin?->format('d/m/Y à H:i') }}
+                </p>
             </div>
-            <div class="mt-2">
-                <span class="border border-black/10 rounded-full p-1 px-4 
+
+            <div class="mt-2 sm:shrink-0">
+                <span class="border border-black/10 rounded-full p-1 px-4 whitespace-nowrap text-sm
                     {{ $attempt->status === 'corrige' ? 'text-vert' : 'text-rouge' }}">
                     {{ $attempt->status === 'corrige' ? 'Corrigé' : 'En attente de correction' }}
                 </span>
             </div>
         </div>
-        {{-- Navigation rapide entre les sections --}}
-       <div class="flex flex-wrap gap-2 items-center  z-50 bg-white pt-3 pb-2 border-b-2 border-black/10">
-            @foreach($examen->typesExercice as $type)
-                <a href="#section-{{ $type->slug }}"
-                class="menu-section p-1 flex items-center px-2 rounded border border-black/5 bg-black/3 transition-all duration-200 hover:bg-rouge hover:text-white hover:border-rouge"
-                data-target="section-{{ $type->slug }}">
-                    {{ $type->nom }}
-                </a>
-            @endforeach
+
+        {{-- Navigation rapide --}}
+        <div class="sticky top-0 z-50 bg-white">
+            <div id="types-exercice-scroll"
+                class="flex flex-nowrap gap-2 items-center pt-3 pb-2 border-b-2 border-black/10  scrollbar-hide cursor-grab select-none">
+                @foreach($examen->typesExercice as $type)
+                    <a href="#section-{{ $type->slug }}"
+                    class="menu-section shrink-0 p-1 px-4 rounded-full border border-black/5 bg-black/3 transition-all duration-200 hover:bg-black/6 hover:border-rouge whitespace-nowrap"
+                    data-target="section-{{ $type->slug }}">
+                        {{ $type->nom }}
+                    </a>
+                @endforeach
+            </div>
         </div>
     </div>
-    <div class="flex justify-between  gap-5 compare-section">    
-        <div class="w-[70%]" >
+    <div class="flex flex-col-reverse lg:flex-row justify-between gap-5 compare-section">
+        <div class="w-full lg:w-[70%]">
 
             {{-- Section QCM --}}
             @if($qcms->isNotEmpty())
@@ -224,7 +235,7 @@
                                             {{ $reponsesEtudiant->sum('points_obtenus') }} / {{ $question->points }} pts
                                         </div>
                                     </div>
-                                    <div class="relative flex justify-between gap-16" >
+                                    <div class="relative flex flex-col sm:flex-row justify-between gap-8 sm:gap-16">
                                         <div class="flex-1 flex flex-col gap-2">
                                             @foreach($paires as $paire)
                                                 <div class="relier-item-gauche p-1 px-2 rounded bg-white/90  border-e border-black/10" data-paire-id="{{ $paire->id }}">
@@ -232,7 +243,7 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                        <svg class="absolute top-0 left-0 w-full h-full pointer-events-none">
+                                        <svg class="absolute top-0 left-0 w-full h-full pointer-events-none hidden sm:block">
                                             @foreach($paires as $paire)
                                                 @php
                                                     $reponse = $reponsesEtudiant->get($paire->id);
@@ -882,9 +893,9 @@
             </div>
             @endif
         </div>
-        <div class=" w-[30%] pt-4">
+        <div class="w-full lg:w-[30%] pt-4">
             <h2 class="text-lg font-semibold text-vert mb-1">Résumé</h2>
-            <div class="rounded-md flow-right sticky top-0 self-start">
+            <div class="rounded-md flow-right lg:sticky lg:top-0 self-start">
                 @php
                     $resumeParType = [];
                     $totalPointsGlobalObtenus = 0;
@@ -1062,12 +1073,27 @@
 
 
 <style>
-    .flow-right{
+    /* .flow-right{
         position:sticky;
         top:13px;
         max-height:calc(100vh - 40px);
         overflow:auto;
         scrollbar-width: none;
+    } */
+    .flow-right{
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+
+    @media (min-width: 1024px) {
+        .flow-right {
+            position: sticky;
+            top: 13px;
+            max-height: calc(100vh - 40px);
+            overflow: auto;
+            scrollbar-width: none;
+        }
     }
     .menu-section.active{
         background: rgb(104, 167, 2);   /* rouge */
@@ -1118,4 +1144,61 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener("scroll", updateActive);
 });
 </script>
+
+
+@push('styles')
+<style>
+    .scrollbar-hide {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    #types-exercice-scroll.dragging {
+        cursor: grabbing;
+    }
+</style>
+@endpush
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const slider = document.getElementById('types-exercice-scroll');
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', function (e) {
+        isDown = true;
+        slider.classList.add('dragging');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', function () {
+        isDown = false;
+        slider.classList.remove('dragging');
+    });
+
+    slider.addEventListener('mouseup', function () {
+        isDown = false;
+        slider.classList.remove('dragging');
+    });
+
+    slider.addEventListener('mousemove', function (e) {
+        if (!isDown) return;
+
+        e.preventDefault();
+
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+
+        slider.scrollLeft = scrollLeft - walk;
+    });
+});
+</script>
+@endpush
 @endsection

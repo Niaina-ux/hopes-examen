@@ -65,7 +65,7 @@ class AdminStudentController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('images'), $imageName);
+            $request->file('image')->move(public_path('images/users'), $imageName);
             $imagePath = $imageName;
         }
 
@@ -119,8 +119,8 @@ class AdminStudentController extends Controller
     public function destroy(User $student)
     {
         // effacer l'image dans images/..
-        if ($student->image && file_exists(public_path('images/' . $student->image))) {
-            unlink(public_path('images/' . $student->image));
+        if ($student->image && file_exists(public_path('images/users/' . $student->image))) {
+            unlink(public_path('images/users/' . $student->image));
         }
 
         $student->delete();

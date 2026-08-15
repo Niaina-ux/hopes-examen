@@ -14,7 +14,7 @@
 <body class="text-black/60">
     @include('layouts.student-layouts.header')
     @yield('contenue-student')
-
+    @include('layouts.student-layouts.footer')
     <script>
     function openModal(id) {
         const modal = document.getElementById(id);
@@ -35,7 +35,7 @@
     });
     </script>
 
-    {{-- ✅ Ilaina — mandray ny @push('scripts') avy amin'ny page (Swiper, sns) --}}
+   
     @stack('scripts')
 </body>
 </html>

@@ -13,7 +13,7 @@
                 $peutCommencer = !$pasEncoreArrive;
             @endphp
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-10">
-                <div class="py-2">
+                <div class="py-2 animation-1">
                     <p class="text-rouge font-semibold text-lg mb-2">
                         Bonjour,
                     </p>
@@ -29,49 +29,62 @@
                         avant de commencer votre examen.
                     </p>
                 </div>
-                <div class=" border border-black/10 rounded-xl  p-4">
-                    <div class="flex justify-between">
-                        <div class=" px-4 py-3 border-b md:border-b-0 border-black/10">
-                            <div class="w-12 h-12  mb-3 rounded-full bg-black/3 flex items-center justify-center">
+                <div class=" rounded-2xl  animation-1
+                    border border-black/10  md:p-4 lg:p-2">
+                    <div class="grid grid-cols-1 m-4
+                        sm:grid-cols-2
+                        lg:m-2">
+                        <div class="flex gap-5 items-center px-4 py-3 border-b border-black/10">
+                            <div class="w-12 h-12 rounded-full bg-black/3 flex items-center justify-center">
                                 <i class="fa-regular fa-clock text-vert text-xl"></i>
                             </div>
-                            <p class="text-sm  mb-1"> Durée </p>
-                            <p class="font-bold ">{{ $examen->duree_minutes }} minutes </p>
+                            <div class="">
+                                <p class="text-sm  mb-1"> Durée </p>
+                                <p class="font-bold ">{{ $examen->duree_minutes }} minutes </p>
+                            </div>
                         </div>
-                        <div class="px-4 py-3 border-b md:border-b-0  md:border-s border-black/10">
-                            <div class="w-12 h-12 mb-3 rounded-full bg-black/3 flex items-center justify-center">
+                        <div class="flex gap-5 items-center px-4 py-3 border-b border-black/10
+                            sm:border-s">
+                            <div class="w-12 h-12 rounded-full bg-black/3 flex items-center justify-center">
                                 <i class="fa-solid fa-list-check text-vert text-xl"></i>
                             </div>
-                            <p class="text-sm text-black/60 mb-1">Types d'exercice</p>
-                            <p class="font-bold"> {{ $examen->typesExercice->count() }} types</p>
+                            <div class="">
+                                <p class="text-sm text-black/60 mb-1">Types d'exercice</p>
+                                <p class="font-bold"> {{ $examen->typesExercice->count() }} types</p>
+                            </div>
                         </div>
-                        <div class=" px-4 py-3 border-s border-black/10">
-                            <div class="w-12 h-12 mb-3 rounded-full bg-black/5 flex items-center justify-center">
+                        <div class=" flex gap-5 items-center px-4 py-3 border-b border-black/10
+                            sm:border-b-0">
+                            <div class="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center">
                                 <i class="fa-regular fa-calendar text-vert text-xl"></i>
                             </div>
-                            <p class="text-sm text-black/60 mb-1">  Date d'examen</p>
-                            <p class="font-bold">
-                                {{ $dateExamen?->format('d/m/Y') ?? '-' }}
-                            </p>
+                            <div class="">
+                                <p class="text-sm text-black/60 mb-1">  Date d'examen</p>
+                                <p class="font-bold">{{ $dateExamen?->format('d/m/Y') ?? '-' }}</p>
+                            </div>
                         </div>
-                        <div class=" px-4 border-s border-black/10 py-3">
-                            <div class="w-12 h-12 mb-3  rounded-full bg-black/5 flex items-center justify-center">
+                        <div class=" flex gap-5 items-center px-4 py-3 border-black/10
+                            sm:border-s">
+                            <div class="w-12 h-12  rounded-full bg-black/5 flex items-center justify-center
+                            ">
                                 <i class="fa-solid fa-circle-check text-vert text-xl"></i>
                             </div>
-                            <p class="text-sm text-black/60 mb-1"> Statut</p>
-                            <p class="font-bold text-vert">
-                                {{ $examen->status == 'brouillon'
-                                    ? 'Brouillon'
-                                    : ($examen->status == 'publie'
-                                        ? 'Publié'
-                                        : 'Archivé') }}
-                            </p>
+                            <div class="">
+                                <p class="text-sm text-black/60 mb-1"> Statut</p>
+                                <p class="font-bold text-vert">
+                                    {{ $examen->status == 'brouillon'
+                                        ? 'Brouillon'
+                                        : ($examen->status == 'publie'
+                                            ? 'Publié'
+                                            : 'Archivé') }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="bg-black/1 border border-black/10 shadow rounded-xl mb-10">
-                <div class="p-7 lg:p-10">
+            <div class="bg-black/2 border-s-4 border-black/40 rounded-e-xl mb-10 animation-1 examen">
+                <div class="p-7 ">
                     <div class="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-10 items-center">
                         <div class="lg:border-r border-black/10 lg:pr-10">
                             <span class="inline-block font-bold text-rouge bg-black/3 px-3 py-1.5 rounded-md mb-5">
@@ -83,7 +96,7 @@
                         <div>
                             <p class="font-bold text-lg mb-4"> Statut de l'examen </p>
                             @if($peutCommencer)
-                                <div class="inline-flex items-center gap-2 bg-black/5 text-vert rounded-md px-4 py-2 mb-5">
+                                <div class="inline-flex items-center gap-2 bg-black/3 text-vert rounded-xl px-4 py-2 mb-5">
                                     <span class="w-2.5 h-2.5 rounded-full bg-vert"></span>
                                     <span class="font-semibold">
                                         Disponible
@@ -92,7 +105,7 @@
                                 <button
                                     type="button"
                                     onclick="openModal('confirm-start-modal')"
-                                    class="w-full bg-rouge  hover:bg-rouge/90  text-white font-semibold rounded-lg px-6 py-3.5  transition-all duration-200 flex items-center justify-center gap-3">
+                                    class="w-full bg-rouge  hover:bg-rouge/90  text-white font-semibold rounded-full px-6 py-3.5  transition-all duration-200 flex items-center justify-center gap-3">
                                     <span> Commencer maintenant </span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </button>
@@ -101,14 +114,14 @@
                                     <p> Une fois commencé, le chronomètre démarre et ne peut pas être mis en pause.</p>
                                 </div>
                             @else
-                                <div class="inline-flex items-center gap-2 bg-yellow-500/10 text-yellow-600  rounded-md px-4 py-2 mb-5">
+                                <div class="inline-flex items-center gap-2 bg-black/3 text-yellow-600  rounded-md px-4 py-2 mb-5">
                                     <i class="fa-regular fa-clock"></i>
                                     <span class="font-semibold"> Pas encore disponible </span>
                                 </div>
                                 <button
                                     type="button"
                                     disabled
-                                    class="w-full bg-black/10 text-black/40  rounded-lg px-6 py-3.5  font-semibold  cursor-not-allowed flex items-centerjustify-center gap-3">
+                                    class="w-full bg-black/10 text-black/40  rounded-full px-6 py-3.5  font-semibold  cursor-not-allowed flex items-center justify-center gap-3">
                                     <span>  Commencer maintenant</span>
                                     <i class="fa-solid fa-lock"></i>
                                 </button>
@@ -159,7 +172,7 @@
                 </p>
             </div>
         @endif
-        <div class="mb-8">
+        <div class="mb-8 animation-1 consigne">
             <div class="mb-6">
                 <h2 class="text-2xl font-bold"> Consignes à respecter</h2>
                 <div class="w-12 h-1 bg-rouge  rounded-full mt-3"> </div>
@@ -173,7 +186,7 @@
                                 rounded-full bg-rouge/10
                                 flex items-center justify-center">
                         <i class="fa-regular fa-clock
-                                  text-rouge text-2xl"></i>
+                                  text-vert text-2xl"></i>
                     </div>
                     <h3 class="font-bold mb-3">
                         Gestion du temps
@@ -194,7 +207,7 @@
                                 rounded-full bg-rouge/10
                                 flex items-center justify-center">
                         <i class="fa-solid fa-user
-                                  text-rouge text-2xl"></i>
+                                  text-vert text-2xl"></i>
                     </div>
                     <h3 class="font-bold mb-3">
                         Travail personnel
@@ -213,7 +226,7 @@
                                 rounded-full bg-rouge/10
                                 flex items-center justify-center">
                         <i class="fa-solid fa-wifi
-                                  text-rouge text-2xl"></i>
+                                  text-vert text-2xl"></i>
                     </div>
                     <h3 class="font-bold mb-3">
                         Connexion stable
@@ -231,7 +244,7 @@
                                 rounded-full bg-rouge/10
                                 flex items-center justify-center">
                         <i class="fa-solid fa-clipboard-check
-                                  text-rouge text-2xl"></i>
+                                  text-vert text-2xl"></i>
                     </div>
                     <h3 class="font-bold mb-3">
                         Réponses
@@ -249,7 +262,7 @@
                                 rounded-full bg-rouge/10
                                 flex items-center justify-center">
                         <i class="fa-solid fa-ban
-                                  text-rouge text-2xl"></i>
+                                  text-vert text-2xl"></i>
                     </div>
                     <h3 class="font-bold mb-3">
                         Interdictions
