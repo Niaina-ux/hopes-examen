@@ -1,6 +1,6 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')
-    <div class="py-3 me-2">
+    <div class="py-3">
         <div class="">
             <a href="{{ route('prof.examen.studentswithexamen', [$slug, $examen->id]) }}" class="hover:underline">Retour / </a>
             <span class="font-semibold">Etudiants & Examen</span>
@@ -42,7 +42,11 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="mt-1">
+                        <div class="mt-1 flex items-center gap-3">
+                            <div class="flex gap-4">
+                                <span><i class="fa-solid fa-envelope"></i></span>
+                                <span><i class="fa-solid fa-download"></i></span>
+                            </div>
                             @if($ExamenisFnis && $premierType && \Illuminate\Support\Facades\Route::has('prof.examen.showtache.' . $premierType->slug))
                                 <a href="{{ route('prof.examen.showtache.' . $premierType->slug, [$slug, $examen->id, $student->id]) }}"
                                 class="p-2 px-3 rounded-full bg-rouge text-white">
@@ -56,15 +60,8 @@
                         </div>
                     </div>
 
-                    <div class="mt-2 bg-black/3 p-2 rounded-md">
+                    <div class="mt-2 bg-black/3 p-4 rounded-xl">
                         @if($ExamenisFnis)
-                        <div class="border border-black/10 bg-vert rounded-t text-white flex justify-between gap-3 p-1 px-2">
-                            <strong>Fiche d'examen</strong>
-                            <div class="flex gap-4">
-                                <span><i class="fa-solid fa-envelope"></i></span>
-                                <span><i class="fa-solid fa-download"></i></span>
-                            </div>
-                        </div>
                         <div class="min-h-[50vh] bg-white/70 rounded-b p-2">
                             @if ($attempt->status === 'corrige')    
                                 <div class="px-15 py-10">

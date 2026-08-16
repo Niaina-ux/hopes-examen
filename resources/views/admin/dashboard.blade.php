@@ -2,7 +2,7 @@
 
 @section('contenue-admin')
 
-<div class="py-3 me-2">
+<div class="py-3 ">
     <h2 class="text-2xl font-bold text-vert">Tableau de bord</h2>
 
     {{-- CARDS --}}
@@ -46,7 +46,9 @@
     </div>
 
     {{-- STATISTIQUE --}}
-    <h3 class="text-xl font-semibold mt-6 mb-3">Statistique</h3>
+    <h3 class="text-xl font-semibold mt-6 mb-3 flex items-center gap-3">Courbe d'évaluation
+        <hr class="border-2 rounded-full border-orange-400 w-[1cm] mt-1  ">
+    </h3>
     {{-- COURBE PAR MOIS + MOYENNE --}}
     <div class="flex flex-col lg:flex-row gap-5">
         <div class="flex-1 min-w-0 bg-black/2 border border-black/3 rounded-xl p-2 h-[450px] lg:h-[60vh]">
