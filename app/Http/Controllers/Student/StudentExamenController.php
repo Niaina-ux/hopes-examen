@@ -43,7 +43,6 @@ class StudentExamenController extends Controller
         $slugRouteFirst = null;
         $studentExamen = null;
 
-        // Manamarina raha mitovy ny categorie an'ny student sy ilay angatahina
         if ($student->categorie_id === $categorie->id) {
 
             $studentExamen = StudentExamen::where('user_id', Auth::id())
@@ -82,7 +81,6 @@ class StudentExamenController extends Controller
             }
         }
 
-        // ✅ Andeha FOANA any amin'ny view, na misy examen na tsia
         return view('student.examen.index', compact(
             'categorie', 'examen', 'attempt', 'slugRouteFirst', 'studentExamen'
         ));
@@ -93,14 +91,12 @@ class StudentExamenController extends Controller
     {
         $student = Student::where('user_id', Auth::id())->firstOrFail();
         $slug = $examen->categorie->slug;
-        // Mizaha raha misy tentative "en_cours" efa misy
         $attempt = ExamAttempt::where('examen_id', $examen->id)
             ->where('student_id', $student->id)
             ->where('status', 'en_cours')
-            ->latest('id') // na latest('date_debut')
+            ->latest('id') 
             ->first();
         if (!$attempt) {
-            // Maka ny numero_tentative farany, mba hampiakatra 1
             $dernierNumero = ExamAttempt::where('examen_id', $examen->id)
                 ->where('student_id', $student->id)
                 ->max('numero_tentative');

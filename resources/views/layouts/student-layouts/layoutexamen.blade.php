@@ -8,7 +8,6 @@
         </div>
     </div>
 </div>
-{{-- window.location.href = "{{ route('student.examen.terminer', $examen->id) }}"; --}}
 
 <div class="mt-4 container-2">
     @yield('exercice-content')
@@ -24,11 +23,11 @@ function updateTimer() {
     const secondes = secondesRestantes % 60;
     document.getElementById('timer').innerText =
         String(minutes).padStart(2, '0') + ':' + String(secondes).padStart(2, '0');
-
-    if (secondesRestantes <= 0) {
-        clearInterval(timerInterval);
-        alert('Le temps est écoulé !');
-        window.location.href = "";
+        
+        if (secondesRestantes <= 0) {
+            clearInterval(timerInterval);
+            alert('Le temps est écoulé !');
+            window.location.href = "{{ route('student.examen.terminer', $examen->id) }}";
         return;
     }
     
@@ -37,5 +36,16 @@ function updateTimer() {
 
 updateTimer();
 const timerInterval = setInterval(updateTimer, 1000);
+
+// ===========
+document.addEventListener('DOMContentLoaded', function () {
+    history.pushState(null, null, location.href);
+
+    window.addEventListener('popstate', function () {
+        history.pushState(null, null, location.href);
+        alert("Vous ne pouvez pas revenir en arrière pendant l'examen.");
+    });
+
+});
 </script>
 @endsection
