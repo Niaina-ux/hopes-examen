@@ -56,6 +56,7 @@ class AdminExamenStudentController extends Controller
             ->pluck('user_id')
             ->toArray();
 
+
         return view('admin.examen.examen-student.show', compact(
             'slug', 'examen', 'studentwithexam', 'datesDisponibles',
             'dateSelectionnee', 'students', 'attempts', 'nombreParDate',
@@ -154,6 +155,11 @@ class AdminExamenStudentController extends Controller
             return redirect()
                 ->route('admin.student.index');
         }
+
+        $bulletinEnvoye = EmailLog::where('user_id', $student->id)
+            ->where('examen_id', $examen->id)
+            ->where('type', 'bulletin_examen')
+            ->exists();
 
         $examen->load('typesExercice');
         $premierType = $examen->typesExercice->sortByDesc('ordre')->first();
@@ -303,7 +309,8 @@ class AdminExamenStudentController extends Controller
 
         return view('admin.student.examenwherestudent', compact(
             'slug', 'examen', 'student', 'premierType', 'attempt', 'etudiant',
-            'resumeParType', 'totalPointsGlobalObtenus', 'totalNoteGlobal', 'toutEstCorrige'
+            'resumeParType', 'totalPointsGlobalObtenus', 'totalNoteGlobal', 'toutEstCorrige',
+            'bulletinEnvoye'         
         ));
     }
 }

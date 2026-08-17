@@ -6,7 +6,7 @@
     'cancelText' => 'Annuler',
 ])
 
-<div id="{{ $id }}" class="fixed inset-0 bg-black/20 hidden items-center justify-center z-50 backdrop-blur-xs">
+<div id="{{ $id }}" class="fixed inset-0 bg-black/20 hidden items-center justify-center z-180 backdrop-blur-xs">
     <div class="bg-white rounded-md p-8 w-[12cm] text-center">
         <i class="fa-solid fa-circle-exclamation text-4xl text-rouge mb-3"></i>
         <h3 class="text-xl font-semibold mb-2">{{ $title }}</h3>

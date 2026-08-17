@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDasboardController;
 use App\Http\Controllers\Admin\AdminEmailStudentController;
 use App\Http\Controllers\Admin\AdminExamenController;
+use App\Http\Controllers\Admin\AdminExamenEmailPdfController;
 use App\Http\Controllers\Admin\AdminExamenStudentController;
 use App\Http\Controllers\Admin\AdminProfController;
 use App\Http\Controllers\Admin\AdminStudentController;
@@ -84,4 +85,9 @@ Route::controller(AdminExamenStudentController::class)->group(function () {
 Route::controller(AdminEmailStudentController::class)->group(function(){
     Route::post('admin/examen/{slug}/{examenId}/student/{studentId}/notifier', 'notifierEtudiant')->name('admin.examen.student.notifier');
     Route::post('admin/examen/{slug}/{examenId}/notifier-groupe', 'notifierGroupe')->name('admin.examen.student.notifierGroupe');
+});
+
+Route::controller(AdminExamenEmailPdfController::class)->group(function(){
+    Route::get('admin/examen/{slug}/{examenId}/student/{studentId}/bulletin/download', 'downloadBulletin')->name('admin.examen.student.bulletin.download');
+    Route::post('admin/examen/{slug}/{examenId}/student/{studentId}/bulletin/envoyer', 'envoyerBulletin')->name('admin.examen.student.bulletin.envoyer');
 });

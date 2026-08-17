@@ -44,13 +44,40 @@
                         </div>
                         <div class="mt-1 flex items-center gap-3">
                             <div class="flex gap-4">
-                                <span><i class="fa-solid fa-envelope"></i></span>
-                                <span><i class="fa-solid fa-download"></i></span>
+                                @if($ExamenisFnis && $attempt->status === 'corrige')
+                                    <button type="button" onclick="openModal('envoyer-bulletin-modal')" title="{{ $bulletinEnvoye ? 'Bulletin déjà envoyé — renvoyer' : 'Envoyer le bulletin par email' }}">
+                                        @if($bulletinEnvoye)
+                                            <i class="fa-solid fa-envelope-circle-check text-vert"></i>
+                                        @else
+                                            <i class="fa-solid fa-envelope"></i>
+                                        @endif
+                                    </button>
+                                    <x-confirm-modal
+                                        id="envoyer-bulletin-modal"
+                                        title="{{ $bulletinEnvoye ? 'Renvoyer le bulletin' : 'Envoyer le bulletin' }}"
+                                        action="{{ route('admin.examen.student.bulletin.envoyer', [$slug, $examen->id, $student->id]) }}"
+                                        confirmText="Oui, {{ $bulletinEnvoye ? 'renvoyer' : 'envoyer' }}"
+                                        cancelText="Annuler">
+                                        {{ $bulletinEnvoye ? 'Renvoyer' : 'Envoyer' }} ce bulletin par email à <span class="text-rouge font-semibold">{{ $student->name }}</span> ?
+                                    </x-confirm-modal>
+
+                                    <a href="{{ route('admin.examen.student.bulletin.download', [$slug, $examen->id, $student->id]) }}" title="Télécharger le bulletin en PDF">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
+                                @else
+                                    <span class="text-black/20" title="Bulletin disponible uniquement après correction">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </span>
+                                    <span class="text-black/20">
+                                        <i class="fa-solid fa-download"></i>
+                                    </span>
+                                @endif
                             </div>
+
                             @if($ExamenisFnis && $premierType && \Illuminate\Support\Facades\Route::has('prof.examen.showtache.' . $premierType->slug))
                                 <a href="{{ route('prof.examen.showtache.' . $premierType->slug, [$slug, $examen->id, $student->id]) }}"
-                                class="p-2 px-3 rounded-full bg-rouge text-white">
-                                @if ($attempt->status === 'corrige')  
+                                class="p-1 px-3 rounded-full bg-rouge text-white hover-rouge">
+                                @if ($attempt->status === 'corrige')
                                 Voir la correction
                                 @else
                                 Corriger
@@ -62,7 +89,7 @@
 
                     <div class="mt-2 bg-black/3 p-4 rounded-xl">
                         @if($ExamenisFnis)
-                        <div class="min-h-[50vh] bg-white/70 rounded-b p-2">
+                        <div class="min-h-[50vh] bg-white lg:w-[22cm] m-auto shadow rounded-b p-2">
                             @if ($attempt->status === 'corrige')    
                                 <div class="px-15 py-10">
                                     <div class="text-right">le, {{ now()->translatedFormat('d F Y') }}</div>
