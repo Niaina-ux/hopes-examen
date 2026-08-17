@@ -7,7 +7,7 @@
 
     {{-- CARDS --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5 mt-4">
-        <a href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
+        <a href="{{ route('admin.student.index') }}" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
             <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
                 Nombre d'étudiants
             </div>
@@ -16,7 +16,7 @@
                 <span class="text-3xl font-bold text-vert">{{ $totalEtudiants }}</span>
             </div>
         </a>
-        <a href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
+        <a href="{{ route('admin.prof.index') }}" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
             <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
                 Nombre des professeurs
             </div>
@@ -25,7 +25,7 @@
                 <span class="text-3xl font-bold text-vert">{{ $totalProfs }}</span>
             </div>
         </a>
-        <a href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
+        <div href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
             <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
                 Nombre d'examens
             </div>
@@ -33,8 +33,8 @@
                 <i class="fa-solid fa-book-open-reader"></i>
                 <span class="text-3xl font-bold text-vert">{{ $totalExamens }}</span>
             </div>
-        </a>
-        <a href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
+        </div>
+        <div href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
             <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
                 Nombre des catégories
             </div>
@@ -42,7 +42,7 @@
                 <i class="fa-solid fa-arrows-turn-right"></i>
                 <span class="text-3xl font-bold text-vert">{{ $totalCategories }}</span>
             </div>
-        </a>
+        </div>
     </div>
 
     {{-- STATISTIQUE --}}

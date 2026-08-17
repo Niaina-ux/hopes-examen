@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\AdminStudentExameQcmController;
 use App\Http\Controllers\Admin\AdminTypeExerciceController;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware(['auth', 'role:admin'])->group(function (){
+
 Route::get('/admin', [AdminDasboardController::class, 'index'])->name('admin.dashboard');
 Route::controller(AdminProfController::class)->group(function(){
     Route::get('/admin/prof/index',  'index')
@@ -36,6 +38,8 @@ Route::controller(AdminStudentController::class)->group(function(){
     Route::get('/admin/student/{student}/assign-categorie',  'assignCategorie')->name('admin.student.assignCategorie');
     Route::post('/admin/student/{student}/assign-categorie',  'storeCategorie')->name('admin.student.storeCategorie');
     Route::get('admin/student/{studentId}/show', 'examenallstudent')->name('admin.student.show');
+    Route::get('admin/student/{slug}/{studentId}/resultat-final/download', 'downloadResultatFinal')->name('admin.student.resultatFinal.download');
+    Route::post('admin/student/{slug}/{studentId}/resultat-final/envoyer', 'envoyerResultatFinal')->name('admin.student.resultatFinal.envoyer');
 });
 
 Route::get('/admin/student/examen/{examen}/qcm', [AdminStudentExameQcmController::class, 'index'])
@@ -90,4 +94,6 @@ Route::controller(AdminEmailStudentController::class)->group(function(){
 Route::controller(AdminExamenEmailPdfController::class)->group(function(){
     Route::get('admin/examen/{slug}/{examenId}/student/{studentId}/bulletin/download', 'downloadBulletin')->name('admin.examen.student.bulletin.download');
     Route::post('admin/examen/{slug}/{examenId}/student/{studentId}/bulletin/envoyer', 'envoyerBulletin')->name('admin.examen.student.bulletin.envoyer');
+});
+
 });

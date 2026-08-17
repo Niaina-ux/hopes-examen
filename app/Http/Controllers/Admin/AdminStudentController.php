@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ResultatFinalMail;
 use App\Models\Categorie;
 use App\Models\ExamAttempt;
 use App\Models\Student;
 use App\Models\StudentExamen;
 use App\Models\User;
 use App\Traits\CalculeStatistiquesExamen;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
 
 class AdminStudentController extends Controller
@@ -131,7 +134,7 @@ class AdminStudentController extends Controller
     }
 
 
-    //detail d'un etudiant
+    
     public function examenallstudent(int $studentId)
     {
         $student = User::find($studentId);
@@ -188,6 +191,79 @@ class AdminStudentController extends Controller
         return view('admin.student.examenallstudent', compact(
             'student', 'userStudent', 'slug', 'attempts', 'examen_planifie', 'statistiques', 'moyenneGenerale'
         ));
+    }
+
+    // email pdf  //
+    public function downloadResultatFinal(string $slug, int $studentId)
+    {
+        [$student, $userStudent, $statistiques, $moyenneGenerale] = $this->chargerStatistiques($studentId);
+        if (!$student) {
+            return redirect()->route('admin.student.index');
+        }
+
+        $pdf = Pdf::loadView('admin.student.resultat-final-pdf', compact(
+            'student', 'userStudent', 'statistiques', 'moyenneGenerale'
+        ));
+
+        return $pdf->download("resultat-final-{$student->name}.pdf");
+    }
+
+    public function envoyerResultatFinal(string $slug, int $studentId)
+    {
+        [$student, $userStudent, $statistiques, $moyenneGenerale] = $this->chargerStatistiques($studentId);
+        if (!$student) {
+            return redirect()->route('admin.student.index');
+        }
+
+        $pdf = Pdf::loadView('admin.student.resultat-final-pdf', compact(
+            'student', 'userStudent', 'statistiques', 'moyenneGenerale'
+        ));
+
+        Mail::to($student->email)->queue(new ResultatFinalMail(
+            $student,
+            base64_encode($pdf->output())
+        ));
+
+        return back()->with('success', "Résultat final envoyé à {$student->name}.");
+    }
+
+    // ✅ Factorise la logique commune (utilisée par examenallstudent, download, envoyer)
+    private function chargerStatistiques(int $studentId): array
+    {
+        $student = User::find($studentId);
+        if (!$student) {
+            return [null, null, collect(), null];
+        }
+
+        $student->load('student.categorie');
+        $userStudent = $student->student;
+        if (!$userStudent) {
+            return [null, null, collect(), null];
+        }
+
+        $attempts = ExamAttempt::where('student_id', $userStudent->id)
+            ->where('numero_tentative', 1)
+            ->where('status', '!=', 'en_cours')
+            ->with('examen.categorie')
+            ->latest('date_fin')
+            ->get();
+
+        $statistiques = $attempts
+            ->filter(fn($attempt) => $attempt->status === 'corrige')
+            ->map(function ($attempt) {
+                return [
+                    'titre' => $attempt->examen->titre,
+                    'date' => $attempt->date_fin?->format('d/m/Y'),
+                    'pourcentage' => $this->calculerPourcentageAttempt($attempt->examen, $attempt),
+                ];
+            })
+            ->filter(fn($s) => $s['pourcentage'] !== null)
+            ->sortBy('date')
+            ->values();
+
+        $moyenneGenerale = $statistiques->isNotEmpty() ? round($statistiques->avg('pourcentage'), 1) : null;
+
+        return [$student, $userStudent, $statistiques, $moyenneGenerale];
     }
     
 }

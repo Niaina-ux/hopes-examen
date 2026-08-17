@@ -313,4 +313,7 @@ class AdminExamenStudentController extends Controller
             'bulletinEnvoye'         
         ));
     }
+
+
+    
 }

@@ -12,7 +12,7 @@
         <h3 class="text-xl font-semibold mb-2">{{ $title }}</h3>
         <p class="text-black/60 mb-5">{{ $slot }}</p>
         <div class="flex justify-center gap-3">
-            <button type="button" onclick="closeModal('{{ $id }}')" class="border border-black/10 rounded-md px-5 py-2">
+            <button type="button" onclick="closeModal('{{ $id }}')" class="border border-black/10 text-black/60 rounded-md px-5 py-2">
                 {{ $cancelText }}
             </button>
             <form action="{{ $action }}" method="POST">

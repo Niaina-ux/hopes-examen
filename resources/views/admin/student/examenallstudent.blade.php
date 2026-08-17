@@ -1,6 +1,6 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')
-    <div class="py-3 me-2">
+    <div class="py-3">
         <div class="">
             <a href=""
             class="hover:underline">
@@ -9,18 +9,26 @@
             <span class="font-semibold">Edutiant</span>
         </div>
         <div class="flex gap-5 py-4  border-black/20">
-            <div class="w-20 h-20 rounded-md overflow-hidden border border-black/5">
-                <img src="{{$userStudent->user->image ? asset('images/'. $userStudent->user->image) : ''}}" alt="" class="w-full h-full object-cover">
+            <div class="w-18 h-18 rounded-xl overflow-hidden border border-black/5">
+                <img src="{{$userStudent->user->image ? asset('images/users/'. $userStudent->user->image) : ''}}" alt="" class="w-full h-full object-cover">
             </div>
             <div class="">
-                <h3 class="font-semibold text-2xl text-vert"> {{$userStudent->user->name}} </h3>
+                <h3 class="font-semibold -mt-1 text-2xl text-vert"> {{$userStudent->user->name}} </h3>
                 <p><span class="text-sm me-2">Email_</span> {{$userStudent->user->email}}</p>
                 <p class="text-rouge"><span class="text-sm me-2 text-black/60">Matricule_</span>{{$userStudent->matricule}}</p>
             </div>
         </div>
         <div class="flex justify-between items-center mt-3 mb-2">
             <h3 class="text-xl mb-2 font-semibold flex items-center gap-3">Statistique <hr class="w-[2cm] border-2 mt-[3px] border-black/20"></h3>
-            {{-- <a href="" class="p-1 px-4 rounded-md text-white bg-rouge">Voir detail</a> --}}
+            <div class="">
+                <button type="button" onclick="openModal('resultat-final-modal')" class="p-1 px-4 rounded-full text-white bg-rouge hover-rouge">
+                    Voir resultat final
+                </button>
+
+                <div id="resultat-final-modal" class="hidden fixed top-0 left-0 w-full p-5 h-screen bg-black/10 z-170 backdrop-blur-xs items-center justify-center">
+                    @include('layouts.admin-layouts.layoutresult-final')
+                </div>
+            </div>
         </div>
         <div class="flex gap-7">
            <div class="flex-1 bg-black/2  border border-black/3 h-[60vh] rounded-xl p-4">

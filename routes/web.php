@@ -13,6 +13,9 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 Route::get('/admin/register', [AdminRegisterController::class, 'admin_register'])->name('admin.register');
 Route::post('/admin/register', [AdminRegisterController::class, 'store'])->name('admin.register.store');
 
+Route::fallback(function () {
+    abort(404);
+});
 
 require __DIR__.'/prof.php';
 require __DIR__.'/student.php';

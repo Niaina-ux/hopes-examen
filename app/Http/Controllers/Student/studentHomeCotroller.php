@@ -13,8 +13,9 @@ class studentHomeCotroller extends Controller
 {
     public function index()
     {
-        if (!Auth::user()) {
-           redirect()->route('login');
+        
+        if (Auth::check() && Auth::user()->role !== 'student') {
+            return redirect()->route('login');
         }
         
         $categories = Categorie::withCount('examens')->get();

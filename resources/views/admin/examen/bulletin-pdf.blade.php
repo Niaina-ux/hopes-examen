@@ -23,7 +23,6 @@
             <td style="border: none;">
                 <strong>HOPES FORMATION</strong><br>
                 Ecole de formation professionnelle<br>
-                <em>Le raccourci Lorem ipsum dolor sit amet</em>
             </td>
             <td style="border: none; text-align: right;">
                 <strong>{{ $student->name }}</strong><br>
@@ -41,13 +40,15 @@
     <table>
         <thead>
             <tr>
+                <th>N°</th>
                 <th>Exercice</th>
                 <th class="text-right-td">Note</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($resumeParType as $r)
+            @foreach($resumeParType as $index => $r)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $r['nom'] }}</td>
                     <td class="text-right-td">{{ $r['obtenus'] }} / {{ $r['total'] }}</td>
                 </tr>
@@ -55,6 +56,7 @@
         </tbody>
         <tfoot>
             <tr>
+                <td>=</td>
                 <td><strong>Total général</strong></td>
                 <td class="text-right-td"><strong>{{ $totalPointsGlobalObtenus }} / {{ $totalNoteGlobal }}</strong></td>
             </tr>

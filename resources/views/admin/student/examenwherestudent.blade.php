@@ -29,17 +29,23 @@
                             <h2 class="text-xl font-semibold -mt-1"> {{$examen->titre}} </h2>
                             <div class="text-sm flex gap-4">
                                 <span>{{ $attempt?->date_fin?->format('d-M-Y') ?? 'Pas encore commencé' }}</span>
-                                <span>
+                                <div>
                                     @if(!$attempt)
+                                    <span class="">
                                         Pas encore commencé
+                                    </span>
                                     @elseif($attempt->status === 'en_cours')
                                         Examen en cours
                                     @elseif($attempt->status === 'corrige')
-                                        Corrigé
+                                    <span class="text-rouge">
+                                       Corrigé
+                                    </span>
                                     @else
-                                        En attente de correction
+                                    <span class="text-vert">
+                                       En attente de correction
+                                    </span>
                                     @endif
-                                </span>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-1 flex items-center gap-3">
@@ -87,40 +93,22 @@
                         </div>
                     </div>
 
-                    <div class="mt-2 bg-black/3 p-4 rounded-xl">
+                    <div class="mt-2 bg-black/2 border border-black/3 p-4 rounded-md">
                         @if($ExamenisFnis)
-                        <div class="min-h-[50vh] bg-white lg:w-[22cm] m-auto shadow rounded-b p-2">
+                        <div class="min-h-[50vh] p-2">
                             @if ($attempt->status === 'corrige')    
-                                <div class="px-15 py-10">
-                                    <div class="text-right">le, {{ now()->translatedFormat('d F Y') }}</div>
-                                    <div class="flex justify-between items-end gap-7 border-b border-black/20 pb-2">
-                                        <div class="w-15 -mb-[2px]">
-                                            <img src="/images/logo.png" alt="" class="w-full object-cover">
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="uppercase font-semibold">Hopes formation</h3>
-                                            <p>Ecole de formation professionnelle</p>
-                                            <p class="italic">Le raccourci Lorem ipsum dolor sit amet</p>
-                                        </div>
-                                        <div class="flex-1 text-right">
-                                            <h3 class="font-semibold">{{ $student->name }}</h3>
-                                            <p>Matricule: {{ $etudiant->matricule ?? '—' }}</p>
-                                            <p>Domaine: {{ $examen->categorie->nom ?? '—' }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-center py-4 pt-7">
-                                        <h2 class="text-4xl font-bold uppercase">Résumé des notes</h2>
-                                        <p class="text-2xl"> {{$examen->titre}} </p>
-                                    </div>
+                            <h2 class="text-xl font-bold uppercase">Résumé des notes</h2>
+                                <div class="py-3">
 
                                     @if(empty($resumeParType))
                                         <div class="h-full flex items-center justify-center text-black/40 py-10">
                                             Aucun exercice noté pour cet examen.
                                         </div>
                                     @else
-                                        <table class="w-full text-base border-collapse border border-black/10">
+                                        <table class="w-full text-base border-collapse border border-black/10 bg-white/90">
                                             <thead>
                                                 <tr class="bg-black/5">
+                                                    <th class="py-2 px-3 border border-black/10 text-left w-[2cm]">N°</th>
                                                     <th class="py-2 px-3 border border-black/10 text-left">Exercice</th>
                                                     <th class="py-2 px-3 border border-black/10 text-right">Note</th>
                                                 </tr>
@@ -128,6 +116,7 @@
                                             <tbody>
                                                 @foreach($resumeParType as $key => $r)
                                                     <tr>
+                                                        <td class="py-2 px-3 border border-black/10">{{ $loop->iteration }}</td>
                                                         <td class="py-2 px-3 border border-black/10">{{ $r['nom'] }}</td>
                                                         <td class="py-2 px-3 border border-black/10 text-right">
                                                             {{ $r['obtenus'] }} / {{ $r['total'] }}
@@ -135,37 +124,32 @@
                                                     </tr>
                                                 @endforeach
                                             </tbody>
-                                            <tfoot>
-                                                <tr class="font-semibold bg-black/5">
-                                                    <td class="py-3 px-3 border border-black/10">Total général</td>
-                                                    <td class="py-3 px-3 border border-black/10 text-right">
-                                                        {{ $totalPointsGlobalObtenus }} / {{ $totalNoteGlobal }}
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
                                         </table>
-                                        @php
-                                            $pourcentage = $totalNoteGlobal > 0 ? ($totalPointsGlobalObtenus / $totalNoteGlobal) * 100 : 0;
-
-                                            $mention = match(true) {
-                                                $pourcentage >= 90 => 'Excellent',
-                                                $pourcentage >= 80 => 'Très Bien',
-                                                $pourcentage >= 70 => 'Bien',
-                                                $pourcentage >= 60 => 'Assez Bien',
-                                                $pourcentage >= 50 => 'Passable',
-                                                default => 'Insuffisant',
-                                            };
-
-                                            $couleurMention = match(true) {
-                                                $pourcentage >= 70 => 'text-vert',
-                                                $pourcentage >= 50 => 'text-orange-500',
-                                                default => 'text-rouge',
-                                            };
-                                        @endphp
-
-                                        <div class="text-right">
-                                            <span>Mention</span>
-                                            <p class="font-semibold {{ $couleurMention }}">{{ $mention }}</p>
+                                        <div class="flex justify-between gap-3 mt-4">
+                                            <h3 class=" font-semibold">Total Général:  <span class="mx-2">{{ $totalPointsGlobalObtenus }} / {{ $totalNoteGlobal }}</span></h3>
+                                            @php
+                                                $pourcentage = $totalNoteGlobal > 0 ? ($totalPointsGlobalObtenus / $totalNoteGlobal) * 100 : 0;
+    
+                                                $mention = match(true) {
+                                                    $pourcentage >= 90 => 'Excellent!',
+                                                    $pourcentage >= 80 => 'Très Bien!',
+                                                    $pourcentage >= 70 => 'Bien!',
+                                                    $pourcentage >= 60 => 'Assez Bien!',
+                                                    $pourcentage >= 50 => 'Passable!',
+                                                    $pourcentage >= 0 => 'Fait le meilleur!',
+                                                    default => 'Insuffisant',
+                                                };
+    
+                                                $couleurMention = match(true) {
+                                                    $pourcentage >= 70 => 'text-vert',
+                                                    $pourcentage >= 50 => 'text-orange-500',
+                                                    default => 'text-rouge',
+                                                };
+                                            @endphp
+    
+                                            <div class="text-right">
+                                                <p class="{{ $couleurMention }}">{{ $mention }}</p>
+                                            </div>
                                         </div>
                                     @endif
                                 </div>

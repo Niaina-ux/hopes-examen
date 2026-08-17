@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [studentHomeCotroller::class, 'index'])
     ->name('home');
-    
+
+Route::middleware(['auth', 'role:student'])->group(function (){
+
 Route::middleware(['auth'])->group(function () {
 
     Route::controller(StudentExamenController::class)->group(function(){
@@ -78,5 +80,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', 'dashboard')->name('student.dashboard');
         Route::get('/mes-examen/{attempt}', 'show')->name('student.examen.historique.show');
     });
+
+});
 
 });

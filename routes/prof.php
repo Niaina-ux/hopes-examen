@@ -37,7 +37,7 @@ use App\Http\Controllers\Prof\ProfStudentController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Mailer\Transport\RoundRobinTransport;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:prof'])->group(function (){
     Route::get('/prof', [ProfDashboardController::class, 'index'])->name('prof.dashboard');
 
     Route::controller(ProfExamenController::class)->group( function(){
