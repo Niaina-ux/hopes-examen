@@ -35,6 +35,18 @@
             </div>
         @endif
     </div>
+    <div class="flex gap-2 border-b-2 border-black/10 py-2 mt-2">
+        <a href="{{ route('admin.prof.index') }}"
+            class="p-1 px-3 rounded-sm border border-black/10 bg-black/2 inline-block hover:bg-black/5 {{ !request('categorie_id') ? 'bg-vert text-white' : '' }}">
+            Tous
+        </a>
+        @foreach ($categories as $categorie)
+            <a href="{{ route('admin.prof.index', ['categorie_id' => $categorie->id]) }}"
+                class=" p-1 px-3 rounded-sm border border-black/10 bg-black/2 inline-block hover:bg-black/5 {{ request('categorie_id') == $categorie->id ? 'bg-vert text-white' : '' }}">
+                {{ $categorie->nom }}
+            </a>
+        @endforeach
+    </div>
     <div class="w-full  mt-4 rounded py-1">
         @forelse ($profs as $prof)    
         <div class="flex justify-between gap-7 p-2 border-b border-black/10">

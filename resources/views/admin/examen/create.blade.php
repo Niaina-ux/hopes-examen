@@ -27,6 +27,12 @@
         </div>
 
         <div class="mb-4">
+            <label class="block text-sm font-medium">Date d'examen (optionnel)</label>
+            <input type="date" name="date_examen" value="{{ old('date_examen') }}" class="border rounded w-full p-2">
+            @error('date_examen') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="mb-4">
             <label class="block text-sm font-medium">Durée (minutes)</label>
             <input type="number" name="duree_minutes" value="{{ old('duree_minutes') }}" class="border rounded w-full p-2">
         </div>

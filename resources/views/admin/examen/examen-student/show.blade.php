@@ -1,10 +1,12 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')
-    <div class="py-3 me-2">
+    <div class="py-3">
         <a href="">Examen /</a>
         <div class="w-[60%] mt-1">
             <h2 class="text-2xl font-semibold text-vert">{{ $examen->titre }}</h2>
             <p>{{ $examen->description }}</p>
+            <p>Date d'examen le <span class="underline font-semibold">{{ \Carbon\Carbon::parse($examen->date_examen)
+                ->translatedFormat('d M Y') }}</span> </p>
         </div>
 
         @if(session('success'))
@@ -21,22 +23,6 @@
             </div>
         @endif
 
-        <div class="flex justify-between items-end border-b-2 border-black/10 mt-2 pb-1">
-            <div class="flex gap-2 flex-wrap">
-                @forelse($datesDisponibles as $date)
-                    <a href="{{ route('admin.examen.student.show', [$slug, $examen->id, 'date' => $date]) }}"
-                        class="border-2 rounded-sm p-1 px-2 flex items-center gap-2
-                            {{ $date === $dateSelectionnee ? 'bg-vert text-white' : 'border-black/10 bg-black/2' }}">
-                        {{ \Carbon\Carbon::parse($date)->translatedFormat('d-M-Y') }}
-                        <span class="text-xs w-5 h-5 border border-black/5 rounded-full flex justify-center items-center bg-white text-black/60">
-                            {{ $nombreParDate[$date] ?? 0 }}
-                        </span>
-                    </a>
-                @empty
-                    <p class="text-black/50 text-sm">Aucune date d'examen assignée.</p>
-                @endforelse
-            </div>
-        </div>
 
         <form id="bulk-notify-form" action="{{ route('admin.examen.student.notifierGroupe', [$slug, $examen->id]) }}" method="POST"
             class="mt-2">
@@ -47,9 +33,27 @@
                         <input type="checkbox" id="select-all">
                         Tout sélectionner
                     </label>
-                    <button type="submit" id="bulk-send-btn" class="bg-vert text-white px-4 py-1 rounded-full text-sm" disabled>
+                    <button type="button" onclick="openBulkSendModal()" id="bulk-send-btn" class="bg-vert text-white px-4 py-1 rounded-full text-sm" disabled>
                         <i class="fa-solid fa-paper-plane"></i> Envoyer aux sélectionnés (<span id="selected-count">0</span>)
                     </button>
+
+                    <div id="confirm-bulk-send-modal" class="fixed inset-0 bg-black/20 hidden items-center justify-center z-160 backdrop-blur-xs">
+                        <div class="bg-white rounded-md p-8 w-[12cm] text-center">
+                            <i class="fa-solid fa-circle-exclamation text-4xl text-rouge mb-3"></i>
+                            <h3 class="text-xl font-semibold mb-2">Envoyer les invitations</h3>
+                            <p class="text-black/60 mb-5">
+                                Envoyer l'invitation à <span id="confirm-selected-count" class="font-semibold text-rouge">0</span> étudiant(s) sélectionné(s) ?
+                            </p>
+                            <div class="flex justify-center gap-3">
+                                <button type="button" onclick="closeModal('confirm-bulk-send-modal')" class="border border-black/10 rounded-md px-5 py-2">
+                                    Annuler
+                                </button>
+                                <button type="button" id="confirm-bulk-send-btn" class="bg-rouge text-white rounded-md px-5 py-2">
+                                    Oui, envoyer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 @forelse($studentwithexam as $se)
                     @php
@@ -84,14 +88,31 @@
                             <p class="text-sm">{{ $user->email }}</p>
                         </div>
                         <div class="flex gap-3 items-start">
-                            <label for="emailenv" class="flex rounded-full px-2 p-1 border border-black/5 shadow gap-2">
-                                <input type="checkbox" id="emailenv" name="student_ids[]" value="{{ $user->id }}"
-                                class="student-checkbox" {{ $aDejaFaitExamen ? 'disabled' : '' }}>
+                            <label for="emailenv"
+                                class="flex rounded-full px-2 p-1 border border-black/5
+                                        shadow gap-2">
+
+                                <input type="checkbox"
+                                    id="emailenv"
+                                    name="student_ids[]"
+                                    value="{{ $user->id }}"
+                                    class="student-checkbox"
+                                    {{ $aDejaFaitExamen ? 'disabled' : '' }}>
+
                                 @if($aDejaFaitExamen)
-                                    <i class="fa-solid fa-envelope-circle-check text-black/20" title="Étudiant ayant déjà passé l'examen — invitation non modifiable"></i>
+                                    <i class="fa-solid fa-envelope-circle-check text-black/20"
+                                    title="Étudiant ayant déjà passé l'examen — invitation non modifiable">
+                                    </i>
                                 @elseif(in_array($user->id, $emailsEnvoyes))
-                                    <i class="fa-solid fa-envelope-circle-check text-vert" title="Invitation déjà envoyée"></i>
+                                    <i class="fa-solid fa-envelope-circle-check text-vert"
+                                    title="Invitation déjà envoyée">
+                                    </i>
+                                @else
+                                    <i class="fa-solid fa-envelope text-black/50"
+                                    title="Invitation non envoyée">
+                                    </i>
                                 @endif
+
                             </label>
 
                             @if($attempt)
@@ -129,12 +150,12 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         const selectAll = document.getElementById('select-all');
         const checkboxes = document.querySelectorAll('.student-checkbox:not(:disabled)'); 
         const sendBtn = document.getElementById('bulk-send-btn');
         const countLabel = document.getElementById('selected-count');
-        const bulkForm = document.getElementById('bulk-notify-form');
+        const bulkForm = document.getElementById('bulk-notify-form'); 
 
         function updateState() {
             const checked = document.querySelectorAll('.student-checkbox:checked:not(:disabled)').length;
@@ -161,6 +182,16 @@
         });
 
         updateState();
+
+        document.getElementById('confirm-bulk-send-btn').addEventListener('click', function () {
+            document.getElementById('bulk-notify-form').submit(); // ✅ mandefa ilay formulaire tena misy checkbox
+        });
     });
+
+    function openBulkSendModal() {
+        const checked = document.querySelectorAll('.student-checkbox:checked:not(:disabled)').length;
+        document.getElementById('confirm-selected-count').textContent = checked;
+        openModal('confirm-bulk-send-modal');
+    }
     </script>
 @endsection

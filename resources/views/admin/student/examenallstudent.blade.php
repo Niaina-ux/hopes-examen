@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="flex justify-between items-center mt-3 mb-2">
-            <h3 class="text-xl mb-2 font-semibold flex items-center gap-3">Statistique <hr class="w-[2cm] border-2 mt-[3px] border-black/20"></h3>
+            <h3 class="text-xl mb-2 font-semibold flex items-center gap-3">Statistique <hr class="w-[2cm] border-2 mt-3 border-black/20"></h3>
             <div class="">
                 <button type="button" onclick="openModal('resultat-final-modal')" class="p-1 px-4 rounded-full text-white bg-rouge hover-rouge">
                     Voir resultat final

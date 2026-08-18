@@ -23,19 +23,18 @@
                 </span>
             </div>
         </div>
-
-        {{-- Navigation rapide --}}
-        <div class="sticky top-0 z-50 bg-white">
-            <div id="types-exercice-scroll"
-                class="flex flex-nowrap gap-2 items-center pt-3 pb-2 border-b-2 border-black/10  scrollbar-hide cursor-grab select-none">
-                @foreach($examen->typesExercice as $type)
-                    <a href="#section-{{ $type->slug }}"
-                    class="menu-section shrink-0 p-1 px-4 rounded-full border border-black/5 bg-black/3 transition-all duration-200 hover:bg-black/6 hover:border-rouge whitespace-nowrap"
-                    data-target="section-{{ $type->slug }}">
-                        {{ $type->nom }}
-                    </a>
-                @endforeach
-            </div>
+    </div>
+    {{-- Navigation rapide --}}
+    <div class="sticky top-0 z-50 bg-white">
+        <div id="types-exercice-scroll"
+            class="flex gap-2 items-center pt-3 pb-2 border-b-2 border-black/10  scrollbar-hide cursor-grab select-none">
+            @foreach($examen->typesExercice as $type)
+                <a href="#section-{{ $type->slug }}"
+                class="menu-section shrink-0 p-1 px-4 rounded-full border border-black/5 bg-black/3 transition-all duration-200 hover:bg-black/6 hover:border-rouge whitespace-nowrap"
+                data-target="section-{{ $type->slug }}">
+                    {{ $type->nom }}
+                </a>
+            @endforeach
         </div>
     </div>
     <div class="flex flex-col-reverse lg:flex-row justify-between gap-5 compare-section">
@@ -1022,7 +1021,7 @@
                             $estAutoCorrige = !in_array($key, $typesCorrectionManuelle);
                             $estCorrige = $estAutoCorrige || ($r['corrige'] ?? false);
                         @endphp
-                        <div class="flex justify-between items-center text-sm gap-3 p-4 bg-black/3 rounded-md">
+                        <div class="flex justify-between items-center text-sm gap-3 p-4 bg-black/2 border border-black/3 rounded-md">
                             <div class="border-e-2 border-black/10 flex-1 px-2">
                                 <span class="text-xs {{ $estCorrige ? 'text-vert' : 'text-rouge' }}">
                                     {{ $estCorrige ? 'Corrigé' : 'En attente de correction' }}

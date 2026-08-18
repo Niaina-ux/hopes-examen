@@ -26,6 +26,32 @@
             <label class="block text-sm font-medium">Description</label>
             <textarea name="description" rows="3" class="border rounded w-full p-2">{{ old('description', $examen->description) }}</textarea>
         </div>
+        <div>
+            <label for="date_examen" class="block mb-1">
+                Date de l'examen
+            </label>
+
+            <input type="date"
+                id="date_examen"
+                name="date_examen"
+                value="{{ old(
+                    'date_examen',
+                    $examen->date_examen
+                        ? \Carbon\Carbon::parse(
+                            $examen->date_examen
+                        )->format('Y-m-d')
+                        : ''
+                ) }}"
+                min="{{ now()->format('Y-m-d') }}"
+                class="w-full border border-black/10
+                        rounded-md p-2 bg-black/2">
+
+            @error('date_examen')
+                <p class="text-red-500 text-sm mt-1">
+                    {{ $message }}
+                </p>
+            @enderror
+        </div>
 
         <div class="mb-4">
             <label class="block text-sm font-medium">Durée (minutes)</label>

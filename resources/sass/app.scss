@@ -186,3 +186,36 @@
     }
     
 }
+
+
+.navlink{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    transition:all 0.3s;
+    &:hover{
+        transition:all 0.3s;
+        color: $vert;
+        .tirelink{
+            margin-right: 10px;
+            height: 0.6cm;
+        }
+    }
+    .tirelink{
+        transition:all 0.3s;
+        height: 0;
+        width: 3px;
+        border-radius: 10px;
+        background-color: $vert;
+    }
+}
+.active{
+    color: $vert;
+    .tirelink{
+        margin-right: 10px;
+        height: 0.6cm;
+        width: 3px;
+        border-radius: 10px;
+        background-color: $vert;
+    }
+}

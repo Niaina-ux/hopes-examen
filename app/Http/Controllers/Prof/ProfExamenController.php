@@ -22,16 +22,102 @@ use Illuminate\Http\Request;
 class ProfExamenController extends Controller
 {
 
-    public function show(string $slug)
-    {
-        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+    // public function show(string $slug)
+    // {
+    //     $categorie = Categorie::where('slug', $slug)->firstOrFail();
 
-        $examens = Examen::where('categorie_id', $categorie->id)
-        ->orderBy('id', 'desc')
-        ->paginate(10);
+    //     $examens = Examen::where('categorie_id', $categorie->id)
+    //     ->orderBy('id', 'desc')
+    //     ->paginate(10);
 
-        return view('prof.examen.show', compact('categorie', 'examens', 'slug'));
+    //     return view('prof.examen.show', compact('categorie', 'examens', 'slug'));
+    // }
+
+    public function show(Request $request, string $slug)
+{
+    $categorie = Categorie::where('slug', $slug)->firstOrFail();
+
+    $moisSelectionne = $request->input('mois');
+    $dateSelectionnee = $request->input('date');
+    $modeTous = !$moisSelectionne && !$dateSelectionnee;
+
+    if ($dateSelectionnee) {
+        $moisSelectionne = \Carbon\Carbon::parse($dateSelectionnee)
+            ->format('Y-m');
+        $modeTous = false;
     }
+
+    $datesDisponibles = collect();
+
+    if ($moisSelectionne) {
+        $datesDisponibles = Examen::where(
+            'categorie_id',
+            $categorie->id
+        )
+            ->whereNotNull('date_examen')
+            ->whereYear(
+                'date_examen',
+                substr($moisSelectionne, 0, 4)
+            )
+            ->whereMonth(
+                'date_examen',
+                substr($moisSelectionne, 5, 2)
+            )
+            ->selectRaw('DATE(date_examen) as date')
+            ->distinct()
+            ->orderByDesc('date')
+            ->pluck('date')
+            ->map(fn ($date) => \Carbon\Carbon::parse($date)
+                ->format('Y-m-d'))
+            ->values();
+    }
+
+    if (
+        !$modeTous &&
+        !$dateSelectionnee &&
+        $datesDisponibles->isNotEmpty()
+    ) {
+        $dateSelectionnee = $datesDisponibles->first();
+    }
+
+    $query = Examen::where(
+        'categorie_id',
+        $categorie->id
+    );
+
+    if ($dateSelectionnee) {
+        $query->whereDate(
+            'date_examen',
+            $dateSelectionnee
+        );
+    } elseif ($moisSelectionne) {
+        $query
+            ->whereYear(
+                'date_examen',
+                substr($moisSelectionne, 0, 4)
+            )
+            ->whereMonth(
+                'date_examen',
+                substr($moisSelectionne, 5, 2)
+            );
+    }
+
+    $examens = $query
+        ->orderByDesc('date_examen')
+        ->orderByDesc('id')
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('prof.examen.show', compact(
+        'categorie',
+        'examens',
+        'slug',
+        'datesDisponibles',
+        'dateSelectionnee',
+        'moisSelectionne',
+        'modeTous'
+    ));
+}
 
     public function assignTypes(string $slug, int $examenId)
     {

@@ -32,7 +32,6 @@ class AdminExamenStudentController extends Controller
             ->groupBy(fn($se) => $se->date_examen->format('Y-m-d'))
             ->map(fn($group) => $group->count());
 
-        // ✅ Daty farany foana no default (mitovy amin'izay natao teo aloha)
         $dateSelectionnee = $request->query('date', $datesDisponibles->last());
 
         $studentwithexam = StudentExamen::where('examen_id', $examen->id)
@@ -64,43 +63,68 @@ class AdminExamenStudentController extends Controller
         ));
     }
 
-    // 
+     
     public function create(string $slug, Examen $examen)
     {
-       
-        $userIdsDejaInvites = StudentExamen::where('examen_id', $examen->id)
+        $userIdsDejaInvites = StudentExamen::where(
+            'examen_id',
+            $examen->id
+        )
             ->pluck('user_id')
             ->toArray();
 
-        
-        $students = Student::where('categorie_id', $examen->categorie_id)
-            ->whereNotIn('user_id', $userIdsDejaInvites)
+        $students = Student::where(
+            'categorie_id',
+            $examen->categorie_id
+        )
+            ->whereNotIn(
+                'user_id',
+                $userIdsDejaInvites
+            )
             ->with('user')
             ->get();
 
-        return view('admin.examen.examen-student.create', compact(
-            'slug', 'examen', 'students'
-        ));
+        return view(
+            'admin.examen.examen-student.create',
+            compact(
+                'slug',
+                'examen',
+                'students'
+            )
+        );
     }
 
     public function store(Request $request, string $slug, Examen $examen)
     {
         $validated = $request->validate([
-            'student_user_ids'   => ['required', 'array', 'min:1'],
+            'student_user_ids' => ['required', 'array', 'min:1'],
             'student_user_ids.*' => ['exists:users,id'],
-            'date_examen'        => ['required', 'date'],
         ], [
-            'student_user_ids.required' => 'Veuillez sélectionner au moins un étudiant.',
-            'date_examen.required'      => 'La date de l\'examen est obligatoire.',
+            'student_user_ids.required' =>
+                'Veuillez sélectionner au moins un étudiant.',
         ]);
 
-        $studentsValides = Student::where('categorie_id', $examen->categorie_id)
-            ->whereIn('user_id', $validated['student_user_ids'])
+        if (!$examen->date_examen) {
+            return back()->withErrors([
+                'student_user_ids' =>
+                    "La date de l'examen n'est pas encore définie.",
+            ])->withInput();
+        }
+
+        $studentsValides = Student::where(
+            'categorie_id',
+            $examen->categorie_id
+        )
+            ->whereIn(
+                'user_id',
+                $validated['student_user_ids']
+            )
             ->pluck('user_id');
 
         if ($studentsValides->isEmpty()) {
             return back()->withErrors([
-                'student_user_ids' => 'Aucun étudiant valide sélectionné pour cette catégorie.',
+                'student_user_ids' =>
+                    'Aucun étudiant valide sélectionné pour cette catégorie.',
             ])->withInput();
         }
 
@@ -108,18 +132,24 @@ class AdminExamenStudentController extends Controller
             StudentExamen::updateOrCreate(
                 [
                     'examen_id' => $examen->id,
-                    'user_id'   => $userId,
+                    'user_id' => $userId,
                 ],
                 [
-                    'date_examen' => $validated['date_examen'],
-                    'termine'     => false,
+                    'date_examen' => $examen->date_examen,
+                    'termine' => false,
                 ]
             );
         }
 
         return redirect()
-            ->route('admin.examen.student.create', [$slug, $examen->id])
-            ->with('success', 'Étudiants assignés à l\'examen avec succès.');
+            ->route(
+                'admin.examen.student.create',
+                [$slug, $examen->id]
+            )
+            ->with(
+                'success',
+                'Étudiants assignés à l\'examen avec succès.'
+            );
     }
 
     

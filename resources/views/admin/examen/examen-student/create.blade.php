@@ -25,16 +25,18 @@
             class="mt-2">
             @csrf
             <div class="flex justify-between pb-2 items-center">
-                <div class="w-[10cm] relative border-2 border-black/20 bg-black/3 rounded-md">
+                <div class="w-[10cm] relative border border-black/20 bg-black/3 rounded-full">
                     <label class="block text-base font-medium absolute top-[50%] right-3 translate-y-[-50%]">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </label>
                     <input type="text" id="filtre-nom" placeholder="Nom d'etudiant .."
-                        class="border-2 rounded-md p-1  w-full pe-5  border-white">
+                        class="border-2 rounded-full p-1  w-full pe-5  border-white">
                 </div>
-                <div class="border-2 border-black/20 bg-black/3 rounded-md">
-                    <input type="date" name="date_examen" id="date-examen" value="{{ old('date_examen') }}" class="border-2 rounded-md p-1  w-full  border-white">
-                    @error('date_examen') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <div class="border border-black/20 bg-black/3 rounded-md ">
+                    <p class="border-2 border-white rounded-md px-5 py-1">
+                        Date: {{ \Carbon\Carbon::parse($examen->date_examen)
+                        ->translatedFormat('d M Y') }}
+                    </p>
                 </div>
             </div>
             <hr class="border border-black/10">

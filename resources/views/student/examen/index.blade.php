@@ -1,7 +1,7 @@
 
 @extends('layouts.student-layouts.layouthead')
 @section('contenue-student')
-<section class="pt-25 pb-16">
+<section class="pt-25 pb-10">
     <div class="container">
         @if ($examen)
             @php
@@ -105,7 +105,7 @@
                                 <button
                                     type="button"
                                     onclick="openModal('confirm-start-modal')"
-                                    class="w-full bg-rouge  hover:bg-rouge/90  text-white font-semibold rounded-full px-6 py-3.5  transition-all duration-200 flex items-center justify-center gap-3">
+                                    class="w-full hover-rouge bg-rouge  hover:bg-rouge/90  text-white font-semibold rounded-full px-6 py-3.5  transition-all duration-200 flex items-center justify-center gap-3">
                                     <span> Commencer maintenant </span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </button>

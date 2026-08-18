@@ -13,15 +13,26 @@ use Illuminate\Validation\Rules\Password;
 
 class AdminProfController extends Controller
 {
-    public function index()
-    {
-        $profs = User::where('role', 'prof')
-            ->with('prof.categorie') // eager load ny prof sy ny categorie-ny
-            ->latest()
-            ->get();
+   public function index(Request $request)
+{
+    $categories = Categorie::orderBy('nom')->get();
 
-        return view('admin.prof.index', compact('profs'));
+    $query = User::where('role', 'prof')
+        ->with('prof.categorie');
+
+    if ($request->filled('categorie_id')) {
+        $query->whereHas('prof', function ($q) use ($request) {
+            $q->where('categorie_id', $request->categorie_id);
+        });
     }
+
+    $profs = $query->latest()->get();
+
+    return view('admin.prof.index', compact(
+        'profs',
+        'categories'
+    ));
+}
 
     public function create()
     {

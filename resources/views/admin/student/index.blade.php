@@ -36,12 +36,12 @@
         @endif
         <div class="flex gap-2 border-b-2 border-black/10 py-1 mt-2">
             <a href="{{ route('admin.student.index') }}"
-                class="p-1 px-3 rounded-sm border-2 border-black/10 bg-black/2 inline-block hover:text-[rgb(250,131,51)] {{ !request('categorie_id') ? 'text-[rgb(250,131,51)] font-semibold' : '' }}">
+                class="p-1 px-3 rounded-sm border border-black/10 bg-black/2 inline-block hover:bg-black/5 {{ !request('categorie_id') ? 'bg-vert text-white' : '' }}">
                 Tous
             </a>
             @foreach ($categories as $categorie)
                 <a href="{{ route('admin.student.index', ['categorie_id' => $categorie->id]) }}"
-                    class=" p-1 px-3 rounded-sm border-2 border-black/10 bg-black/2 inline-block hover:text-[rgb(250,131,51)] {{ request('categorie_id') == $categorie->id ? 'text-[rgb(250,131,51)] font-semibold' : '' }}">
+                    class=" p-1 px-3 rounded-sm border border-black/10 bg-black/2 inline-block hover:black/5 {{ request('categorie_id') == $categorie->id ? 'bg-vert text-white' : '' }}">
                     {{ $categorie->nom }}
                 </a>
             @endforeach

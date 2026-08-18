@@ -1,9 +1,8 @@
 @extends('layouts.student-layouts.layouthead')
 @section('contenue-student')
     
-<section class=" pt-10
-        md:pt-15">
-    <div class="container flex justify-between flex-col md:flex-row items-center md:gap-0 lg:gap-10 py-15  ">
+<section class=" py-20 min-h-[95vh]">
+    <div class="container flex justify-between flex-col md:flex-row items-center md:gap-0 lg:gap-10 pt-13 ">
         <div class="flex-1 ">
             <h1 class="font-bold text-3xl lg:text-5xl animation-1">Préparez-vous, testez vos connaissances, réussissez vos examens</h1>
             <p class="my-7 md:my-4 lg:my-7 animation-1">Une plateforme simple et intuitive pour vous accompagner dans votre préparation, évaluer vos connaissances et passer vos examens en ligne en toute confiance.</p>
@@ -31,7 +30,7 @@
     </div>
 </section>
 
-<section class=" py-5 md:py-7">
+{{-- <section class=" py-5 md:py-7">
     <div class="container pb-6">
         <div class="flex justify-between items-center mb-6 flex-wrap
             md:flex-nowrap">
@@ -93,7 +92,6 @@
                 </div>
             </div>
         </div>
-        {{-- Swiper --}}
         <div class="relative">
             <div class="swiper categorie-swiper !py-3 !px-1">
                 <div class="swiper-wrapper">
@@ -160,9 +158,9 @@
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 
-@push('styles')
+{{-- @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
 <style>
     .categorie-swiper .swiper-slide {
@@ -231,6 +229,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-@endpush
+@endpush --}}
 @endsection
 
