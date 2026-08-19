@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class=" text-black/60 flex justify-center items-center h-screen">
-        <div class="w-[11cm]  rounded-md p-4 border border-black/10 shadow ">
+        <div class="w-[11cm]  rounded-xl p-4 border border-black/10 shadow ">
             <h3 class="text-2xl font-semibold text-center mb-4 text-vert">Inscription Admin</h3>
 
             <form action="{{ route('admin.register.store') }}" method="POST">
@@ -40,7 +40,7 @@
                     <label for="afficherPassword">Afficher mot de passe</label>
                 </div>
 
-                <button type="submit" class="p-1 rounded-md w-full mt-2 bg-rouge">
+                <button type="submit" class="p-2 hover-rouge text-white rounded-xl  w-full mt-2 bg-rouge">
                     S'inscrire
                 </button>
             </form>

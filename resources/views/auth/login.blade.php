@@ -12,7 +12,7 @@
 <body>
     <div class="text-black/60 h-screen flex justify-center items-center relative">
         <a href=" {{route('home')}} " class="absolute top-5 left-10 text-xl"><i class="fa-solid fa-xmark"></i></a>
-        <div class="w-[11cm] m-auto rounded-md p-4 shadow border border-black/10">
+        <div class="w-[11cm] m-auto rounded-xl p-4 shadow border border-black/10">
             <h3 class="text-2xl font-semibold mb-4 text-vert text-center">Connexion</h3>
             @if (session('error'))
                 <div class="text-left text-red-600 text-sm mb-3">
@@ -39,7 +39,7 @@
                     <label for="afficherPassword">Afficher mot de passe</label>
                 </div>
 
-                <button type="submit" class="p-1 rounded-md w-full my-5 bg-rouge">
+                <button type="submit" class="p-2 rounded-xl hover-rouge text-white w-full my-5 bg-rouge">
                     Connexion
                 </button>
             </form>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('titre');
             $table->text('description')->nullable();
             $table->integer('duree_minutes')->nullable();
+            $table->date('date_examen')->nullable();
             $table->enum('status', ['brouillon', 'publie', 'archive'])->default('brouillon');
             $table->timestamps();
         });
