@@ -3,14 +3,14 @@
 <div class=" py-3">
     <div class="w-full">
         <div class="">
-            <a href="{{ route('prof.examen.qcm.question.show', [$slug, $examen->id, $qcm->id]) }}">
+            <a href="">
                 Retour / 
             </a>
             <span class="font-semibold">Modification</span>
         </div>
-        <div class="bg-white rounded-md me-2">
+        <div class=" rounded-md ">
             <h2 class="text-xl font-semibold my-2 text-vert">Modifier la question - {{ $qcm->titre }}</h2>
-            <form action="{{ route('prof.examen.qcm.question.update', [$slug, $examen->id, $qcm->id, $question->id]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('prof.qcm.question.update', [$slug, $qcm->id, $question->id]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="question-block rounded-md mb-4">

@@ -7,8 +7,10 @@
 
     {{-- CARDS --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5 mt-4">
-        <a href="{{ route('admin.student.index') }}" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
-            <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
+        <a href="{{ route('admin.student.index') }}" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2 
+            dark:border-white/5 dark:bg-white/3">
+            <div class="text-base flex-1 px-3 border-e border-black/5
+                dark:border-white/20">
                 Nombre d'étudiants
             </div>
             <div class="w-[40%] text-center px-2 flex items-center gap-2">
@@ -16,8 +18,10 @@
                 <span class="text-3xl font-bold text-vert">{{ $totalEtudiants }}</span>
             </div>
         </a>
-        <a href="{{ route('admin.prof.index') }}" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
-            <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
+        <a href="{{ route('admin.prof.index') }}" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2 
+            dark:border-white/5 dark:bg-white/3">
+            <div class="text-base flex-1 px-3 border-e border-black/5
+                dark:border-white/20">
                 Nombre des professeurs
             </div>
             <div class="w-[40%] text-center px-2 flex items-center gap-2">
@@ -25,8 +29,10 @@
                 <span class="text-3xl font-bold text-vert">{{ $totalProfs }}</span>
             </div>
         </a>
-        <div href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
-            <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
+        <div href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2 
+            dark:border-white/5 dark:bg-white/3">
+            <div class="text-base flex-1 px-3 border-e border-black/5
+                dark:border-white/20">
                 Nombre d'examens
             </div>
             <div class="w-[40%] text-center px-2 flex items-center gap-2">
@@ -34,8 +40,10 @@
                 <span class="text-3xl font-bold text-vert">{{ $totalExamens }}</span>
             </div>
         </div>
-        <div href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2">
-            <div class="text-base flex-1 text-black/50 px-3 border-e border-black/5">
+        <div href="" class="relative bg-black/2 flex items-center rounded-xl p-4 border border-black/2 
+            dark:border-white/5 dark:bg-white/3">
+            <div class="text-base flex-1 px-3 border-e border-black/5
+                dark:border-white/20">
                 Nombre des catégories
             </div>
             <div class="w-[40%] text-center px-2 flex items-center gap-2">
@@ -51,13 +59,16 @@
     </h3>
     {{-- COURBE PAR MOIS + MOYENNE --}}
     <div class="flex flex-col lg:flex-row gap-5">
-        <div class="flex-1 min-w-0 bg-black/2 border border-black/3 rounded-xl p-2 h-[450px] lg:h-[60vh]">
+        <div 
+            class="flex-1 min-w-0 bg-black/2 border border-black/3 rounded-xl p-2 h-[450px] lg:h-[60vh]
+            dark:bg-white/2 dark:border-white/3">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <h4 class="text-xl">Courbe d'évaluation par mois</h4>
                 <form method="GET" action="{{ url()->current() }}">
                     <input type="hidden" name="mois" value="{{ $moisSelectionne }}">
                     <select name="annee" onchange="this.form.submit()"
-                        class="border rounded border-black/20 bg-white p-1 text-sm">
+                        class="border rounded border-black/20 bg-white p-1 text-sm
+                        dark:bg-white/5 dark:border-white/7">
                         @foreach($anneesDisponibles as $annee)
                             <option value="{{ $annee }}" {{ $annee == $anneeSelectionnee ? 'selected' : '' }}>
                                 {{ $annee }}
@@ -66,11 +77,15 @@
                     </select>
                 </form>
             </div>
-            <div class="bg-white p-2 rounded-md mt-2 h-[calc(100%-3.5rem)]">
+            <div 
+                class="bg-white p-2 rounded-md mt-2 h-[calc(100%-3.5rem)]
+                dark:bg-white/2">
                 @if($statistiquesParMois->contains(fn($s) => $s['moyenne'] !== null))
                     <canvas id="chart-par-mois"></canvas>
                 @else
-                    <div class="h-full flex items-center justify-center text-black/40">
+                    <div 
+                        class="h-full flex items-center justify-center text-black/40
+                        dark:text-white/30">
                         Aucune donnée pour cette année.
                     </div>
                 @endif
@@ -79,7 +94,9 @@
 
 
         {{-- MOYENNE GENERALE --}}
-        <div class="w-full lg:w-[30%] bg-black/2 border border-black/3 rounded-xl p-4 h-[450px] lg:h-[60vh]">
+        <div 
+            class="w-full lg:w-[30%] bg-black/2 border border-black/3 rounded-xl p-4 h-[450px] lg:h-[60vh]
+            dark:bg-white/2 dark:border-white/3">
             <h4 class="text-xl mb-2 text-center">
                 Moyenne générale
             </h4>
@@ -93,7 +110,9 @@
                     </p>
                 </div>
             @else
-                <div class="h-[calc(100%-2rem)] flex items-center justify-center text-black/40">
+                <div 
+                    class="h-[calc(100%-2rem)] flex items-center justify-center text-black/40
+                    dark:text-white/30">
                     Pas encore de moyenne.
                 </div>
             @endif
@@ -104,12 +123,15 @@
     {{-- COURBE PAR CATEGORIE + TOP 5 --}}
     <div class="flex flex-col lg:flex-row gap-5 mt-10">
         {{-- COURBE PAR CATEGORIE --}}
-        <div class="flex-1 min-w-0 bg-black/2 border border-black/3 rounded-xl p-2 h-[450px] lg:h-[60vh]">
+        <div 
+            class="flex-1 min-w-0 bg-black/2 border border-black/3 rounded-xl p-2 h-[450px] lg:h-[60vh]
+            dark:bg-white/2 dark:border-white/3">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <h4 class="text-xl">Courbe d'évaluation par catégorie</h4>
                 <form method="GET" action="{{ url()->current() }}" class="flex gap-2">
                     <select name="mois" onchange="this.form.submit()"
-                        class="border border-black/20 bg-white rounded p-1 text-sm">
+                        class="border border-black/20 bg-white rounded p-1 text-sm
+                        dark:bg-white/2 dark:border-white/5">
                         @foreach(range(1, 12) as $m)
                             <option value="{{ $m }}" {{ $m == $moisSelectionne ? 'selected' : '' }}>
                                 {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
@@ -117,7 +139,8 @@
                         @endforeach
                     </select>
                     <select name="annee" onchange="this.form.submit()"
-                        class="border border-black/20 bg-white rounded p-1 text-sm">
+                        class="border border-black/20 bg-white rounded p-1 text-sm
+                        dark:bg-white/2 dark:border-white/5">
                         @foreach($anneesDisponibles as $annee)
                             <option value="{{ $annee }}" {{ $annee == $anneeSelectionnee ? 'selected' : '' }}>
                                 {{ $annee }}
@@ -126,19 +149,25 @@
                     </select>
                 </form>
             </div>
-            <div class="bg-white p-2 rounded-md mt-2 h-[calc(100%-3.5rem)]">
+            <div 
+                class="bg-white p-2 rounded-md mt-2 h-[calc(100%-3.5rem)]
+                dark:bg-white/2">
                 @if($statistiquesParCategorie->isNotEmpty())
                     <canvas id="chart-par-categorie"></canvas>
                 @else
-                    <div class="h-full flex items-center justify-center text-black/40">
+                    <div 
+                        class="h-full flex items-center justify-center text-black/40
+                        dark:text-white/30">
                         Aucune donnée pour ce mois.
                     </div>
                 @endif
             </div>
         </div>
         {{-- TOP 5 --}}
-        <div class="w-full lg:w-[30%] bg-black/2 border border-black/3 rounded-xl p-4
-                    h-auto lg:h-[60vh] overflow-y-auto">
+        <div 
+            class="w-full lg:w-[30%] bg-black/2 border border-black/3 rounded-xl p-4
+                    h-auto lg:h-[60vh] overflow-y-auto
+                    dark:bg-white/2 dark:border-white/3">
             <h4 class="text-xl mb-3">
                 Top 5 des meilleurs élèves —
                 {{ \Carbon\Carbon::create()->month((int) $moisSelectionne)->translatedFormat('F') }}
@@ -147,7 +176,9 @@
             @if($top5Eleves->isNotEmpty())
                 <div class="space-y-2">
                     @foreach($top5Eleves as $index => $eleve)
-                        <div class="flex items-center gap-3 p-2 rounded-md bg-white/80 border border-black/3">
+                        <div 
+                            class="flex items-center gap-3 p-2 rounded-md bg-white/80 border border-black/3
+                            dark:bg-white/2 dark:border-white/3">
                             <div class="w-8 h-8 shrink-0 rounded-full bg-black/5 flex justify-center items-center font-semibold text-sm">
                                 {{ $index + 1 }}
                             </div>
@@ -165,7 +196,8 @@
                     @endforeach
                 </div>
             @else
-                <div class="p-6 text-center text-black/40">
+                <div class="h-[70%] flex items-center justify-center text-black/40
+                        dark:text-white/30">
                     Aucun élève classé pour ce mois.
                 </div>
             @endif

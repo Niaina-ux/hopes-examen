@@ -96,11 +96,13 @@
         </div>
     @endif
 
-    <div class="p-2 border border-black/10 rounded-md mt-4 bg-black/2">
+    <div class="p-2 border border-black/10 rounded-md mt-4 bg-black/2
+        dark:border-white/3 dark:bg-white/2">
         @forelse($examens as $index => $examen)
             <div class="flex justify-between gap-7 border
                         border-black/10 rounded bg-white/70 p-2
-                        hover:bg-white transition">
+                        hover:bg-white transition
+                        dark:border-white/3 dark:bg-white/2">
                 <div class="w-10 h-10 shrink-0 rounded-md bg-black/5
                             flex justify-center items-center font-semibold">
                     {{ str_pad(

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('qcm', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('examen_id')->constrained('examens')->cascadeOnDelete();
             $table->foreignId('categorie_id')->constrained('categories')->cascadeOnDelete();
             $table->string('titre'); 
             $table->text('description')->nullable();

@@ -1,12 +1,12 @@
 <div class="">
-    @if(session('success'))
+    {{-- @if(session('success'))
         <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mb-2 flex justify-between items-center">
             <span>{{ session('success') }}</span>
             <button type="button" onclick="document.getElementById('success-alert').remove()">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-    @endif
+    @endif --}}
 
     @if(session('error'))
         <div id="error-alert" class="bg-red-100/50 text-rouge px-4 py-2 rounded-md mb-2 flex justify-between items-center">
@@ -85,7 +85,6 @@
         </div>
         @php
             $totalPointsExamen = collect([
-                \App\Models\Qcm::class,
                 \App\Models\Pointiller::class,
                 \App\Models\Relier::class,
                 \App\Models\Code::class,
@@ -98,6 +97,9 @@
             ])->sum(function ($modelClass) use ($examen) {
                 return $modelClass::where('examen_id', $examen->id)->sum('note_totale');
             });
+
+            // ✅ QCM géré séparément — points des questions sélectionnées pour CET examen, via la banque
+            $totalPointsExamen += $examen->qcmQuestionsSelectionnees()->sum('points');
         @endphp
         <div class="p-1 px2 rounded-md border border-black/20 ">
             Total: <span class="text-rouge">{{ $totalPointsExamen }}</span> Pts

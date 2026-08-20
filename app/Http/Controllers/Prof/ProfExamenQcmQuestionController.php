@@ -12,16 +12,9 @@ use Illuminate\Validation\Rule;
 
 class ProfExamenQcmQuestionController extends Controller
 {
-    public function show(string $slug, Examen $examen, Qcm $qcm)
+    public function create(string $slug, Qcm $qcm)
     {
-        $questions = $qcm->qcmQuestions()->with('qcmChoices')->orderBy('id', 'desc')->get();
-
-        return view('prof.examen.qcm.questions.show', compact('examen', 'qcm', 'questions', 'slug'));
-    }
-
-    public function create(string $slug, Examen $examen, Qcm $qcm)
-    {
-        return view('prof.examen.qcm.questions.create', compact('slug', 'examen', 'qcm'));
+        return view('prof.questions.qcm.questions.create', compact('slug', 'qcm'));
     }
 
     public function store(Request $request, string $slug, Examen $examen, Qcm $qcm)
@@ -186,7 +179,7 @@ class ProfExamenQcmQuestionController extends Controller
         $question->delete();
 
         return redirect()
-            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
+            ->back()
             ->with('success', 'Question supprimée avec succès.');
     }
 
@@ -194,7 +187,7 @@ class ProfExamenQcmQuestionController extends Controller
     {
         $question->load('qcmChoices');
 
-        return view('prof.examen.qcm.questions.edit', compact('slug', 'examen', 'qcm', 'question'));
+        return view('prof.questions.qcm.questions.edit', compact('slug', 'qcm', 'question'));
     }
 
     public function update(Request $request, string $slug, Examen $examen, Qcm $qcm, QcmQuestion $question)
@@ -337,7 +330,7 @@ class ProfExamenQcmQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
+            ->route('prof.question.qcm', [$slug, $qcm->id])
             ->with('success', 'Question modifiée avec succès.');
     }
 }

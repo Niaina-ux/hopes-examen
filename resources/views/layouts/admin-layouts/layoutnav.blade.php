@@ -1,9 +1,11 @@
-<div class="h-full p-2 px-3">
-    <div class="text-vert font-bold text-3xl px-2">
+<div class="h-full p-2 px-4 bg-black/3 dark:bg-white/3">
+    <div class="text-vert font-bold text-3xl">
         Hopes
     </div>
     <div class="mt-3 w-full">
-        <span class="uppercase text-sm border-b text-black/50 border-black/10 pb-1 inline-block px-2 py-1">
+        <span 
+            class="uppercase text-sm border-b  border-black/10 pb-1 inline-block  py-1
+            dark:border-white/25">
             <i class="fa-solid fa-table-cells-large text-xl me-2"></i>
             Menu
         </span>
@@ -65,7 +67,9 @@
         </ul>
     </div>
     <div class="mt-5">
-        <span class="uppercase text-sm border-b text-black/50 border-black/10 pb-1 inline-block px-2 py-1">
+        <span 
+            class="uppercase text-sm border-b border-black/10 pb-1 inline-block py-1
+            dark:border-white/25">
             <i class="fa-solid fa-book-open text-xl me-2"></i>
             Examen
         </span>
@@ -87,7 +91,9 @@
     <div class="absolute bottom-10 left-4">
         <form action="{{ route('logout') }}" method="POST" class="inline">
             @csrf
-            <button type="submit" class=" w-[5cm] flex gap-3 items-center px-2 py-1  rounded-md transition-all hover:text-red-500 hover:bg-red-500/5 border-2 border-white shadow bg-black/3">
+            <button type="submit" 
+                class=" w-[5cm] flex gap-3 items-center px-2 py-1  rounded-md transition-all hover:text-red-500 hover:bg-red-500/5 border-2 border-white shadow bg-black/3
+                dark:border-white/25 dark:bg-white/10">
                 <i class="fa-solid fa-arrow-up-from-bracket"></i>
                 Deconnexion
             </button>

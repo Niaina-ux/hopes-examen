@@ -50,21 +50,32 @@ Route::middleware(['auth', 'role:prof'])->group(function (){
     });
 
     Route::controller(ProfExamenQcmController::class)->group(function(){
+        // ------
+        Route::get('prof/{slug}/qcm', 'showbanque')->name('prof.question.qcm');
+        Route::get('prof/{slug}/qcm/create', 'create')->name('prof.question.qcm.create');
+        Route::post('prof/{slug}/qcm/store', 'store')->name('prof.question.qcm.store');
+        Route::get('/prof/{slug}/qcm/{qcmId}/edit', 'edit')->name('prof.question.qcm.edit');
+        Route::put('prof/{slug}/qcm/{qcmId}/update', 'update')->name('prof.question.qcm.update');
+        Route::delete('prof/{slug}/qcm/{qcm}', 'destroy')->name('prof.question.qcm.destroy');
+        // -------
+        
         Route::get('prof/examen/{slug}/{examen}/qcm', 'show')->name('prof.examen.qcm');
-        Route::get('prof/examen/{slug}/{examen}/qcm/create', 'create')->name('prof.examen.qcm.create');
-        Route::post('prof/examen/{slug}/{examen}/qcm/store', 'store')->name('prof.examen.qcm.store');
-        Route::get('/prof/examen/{slug}/{examen}/qcm/{qcm}/edit', 'edit')->name('prof.examen.qcm.edit');
-        Route::put('/prof/examen/{slug}/{examen}/qcm/{qcm}', 'update')->name('prof.examen.qcm.update');
-        Route::delete('prof/examen/{slug}/{examen}/qcm/{qcm}', 'destroy')->name('prof.examen.qcm.destroy');
+
+        // ------
+        Route::get('prof/examen/{slug}/{examenId}/qcm/select-questions', 'selectQuestionsForm')->name('prof.examen.qcm.selectQuestions.form');
+        Route::post('prof/examen/{slug}/{examenId}/qcm/select-questions', 'storeSelectedQuestions')->name('prof.examen.qcm.selectQuestions.store');
+        Route::delete('prof/examen/{slug}/{examenId}/qcm/question/{questionId}','removeQuestion')->name('prof.examen.qcm.question.remove');
+        // -------
     });
 
     Route::controller(ProfExamenQcmQuestionController::class)->group(function () {
-        Route::get('prof/examen/{slug}/{examen}/qcm/{qcm}/question', 'show')->name('prof.examen.qcm.question.show');
-        Route::get('prof/examen/{slug}/{examen}/qcm/{qcm}/question/create', 'create')->name('prof.examen.qcm.question.create');
-        Route::post('prof/examen/{slug}/{examen}/qcm/{qcm}/question/store', 'store')->name('prof.examen.qcm.question.store');
-        Route::delete('/prof/examen/{slug}/{examen}/qcm/{qcm}/question/{question}', 'destroy')->name('prof.examen.qcm.question.destroy');
-        Route::get('/prof/examen/{slug}/{examen}/qcm/{qcm}/question/{question}/edit', 'edit')->name('prof.examen.qcm.question.edit');
-        Route::put('/prof/examen/{slug}/{examen}/qcm/{qcm}/question/{question}', 'update')->name('prof.examen.qcm.question.update');
+        // --------
+        Route::get('prof/{slug}/qcm/{qcm}/question/create', 'create')->name('prof.qcm.question.create');
+        Route::post('prof/{slug}/qcm/{qcm}/question/store', 'store')->name('prof.qcm.question.store');
+        Route::get('/prof/{slug}/qcm/{qcm}/question/{question}/edit', 'edit')->name('prof.qcm.question.edit');
+        Route::put('/prof/{slug}/qcm/{qcm}/question/{question}', 'update')->name('prof.qcm.question.update');
+        Route::delete('/prof/{slug}/qcm/{qcm}/question/{question}', 'destroy')->name('prof.qcm.question.destroy');
+        // --------
     });
 
     Route::controller(ProfExamenPointillerController::class)->group(function(){

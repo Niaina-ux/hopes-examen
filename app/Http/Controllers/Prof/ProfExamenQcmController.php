@@ -6,31 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\Categorie;
 use App\Models\Examen;
 use App\Models\Qcm;
+use App\Models\QcmQuestion;
 use Illuminate\Http\Request;
 
 class ProfExamenQcmController extends Controller
 {
-    public function show(string $slug, int $examenId)
-    {
-        $examen = Examen::find($examenId);
+    public function showbanque(string $slug)
+    { 
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+        $types = $categorie->typesExerciceAutorises;
 
-        if (!$examen) {
-            return redirect()
-                ->route('prof.examen.show', $slug)
-                ->with('error', "Il y a un problème dans l'URL !");
-        }
-
-        $qcms = $examen->qcm()
-            ->with('qcmQuestions')
+        $qcms = Qcm::with('qcmQuestions')
             ->latest()
             ->get();
 
-        return view('prof.examen.qcm.show', compact('examen', 'qcms', 'slug'));
+        return view('prof.questions.qcm.show', compact('types', 'slug', 'qcms'));
     }
 
-    public function create(string $slug, Examen $examen)
-    {
-        return view('prof.examen.qcm.create', compact('slug','examen'));
+    public function create(string $slug)
+    {   
+        return view('prof.questions.qcm.create', compact('slug'));
     }
 
     public function store(Request $request, string $slug, Examen $examen)
@@ -40,84 +35,64 @@ class ProfExamenQcmController extends Controller
         $validated = $request->validate([
             'titre' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'duree_minutes' => ['nullable', 'integer', 'min:1'],
-            'note_totale' => ['nullable', 'integer', 'min:1'],
         ], [
             'titre.required' => 'Le titre est obligatoire.',
-            'duree_minutes.integer' => 'La durée doit être un nombre entier.',
-            'note_totale.integer' => 'La note totale doit être un nombre entier.',
         ]);
 
-        // Fanamarinana: mijery raha mihoatra ny duree_minutes an'ny examen ny SUM duree_minutes
-        if (!empty($validated['duree_minutes'])) {
-            $dureeExistante = $examen->qcm()->sum('duree_minutes');
-            $dureeTotal = $dureeExistante + $validated['duree_minutes'];
-
-            if ($examen->duree_minutes !== null && $dureeTotal > $examen->duree_minutes) {
-                return back()->withErrors([
-                    'duree_minutes' => "La durée totale ({$dureeTotal} min) dépasse la durée autorisée pour cet examen ({$examen->duree_minutes} min). Durée déjà utilisée : {$dureeExistante} min.",
-                ])->withInput();
-            }
-        }
-
         $qcm = Qcm::create([
-            'examen_id' => $examen->id,
             'categorie_id' => $categorie->id,
             'titre' => $validated['titre'],
             'description' => $validated['description'] ?? null,
-            'duree_minutes' => $validated['duree_minutes'] ?? null,
-            'note_totale' => $validated['note_totale'] ?? null,
-            'ordre' => Qcm::where('examen_id', $examen->id)->count(),
+            'ordre' => 0,
         ]);
 
         return redirect()
-            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
+            ->route('prof.question.qcm', $slug)
             ->with('success', 'QCM créé avec succès. Vous pouvez maintenant ajouter des questions.');
     }
 
-    public function edit(string $slug, int $examenId, int $qcmId)
+
+    public function edit(string $slug, int $qcmId)
     {
-        $examen = Examen::find($examenId);
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
 
-        if (!$examen) {
-            return redirect()
-                ->route('prof.examen.show', $slug)
-                ->with('error', "Il y a un problème dans l'URL !");
-        }
-
-        $qcm = Qcm::where('examen_id', $examen->id)->find($qcmId);
+        $qcm = Qcm::where('categorie_id', $categorie->id)->find($qcmId);
 
         if (!$qcm) {
             return redirect()
-                ->route('prof.examen.qcm', [$slug, $examen->id])
-                ->with('error', "Ce QCM est introuvable pour cet examen.");
+                ->route('prof.qcm.show', $slug)
+                ->with('error', "Ce QCM est introuvable pour cette catégorie.");
         }
 
-        return view('prof.examen.qcm.edit', compact('slug', 'examen', 'qcm'));
+        return view('prof.questions.qcm.edit', compact('slug', 'qcm'));
     }
 
-    public function update(Request $request, string $slug, Examen $examen, Qcm $qcm)
+    public function update(Request $request, string $slug, int $qcmId)
     {
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+
+        $qcm = Qcm::where('categorie_id', $categorie->id)->find($qcmId);
+
+        if (!$qcm) {
+            return redirect()
+                ->route('prof.qcm.show', $slug)
+                ->with('error', "Ce QCM est introuvable pour cette catégorie.");
+        }
+
         $validated = $request->validate([
             'titre' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'duree_minutes' => ['nullable', 'integer', 'min:1'],
-            'note_totale' => ['nullable', 'integer', 'min:1'],
         ], [
             'titre.required' => 'Le titre est obligatoire.',
-            'duree_minutes.integer' => 'La durée doit être un nombre entier.',
-            'note_totale.integer' => 'La note totale doit être un nombre entier.',
         ]);
 
         $qcm->update([
             'titre' => $validated['titre'],
             'description' => $validated['description'] ?? null,
-            'duree_minutes' => $validated['duree_minutes'] ?? null,
-            'note_totale' => $validated['note_totale'] ?? null,
         ]);
 
         return redirect()
-            ->route('prof.examen.qcm', [$slug, $examen->id, $qcm->id])
+            ->route('prof.question.qcm', $slug)
             ->with('success', 'QCM modifié avec succès.');
     }
 
@@ -136,5 +111,125 @@ class ProfExamenQcmController extends Controller
 
         return redirect()->back()
             ->with('success', 'QCM supprimé avec succès.');
+    }
+
+    // **********
+    public function show(string $slug, int $examenId)
+    {
+        $examen = Examen::find($examenId);
+        if (!$examen) {
+            return redirect()->route('prof.examen.show', $slug)->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+
+        $questionsSelectionneesIds = $examen->qcmQuestionsSelectionnees->pluck('id')->toArray();
+
+        $qcms = Qcm::where('categorie_id', $categorie->id)
+            ->with(['qcmQuestions' => function ($q) use ($questionsSelectionneesIds) {
+                $q->whereIn('id', $questionsSelectionneesIds)->with('qcmChoices');
+            }])
+            ->get()
+            ->filter(fn($qcm) => $qcm->qcmQuestions->isNotEmpty()) 
+            ->values();
+
+        return view('prof.examen.qcm.show', compact('slug', 'examen', 'qcms'));
+    }
+
+    public function selectQuestionsForm(string $slug, int $examenId)
+    {
+        $examen = Examen::find($examenId);
+        if (!$examen) {
+            return redirect()->route('prof.examen.show', $slug)
+                ->with('error', "Il y a un problème dans l'URL !");
+        }
+
+        if ($examen->status !== 'brouillon') {
+            return redirect()->route('prof.examen.qcm',[$slug, $examen->id])->with('error', "L'examen est deja creé !");
+        }
+
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+
+        $questionsSelectionneesIds = $examen->qcmQuestionsSelectionnees()
+            ->pluck('qcm_questions.id')
+            ->toArray();
+
+        $qcms = Qcm::where('categorie_id', $categorie->id)
+            ->with(['qcmQuestions' => function ($query) use ($examenId) {
+                $query->whereNotIn('id', function ($subQuery) use ($examenId) {
+                    $subQuery->select('qcm_question_id')
+                        ->from('examen_qcm_questions')
+                        ->where('examen_id', '!=', $examenId);
+                })->with('qcmChoices');
+            }])
+            ->paginate(5)
+            ->withQueryString();
+
+        $questionsAjoutees = count($questionsSelectionneesIds);
+
+        $questionsRestantes = QcmQuestion::whereHas('qcm', function ($query) use ($categorie) {
+            $query->where('categorie_id', $categorie->id);
+        })
+            ->whereNotIn('id', function ($subQuery) {
+                $subQuery->select('qcm_question_id')
+                    ->from('examen_qcm_questions');
+            })
+            ->count();
+
+        return view('prof.examen.qcm.select-questions', compact(
+            'slug',
+            'examen',
+            'qcms',
+            'questionsSelectionneesIds',
+            'questionsAjoutees',
+            'questionsRestantes'
+        ));
+    }
+
+    public function storeSelectedQuestions(Request $request, string $slug, int $examenId)
+    {
+        $examen = Examen::find($examenId);
+        if (!$examen) {
+            return redirect()->route('prof.examen.show', $slug)->with('error', "Il y a un problème dans l'URL !");
+        }
+        if ($examen->status !== 'brouillon') {
+            return back('')->with('error', "L'examen est deja creé !");
+        }
+
+        $validated = $request->validate([
+            'question_ids' => ['nullable', 'array'],
+            'question_ids.*' => ['integer', 'exists:qcm_questions,id'],
+        ]);
+
+        $syncData = [];
+        foreach ($validated['question_ids'] ?? [] as $index => $questionId) {
+            $syncData[$questionId] = ['ordre' => $index + 1];
+        }
+
+        $examen->qcmQuestionsSelectionnees()->sync($syncData);
+
+        return redirect()
+            ->route('prof.examen.qcm', [$slug, $examen->id])
+            ->with('success', 'Questions sélectionnées avec succès.');
+    }
+
+    public function removeQuestion(string $slug, int $examenId, int $questionId)
+    {
+        $examen = Examen::findOrFail($examenId);
+
+        if ($examen->status !== 'brouillon') {
+            return back()->with(
+                'error',
+                "Impossible de supprimer une question après la validation de l'examen."
+            );
+        }
+
+        $examen->qcmQuestionsSelectionnees()
+            ->detach($questionId);
+
+        return back()->with(
+            'success',
+            'Question supprimée de cet examen.'
+        );
     }
 }

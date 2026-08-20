@@ -38,11 +38,13 @@
     @endif
     
     @if($examen->typesExercice->isNotEmpty())
-        <div class="gap-3 py-2 border border-black/3 bg-black/2 rounded-md p-2 mt-4 ">
+        <div class="gap-3 py-2 border border-black/3 bg-black/2 rounded-md p-2 mt-4 
+            dark:bg-white/2 dark:border-white/3">
             @foreach($examen->typesExercice as $type)
                 @if(\Illuminate\Support\Facades\Route::has('prof.examen.' . $type->slug))
                     <a href="{{ route('prof.examen.' . $type->slug, [$slug, $examen->id]) }}"
-                        class="w-full  p-2 border hover:bg-black/3 rounded border-black/3 bg-white/70 flex gap-3 items-center justify-between ">
+                        class="w-full  p-2 border hover:bg-black/3 rounded border-black/3 bg-white/70 flex gap-3 items-center justify-between 
+                        dark:bg-white/2 dark:border-white/3">
                         <div class="font-semibold text-rouge w-8 h-8 rounded bg-black/5 flex justify-center items-center">
                             <i class="{{ $type->icone ?? 'fa-solid fa-chart-simple' }} text-vert"></i>
                         </div>

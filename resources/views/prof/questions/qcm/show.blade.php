@@ -1,16 +1,16 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
     <div class="py-3">
-        @include('layouts.admin-layouts.examen.layout-exam')
+        @include('layouts.prof-layouts.proflayoutesexamquestion')
         @if(session('success'))
-            <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md my-4 flex justify-between items-center">
+            <div id="success-alert" class="bg-green-100/10 text-green-700 px-4 py-2 rounded-md my-4 flex justify-between items-center">
                 <span>{{ session('success') }}</span>
                 <button type="button" onclick="document.getElementById('success-alert').remove()">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
         @endif
-        <div class="">
+        <div class=" mt-2">
             @forelse($qcms as $index => $qcm)
                 <div class="p-2  flex gap-5 justify-between border border-black/10 rounded-md my-2
                     dark:border-white/10">
@@ -23,19 +23,47 @@
                             <div class="">
                                 <h3 class="text-lg font-semibold">{{ $qcm->titre }}</h3>
                                 <p>{{ $qcm->description }}</p>
+                                @php
+                                    $noteTotaleQcm = $qcm->qcmQuestions->sum('points');
+                                    $dureeTotaleSecondes = $qcm->qcmQuestions->sum('duree_seconde');
+                                    $dureeTotaleMinutes = round($dureeTotaleSecondes / 60, 1);
+                                @endphp
+
                                 <div class="flex gap-3">
                                     <div class="flex text-sm text-vert">
-                                        Durée {{ $qcm->duree_minutes ?? 'N/A' }} minutes
+                                        Durée {{ $dureeTotaleMinutes }} minutes
                                     </div>
                                     <div class="flex text-sm text-rouge">
-                                        {{ $qcm->note_totale }} Pts
+                                        {{ $noteTotaleQcm }} Pts
                                     </div>
-                                    <div class="flex text-sm ">
-                                        Il y a 
-                                        {{ $qcm->qcmQuestions->count() }}
-                                        Questions
+                                    <div class="flex text-sm">
+                                        Il y a {{ $qcm->qcmQuestions->count() }} Questions
                                     </div>
                                 </div>
+                            </div>
+                            <div class="flex gap-5 items-start"> 
+                                <div class="flex gap-4">
+                                    <a href=" {{route('prof.question.qcm.edit', [$slug, $qcm->id])}} " class="">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <button type="button" onclick="openModal('delete-qcm-modal-{{ $qcm->id }}')" class="text-red-600">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+
+                                    <x-confirm-modal
+                                        id="delete-qcm-modal-{{ $qcm->id }}"
+                                        title="Supprimer le QCM"
+                                        action="{{ route('prof.question.qcm.destroy', [$slug, $qcm->id]) }}"
+                                        method="DELETE"
+                                        confirmText="Oui, supprimer"
+                                        cancelText="Annuler">
+                                        Confirmez-vous la suppression de <span class="text-rouge font-semibold">{{ $qcm->titre }}</span> ? Cette action supprimera aussi toutes ses questions.
+                                    </x-confirm-modal>
+                                </div>
+                                <a href=" {{route('prof.qcm.question.create', [$slug, $qcm->id])}} " 
+                                    class="bg-vert p-1 px-4 inline-block rounded-full text-white">
+                                    Créer question
+                                </a>
                             </div>
                         </div>
                         <div class="mt-1">
@@ -43,7 +71,7 @@
                                 <div class="border-y border-black/5 d py-2
                                     dark:border-white/5">
                                     <div class="flex gap-4 justify-between ">
-                                        <div class="w-9 h-9 bg-black/5 rounded-md flex justify-center items-center
+                                        <div class="w-9 h-9 bg-black/5 rounded-sm flex justify-center items-center
                                             dark:bg-white/5">
                                             <span class="text-vert">{{ $index + 1 }}</span>
                                         </div>
@@ -63,22 +91,23 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                @if ($examen->status === 'brouillon') 
                                                 <div class="flex gap-3 items-center">
-                                                    <button type="button" onclick="openModal('romove-question-modal-{{ $question->id }}')" class="text-rouge">
+                                                    <a href=" {{route('prof.qcm.question.edit', [$slug,$qcm->id,$question->id] )}} " class="text-vert">
+                                                        <i class="fa-solid fa-pen"></i>
+                                                    </a>
+                                                    <button type="button" onclick="openModal('delete-question-modal-{{ $question->id }}')" class="text-rouge">
                                                         <i class="fa-regular fa-trash-can"></i>
                                                     </button>
                                                     <x-confirm-modal
-                                                        id="romove-question-modal-{{ $question->id }}"
+                                                        id="delete-question-modal-{{ $question->id }}"
                                                         title="Supprimer la question"
-                                                        action="{{ route('prof.examen.qcm.question.remove',[$slug, $examen->id, $question->id] ) }}"
+                                                        action="{{ route('prof.qcm.question.destroy', [$slug, $qcm->id, $question->id]) }}"
                                                         method="DELETE"
                                                         confirmText="Oui, supprimer"
                                                         cancelText="Annuler">
                                                         Confirmez-vous la suppression de cette question ? Cette action est irréversible.
                                                     </x-confirm-modal>
                                                 </div>
-                                                @endif
                                             </div>
                                             <div class="mb-2">
                                                 @if($question->image)
@@ -94,12 +123,12 @@
                                                     </video>
                                                 @endif
                                             </div>
-                                            <div class=" rounded-md p-2   px-3 reponse bg-black/2 border border-black/3 
+                                            <div class=" rounded-md p-2   px-3 reponse bg-black/2 border border-black/3
                                                 dark:bg-white/2 dark:border-white/3">
                                                 @foreach($question->qcmChoices as $choice)
                                                     <div class="flex justify-between gap-4 border-b border-black/5 py-1 {{ $loop->even ? 'bg-white/60 dark:bg-white/2' : '' }}">
                                                         <p class="flex-1 text-sm">- {{ $choice->texte }}</p>
-                                                        <span class="{{ $choice->est_correcte ? 'text-vert' : '' }}">
+                                                        <span class="{{ $choice->est_correcte ? 'text-vert' : 'text-black/40 dark:text-white/30' }}">
                                                             @if($choice->est_correcte)
                                                                 <i class="fa-solid fa-check"></i>
                                                             @else
@@ -114,7 +143,7 @@
                                 </div>
                             @empty
                                 <div class="p-10  mt-2 rounded-md bg-black/5 text-center
-                                    dark:bg-white/3">
+                                    dark:bg-white/2">
                                     <i class="fa-solid fa-box-open text-2xl"></i>
                                     <p>Aucune question n'a encore été ajoutée.</p>
                                 </div>
@@ -128,14 +157,12 @@
                     <p>Aucun QCM n'a encore été créé pour cet examen.</p>
                 </div>
             @endforelse
-        </div>
-        @if ($examen->status === 'brouillon')
-        <div class="flex justify-end sticky bottom-5 mt-4 pe-2 gap-3">
-            <a href="{{ route('prof.examen.qcm.selectQuestions.form', [$slug, $examen->id]) }}" class="p-2 text-white px-5 inline-block rounded-full bg-vert">
-                + Ajouter question
+        </div>   
+        <div class=" flex justify-end sticky bottom-5 mt-4 pe-2">
+            <a href=" {{route('prof.question.qcm.create', $slug)}} " class="p-2 text-white px-5 inline-block rounded-full bg-rouge ">
+                Créer nouveau quiz
             </a>
         </div>
-        @endif
         
     </div>
 @endsection

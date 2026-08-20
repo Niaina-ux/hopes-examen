@@ -22,102 +22,100 @@ use Illuminate\Http\Request;
 class ProfExamenController extends Controller
 {
 
-    // public function show(string $slug)
-    // {
-    //     $categorie = Categorie::where('slug', $slug)->firstOrFail();
-
-    //     $examens = Examen::where('categorie_id', $categorie->id)
-    //     ->orderBy('id', 'desc')
-    //     ->paginate(10);
-
-    //     return view('prof.examen.show', compact('categorie', 'examens', 'slug'));
-    // }
 
     public function show(Request $request, string $slug)
-{
-    $categorie = Categorie::where('slug', $slug)->firstOrFail();
+    {
+        $categorie = Categorie::with('typesExerciceAutorises')
+            ->where('slug', $slug)
+            ->firstOrFail();
 
-    $moisSelectionne = $request->input('mois');
-    $dateSelectionnee = $request->input('date');
-    $modeTous = !$moisSelectionne && !$dateSelectionnee;
+        $typePremier = Categorie::where('slug', $slug)
+            ->firstOrFail()
+            ->typesExerciceAutorises()
+            ->first();
 
-    if ($dateSelectionnee) {
-        $moisSelectionne = \Carbon\Carbon::parse($dateSelectionnee)
-            ->format('Y-m');
-        $modeTous = false;
-    }
+        $moisSelectionne = $request->input('mois');
+        $dateSelectionnee = $request->input('date');
+        $modeTous = !$moisSelectionne && !$dateSelectionnee;
 
-    $datesDisponibles = collect();
+        if ($dateSelectionnee) {
+            $moisSelectionne = \Carbon\Carbon::parse($dateSelectionnee)
+                ->format('Y-m');
+            $modeTous = false;
+        }
 
-    if ($moisSelectionne) {
-        $datesDisponibles = Examen::where(
+        $datesDisponibles = collect();
+
+        if ($moisSelectionne) {
+            $datesDisponibles = Examen::where(
+                'categorie_id',
+                $categorie->id
+            )
+                ->whereNotNull('date_examen')
+                ->whereYear(
+                    'date_examen',
+                    substr($moisSelectionne, 0, 4)
+                )
+                ->whereMonth(
+                    'date_examen',
+                    substr($moisSelectionne, 5, 2)
+                )
+                ->selectRaw('DATE(date_examen) as date')
+                ->distinct()
+                ->orderByDesc('date')
+                ->pluck('date')
+                ->map(fn ($date) => \Carbon\Carbon::parse($date)
+                    ->format('Y-m-d'))
+                ->values();
+        }
+
+        if (
+            !$modeTous &&
+            !$dateSelectionnee &&
+            $datesDisponibles->isNotEmpty()
+        ) {
+            $dateSelectionnee = $datesDisponibles->first();
+        }
+
+        $query = Examen::where(
             'categorie_id',
             $categorie->id
-        )
-            ->whereNotNull('date_examen')
-            ->whereYear(
-                'date_examen',
-                substr($moisSelectionne, 0, 4)
-            )
-            ->whereMonth(
-                'date_examen',
-                substr($moisSelectionne, 5, 2)
-            )
-            ->selectRaw('DATE(date_examen) as date')
-            ->distinct()
-            ->orderByDesc('date')
-            ->pluck('date')
-            ->map(fn ($date) => \Carbon\Carbon::parse($date)
-                ->format('Y-m-d'))
-            ->values();
-    }
-
-    if (
-        !$modeTous &&
-        !$dateSelectionnee &&
-        $datesDisponibles->isNotEmpty()
-    ) {
-        $dateSelectionnee = $datesDisponibles->first();
-    }
-
-    $query = Examen::where(
-        'categorie_id',
-        $categorie->id
-    );
-
-    if ($dateSelectionnee) {
-        $query->whereDate(
-            'date_examen',
-            $dateSelectionnee
         );
-    } elseif ($moisSelectionne) {
-        $query
-            ->whereYear(
+
+        if ($dateSelectionnee) {
+            $query->whereDate(
                 'date_examen',
-                substr($moisSelectionne, 0, 4)
-            )
-            ->whereMonth(
-                'date_examen',
-                substr($moisSelectionne, 5, 2)
+                $dateSelectionnee
             );
+        } elseif ($moisSelectionne) {
+            $query
+                ->whereYear(
+                    'date_examen',
+                    substr($moisSelectionne, 0, 4)
+                )
+                ->whereMonth(
+                    'date_examen',
+                    substr($moisSelectionne, 5, 2)
+                );
+        }
+
+        $examens = $query
+            ->orderByDesc('date_examen')
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('prof.examen.show', compact(
+            'categorie',
+            'examens',
+            'slug',
+            'datesDisponibles',
+            'dateSelectionnee',
+            'moisSelectionne',
+            'modeTous',
+            'typePremier'
+        ));
     }
-
-    $examens = $query
-        ->orderByDesc('date_examen')
-        ->orderByDesc('id')
-        ->paginate(10)
-        ->withQueryString();
-
-    return view('prof.examen.show', compact(
-        'categorie',
-        'examens',
-        'slug',
-        'datesDisponibles',
-        'dateSelectionnee',
-        'moisSelectionne',
-        'modeTous'
-    ));
-}
 
     public function assignTypes(string $slug, int $examenId)
     {
@@ -199,185 +197,6 @@ class ProfExamenController extends Controller
                 ->with('error', "Il y a un problème dans l'URL !");
         }
         $examen->load('typesExercice');
-        $erreurs = [];
-        foreach ($examen->typesExercice as $type) {
-            switch ($type->slug) {
-                case 'qcm':
-                    $qcms = Qcm::where('examen_id', $examen->id)->with('qcmQuestions')->get();
-
-                    if ($qcms->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « QCM » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($qcms as $qcm) {
-                        $totalPoints = $qcm->qcmQuestions->sum('points');
-                        if ($qcm->qcmQuestions->isEmpty()) {
-                            $erreurs[] = "QCM « {$qcm->titre} » : aucune question n'a été ajoutée.";
-                        } elseif ($totalPoints != $qcm->note_totale) {
-                            $erreurs[] = "QCM « {$qcm->titre} » : {$totalPoints} pts au lieu de {$qcm->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'code':
-                    $codes = Code::where('examen_id', $examen->id)->with('codeQuestions')->get();
-
-                    if ($codes->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Code » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($codes as $code) {
-                        $totalPoints = $code->codeQuestions->sum('points');
-                        if ($code->codeQuestions->isEmpty()) {
-                            $erreurs[] = "Code « {$code->titre} » : aucune question n'a été ajoutée.";
-                        } elseif ($totalPoints != $code->note_totale) {
-                            $erreurs[] = "Code « {$code->titre} » : {$totalPoints} pts au lieu de {$code->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'text':
-                    $texts = Text::where('examen_id', $examen->id)->with('textQuestions')->get();
-
-                    if ($texts->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Compréhension de texte » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($texts as $text) {
-                        $totalPoints = $text->textQuestions->sum('points');
-                        if ($text->textQuestions->isEmpty()) {
-                            $erreurs[] = "Texte « {$text->titre} » : aucune question n'a été ajoutée.";
-                        } elseif ($totalPoints != $text->note_totale) {
-                            $erreurs[] = "Texte « {$text->titre} » : {$totalPoints} pts au lieu de {$text->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'redaction':
-                    $redactions = Redaction::where('examen_id', $examen->id)->get();
-
-                    if ($redactions->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Rédaction » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-                    break;
-
-                case 'pointiller':
-                    $pointillers = Pointiller::where('examen_id', $examen->id)->with('pointillerQuestions')->get();
-
-                    if ($pointillers->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Pointillé » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($pointillers as $pointiller) {
-                        $totalPoints = $pointiller->pointillerQuestions->sum('points');
-                        if ($pointiller->pointillerQuestions->isEmpty()) {
-                            $erreurs[] = "Pointillé « {$pointiller->titre} » : aucune question n'a été ajoutée.";
-                        } elseif ($totalPoints != $pointiller->note_totale) {
-                            $erreurs[] = "Pointillé « {$pointiller->titre} » : {$totalPoints} pts au lieu de {$pointiller->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'relier':
-                    $reliers = Relier::where('examen_id', $examen->id)->with('relierQuestions')->get();
-
-                    if ($reliers->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Relier » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($reliers as $relier) {
-                        $totalPoints = $relier->relierQuestions->sum('points');
-                        if ($relier->relierQuestions->isEmpty()) {
-                            $erreurs[] = "Relier « {$relier->titre} » : aucune question n'a été ajoutée.";
-                        } elseif ($totalPoints != $relier->note_totale) {
-                            $erreurs[] = "Relier « {$relier->titre} » : {$totalPoints} pts au lieu de {$relier->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'fichier':
-                    $fichiers = Fichier::where('examen_id', $examen->id)->with('fichierQuestions')->get();
-
-                    if ($fichiers->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Devoir à rendre » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($fichiers as $fichier) {
-                        $totalPoints = $fichier->fichierQuestions->sum('points');
-                        if ($fichier->fichierQuestions->isEmpty()) {
-                            $erreurs[] = "Devoir « {$fichier->titre} » : aucune question n'a été ajoutée.";
-                        } elseif ($totalPoints != $fichier->note_totale) {
-                            $erreurs[] = "Devoir « {$fichier->titre} » : {$totalPoints} pts au lieu de {$fichier->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'image':
-                    $images = ImageExercice::where('examen_id', $examen->id)->with('questions')->get();
-
-                    if ($images->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Image » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($images as $image) {
-                        $totalPoints = $image->questions->sum('points');
-                        if ($image->questions->isEmpty()) {
-                            $erreurs[] = "Image « {$image->titre} » : aucune image n'a été ajoutée.";
-                        } elseif ($totalPoints != $image->note_totale) {
-                            $erreurs[] = "Image « {$image->titre} » : {$totalPoints} pts au lieu de {$image->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'glisserdeposer':
-                    $glisserDeposers = GlisserDeposer::where('examen_id', $examen->id)->with('questions')->get();
-
-                    if ($glisserDeposers->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Glisser-déposer » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($glisserDeposers as $gd) {
-                        $totalPoints = $gd->questions->sum('points');
-                        if ($gd->questions->isEmpty()) {
-                            $erreurs[] = "Glisser-déposer « {$gd->titre} » : aucune question n'a été ajoutée.";
-                        } elseif ($totalPoints != $gd->note_totale) {
-                            $erreurs[] = "Glisser-déposer « {$gd->titre} » : {$totalPoints} pts au lieu de {$gd->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-
-                case 'motscroises':
-                    $motsCroisesListe = MotsCroises::where('examen_id', $examen->id)->with('motsCroisesMots')->get();
-
-                    if ($motsCroisesListe->isEmpty()) {
-                        $erreurs[] = "Aucun exercice « Mots croisés » n'a été créé pour ce type d'exercice.";
-                        break;
-                    }
-
-                    foreach ($motsCroisesListe as $mc) {
-                        $totalPoints = $mc->motsCroisesMots->sum('points');
-                        if ($mc->motsCroisesMots->isEmpty()) {
-                            $erreurs[] = "Mots croisés « {$mc->titre} » : aucun mot n'a été ajouté.";
-                        } elseif ($totalPoints != $mc->note_totale) {
-                            $erreurs[] = "Mots croisés « {$mc->titre} » : {$totalPoints} pts au lieu de {$mc->note_totale} pts attendus.";
-                        }
-                    }
-                    break;
-            }
-        }
-
-        if (!empty($erreurs)) {
-            return back()->with('error', "Impossible de terminer : " . implode(' | ', $erreurs));
-        }
 
         $examen->update(['status' => 'publie']);
 
