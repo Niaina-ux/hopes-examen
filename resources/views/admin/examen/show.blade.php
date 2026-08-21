@@ -30,14 +30,16 @@
     @endif
 
     <div class="flex items-center justify-between gap-3
-                border-b-2 border-black/10 pb-2 mt-4">
+                border-b-2 border-black/10 pb-2 mt-4
+                dark:border-white/10">
         <div class="flex items-center gap-2 overflow-x-auto min-w-0">
             <a href="{{ route('admin.examen.show', $slug) }}"
                class="shrink-0 px-5 py-1 rounded-md border
                       border-black/10 transition
+                      dark:border-white/10
                       {{ $modeTous
                           ? 'bg-vert text-white'
-                          : 'bg-black/2 hover:bg-black/5' }}">
+                          : 'bg-black/2 hover:bg-black/5 dark:bg-white/3 dark:hover:bg-white/5' }}">
                 Tous
             </a>
             @if ($moisSelectionne && !$modeTous)
@@ -56,7 +58,10 @@
             </a>
             @endforeach
             @else
-            <p class="px-5 rounded-md bg-black/2 p-1 border border-black/3">Selcetionnez le date pour filtrer <i class="fa-solid fa-arrow-right-long"></i></p>   
+            <p class="px-5 rounded-md bg-black/2 p-1 border border-black/3
+            dark:bg-white/2 dark:border-white/3">
+                Selcetionnez la date et mois pour filtrer <i class="fa-solid fa-arrow-right-long"></i>
+            </p>   
             @endif
         </div>
 
@@ -67,8 +72,8 @@
                    name="mois"
                    value="{{ $moisSelectionne }}"
                    onchange="this.form.submit()"
-                   class="border border-black/10 rounded-md
-                          bg-black/2 p-1 px-3">
+                   class="border border-black/10 rounded-md bg-black/2 p-1 px-3
+                    dark:border-white/10 dark:bg-white/2">
         </form>
     </div>
 
@@ -85,7 +90,7 @@
         </div>
     @elseif($moisSelectionne)
         <div class="mt-4 flex items-center gap-2">
-            <span class="text-sm text-black/50">
+            <span class="text-sm">
                 Examens du mois :
             </span>
             <span class="px-3 py-1 rounded-full bg-vert/10
@@ -102,25 +107,21 @@
             <div class="flex justify-between gap-7 border
                         border-black/10 rounded bg-white/70 p-2
                         hover:bg-white transition
-                        dark:border-white/3 dark:bg-white/2">
+                        dark:border-white/3 dark:bg-white/2 dark:hover:bg-white/4">
                 <div class="w-10 h-10 shrink-0 rounded-md bg-black/5
-                            flex justify-center items-center font-semibold">
-                    {{ str_pad(
-                        $examens->firstItem() + $index,
-                        2,
-                        '0',
-                        STR_PAD_LEFT
-                    ) }}
+                            flex justify-center items-center font-semibold
+                            dark:bg-white/5">
+                    {{ str_pad($examens->firstItem() + $index,2, '0', STR_PAD_LEFT) }}
                 </div>
 
                 <div class="flex-1 min-w-0">
-                    <h3 class="text-lg -mt-1">
+                    <a href="" class="text-lg -mt-1">
                         {{ $examen->titre }}
-                    </h3>
+                    </a>
 
                     <div class="flex gap-3 text-sm  flex-wrap">
                         <span class=" {{ $examen->status == 'brouillon'
-                                         ? 'text-black/70'
+                                         ? 'text-black/70 dark:text-white/50'
                                          : 'text-rouge' }}">
                             {{ match($examen->status) {
                                 'brouillon' => 'Brouillon',
@@ -157,7 +158,7 @@
                             $slug,
                             $examen->id
                         ]) }}"
-                       class="text-black/60">
+                       class="">
                         <i class="fa-solid fa-pen"></i>
                     </a>
 
@@ -178,7 +179,8 @@
                 </div>
             </div>
         @empty
-            <div class="p-10 rounded-md bg-black/5 text-center">
+            <div class="p-10 rounded-md bg-black/5 text-center
+                dark:bg-white/2">
                 <i class="fa-solid fa-box-open text-2xl"></i>
                 <p>
                     Aucun examen créé pour cette catégorie

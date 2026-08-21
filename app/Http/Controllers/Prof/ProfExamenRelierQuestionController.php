@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Prof;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorie;
 use App\Models\Examen;
 use App\Models\Relier;
 use App\Models\RelierQuestion;
@@ -12,21 +13,18 @@ use Illuminate\Validation\Rule;
 
 class ProfExamenRelierQuestionController extends Controller
 {
-    public function show(string $slug, Examen $examen, Relier $relier)
+    
+    public function create(string $slug, int $relierId)
     {
-        $questions = $relier->relierQuestions()
-            ->with('paires')
-            ->orderBy('id', 'desc')
-            ->get();
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+        $relier = Relier::where('categorie_id', $categorie->id)->find($relierId);
+        if (!$relier) {
+            return redirect()
+                ->route('prof.question.relier', $slug)
+                ->with('error', "Ce exericice est introuvable pour cette catégorie.");
+        }
 
-        return view('prof.examen.relier.questions.show',
-            compact('slug','examen', 'relier', 'questions')
-        );
-    }
-
-    public function create(string $slug, Examen $examen, Relier $relier)
-    {
-        return view('prof.examen.relier.questions.create', compact('slug', 'examen', 'relier'));
+        return view('prof.questions.relier.questions.create', compact('slug',  'relier'));
     }
 
     public function store(Request $request, string $slug, Examen $examen, Relier $relier)
@@ -72,7 +70,6 @@ class ProfExamenRelierQuestionController extends Controller
             ]);
         }
 
-        // ✅ Fanamarinana ny note_totale
         if ($relier->note_totale !== null) {
             $pointsExistants = $relier->relierQuestions()->sum('points');
             $pointsTotal = $pointsExistants + $validated['points'];
@@ -103,18 +100,34 @@ class ProfExamenRelierQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.relier', [$slug, $examen->id])
+            ->route('prof.question.relier', [$slug])
             ->with('success', 'Question enregistrée avec succès.');
     }
 
-    public function edit(string $slug, Examen $examen, Relier $relier, RelierQuestion $question)
-    {
-        $question->load('paires');
+    public function edit(string $slug, int $relierId, int $questionId)
+    {   
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+        $relier = Relier::where('categorie_id', $categorie->id)->find($relierId);
+        if (!$relier) {
+            return redirect()
+                ->route('prof.question.relier', $slug)
+                ->with('error', "Ce exericice est introuvable pour cette catégorie.");
+        }
 
-        return view('prof.examen.relier.questions.edit', compact('slug', 'examen', 'relier', 'question'));
+        $question = $relier->relierQuestions()
+            ->with('paires')
+            ->find($questionId);
+
+        if (!$question) {
+            return redirect()
+                ->route('prof.question.relier', $slug)
+                ->with('error', "Cette question est introuvable dans cet exercice.");
+        }
+
+        return view('prof.questions.relier.questions.edit', compact('slug', 'relier', 'question'));
     }
 
-    public function update(Request $request, string $slug, Examen $examen, Relier $relier, RelierQuestion $question)
+    public function update(Request $request, string $slug,  Relier $relier, RelierQuestion $question)
     {
         $validated = $request->validate([
             'enonce' => ['required','string',],
@@ -157,7 +170,6 @@ class ProfExamenRelierQuestionController extends Controller
             ]);
         }
 
-        // ✅ Fanamarinana ny note_totale — tsy anisan'ny sum ilay question ankehitriny
         if ($relier->note_totale !== null) {
             $pointsAutresQuestions = $relier->relierQuestions()
                 ->where('id', '!=', $question->id)
@@ -193,17 +205,17 @@ class ProfExamenRelierQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.relier', [$slug, $examen->id])
+            ->route('prof.question.relier', $slug)
             ->with('success', 'Question modifiée avec succès.');
     }
 
 
-    public function destroy(string $slug, Examen $examen, Relier $relier, RelierQuestion $question)
+    public function destroy(string $slug, Relier $relier, RelierQuestion $question)
     {
         $question->delete();
 
         return redirect()
-            ->route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id])
+            ->route('prof.question.relier', $slug)
             ->with('success', 'Question supprimée avec succès.');
     }
 }

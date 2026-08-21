@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('relier', function (Blueprint $table) {
+        Schema::create('examen_relier_questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('categorie_id')->constrained('categories')->cascadeOnDelete();
-            $table->string('titre');
-            $table->text('description')->nullable();
-            $table->integer('duree_minutes')->nullable();
-            $table->integer('note_totale')->nullable();
+            $table->foreignId('examen_id')->constrained('examens')->cascadeOnDelete();
+            $table->foreignId('relier_question_id')->constrained('relier_questions')->cascadeOnDelete();
             $table->integer('ordre')->default(0);
             $table->timestamps();
+
+            $table->unique(['examen_id', 'relier_question_id']);
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('relier');
+        Schema::dropIfExists('examen_relier_questions');
     }
 };

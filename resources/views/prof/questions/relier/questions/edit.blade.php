@@ -1,11 +1,11 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
 <div class="py-3">
-    <div class="flex items-center gap-3 my-3">
-        <a href="{{ route('prof.examen.relier.question.show', [$slug, $examen->id, $relier->id]) }}" class="bg-vert rounded-md w-7 h-7 flex justify-center items-center text-white">
+    <div class="flex items-center gap-3 ">
+        <a href="" class=" flex justify-center items-center gap-2">
             <i class="fa-solid fa-angle-left"></i>
+            Retour
         </a>
-        Retour
     </div>
     <div class="w-full">
         <h2 class="text-2xl font-semibold text-vert">Modifier l'exercice relier par flèche</h2>
@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('prof.examen.relier.question.update', [$slug, $examen->id, $relier->id, $question->id]) }}">
+        <form method="POST" action="{{ route('prof.relier.question.update', [$slug,  $relier->id, $question->id]) }}">
             @csrf
             @method('PUT')
 

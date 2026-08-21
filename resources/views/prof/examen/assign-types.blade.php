@@ -1,6 +1,6 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="bg-white py-3 rounded-md">
+<div class="py-3 rounded-md">
     <div class="">
         <a href="">
             Examen-type/
@@ -8,7 +8,7 @@
         <span>Assign-types</span>
     </div>
     <h2 class="text-2xl font-semibold my-1 text-vert">{{ $examen->titre }}</h2>
-    <p class="text-black/60 mb-4">Sélectionnez les types d'exercice pour cet examen et définissez leur ordre</p>
+    <p class="mb-4">Sélectionnez les types d'exercice pour cet examen et définissez leur ordre</p>
 
     @if(session('success'))
         <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md my-4 flex justify-between items-center">
@@ -34,21 +34,24 @@
     <form action="{{ route('prof.examen.storeTypes',[$slug, $examen->id]) }}" method="POST">
         @csrf
 
-        <div class="my-5 border border-black/3 rounded-md p-2 bg-black/2">
+        <div class="my-5 border border-black/3 rounded-md p-2 bg-black/2
+            dark:border-white/3 dark:bg-white/2">
             @foreach($typesExercice as $type)
                 @php
                     $isChecked = in_array($type->id, old('type_exercice_id', $examen->typesExercice->pluck('id')->toArray()));
                     $ordreActuel = old('ordre.' . $type->id, $examen->typesExercice->firstWhere('id', $type->id)?->pivot?->ordre ?? 0);
                 @endphp
-                <label class="flex items-center justify-between gap-3 border border-black/3 rounded p-2 cursor-pointer bg-white/70">
-                    <div class="gap-2 w-8 h-8 bg-black/5 rounded-md flex justify-center items-center">
+                <label class="flex items-center justify-between gap-3 border border-black/3 rounded p-2 cursor-pointer bg-white/70
+                    dark:border-white/3 dark:bg-white/2">
+                    <div class="gap-2 w-8 h-8 bg-black/5 rounded-md flex justify-center items-center
+                        dark:bg-white/5">
                         <i class="{{ $type->icone ?? 'fa-solid fa-shapes' }} text-vert"></i>
                     </div>
                     <div class="flex-1">
                         {{ $type->nom }}
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-xs text-black/40">Ordre</span>
+                        <span class="text-xs">Ordre</span>
                         <input type="number" name="ordre[{{ $type->id }}]" value="{{ $ordreActuel }}" min="0"
                             class="border rounded w-16 p-1 text-center text-sm ordre-input">
                         <input type="checkbox" name="type_exercice_id[]" value="{{ $type->id }}" {{ $isChecked ? 'checked' : '' }}

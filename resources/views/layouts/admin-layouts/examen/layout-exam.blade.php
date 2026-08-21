@@ -1,13 +1,4 @@
 <div class="">
-    {{-- @if(session('success'))
-        <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mb-2 flex justify-between items-center">
-            <span>{{ session('success') }}</span>
-            <button type="button" onclick="document.getElementById('success-alert').remove()">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-    @endif --}}
-
     @if(session('error'))
         <div id="error-alert" class="bg-red-100/50 text-rouge px-4 py-2 rounded-md mb-2 flex justify-between items-center">
             <span>{{ session('error') }}</span>
@@ -61,19 +52,19 @@
                 @endif
                 <i class="fa-solid fa-circle-check"></i> Finalisé
             </div>
-
         </div>
         @endif
     </div>
 </div>
 
 @if($examen->typesExercice->isNotEmpty())
-    <div class="border-b flex justify-between  border-black/10 mt-2 py-2">
+    <div class="border-b flex justify-between  border-black/10 mt-2 py-2
+    dark:border-white/10">
         <div class="flex gap-1 ">
             @foreach($examen->typesExercice as $type)
                 @if(\Illuminate\Support\Facades\Route::has('prof.examen.' . $type->slug))
                     <a href="{{ route('prof.examen.' . $type->slug, [$slug, $examen->id]) }}"
-                        class="inline-block p-1 px-3 rounded-full border {{ request()->routeIs('prof.examen.' . $type->slug .'*') ? 'bg-vert text-white border-vert border-transparent' : 'bg-black/5 border-black/5' }}">
+                        class="inline-block p-1 px-3 rounded-full border {{ request()->routeIs('prof.examen.' . $type->slug .'*') ? 'bg-vert text-white border-vert border-transparent' : 'bg-black/5 border-black/5 dark:border-white/5 dark:bg-white/5' }}">
                         {{ $type->nom }}
                     </a>
                 @else
@@ -84,25 +75,27 @@
             @endforeach
         </div>
         @php
-            $totalPointsExamen = collect([
-                \App\Models\Pointiller::class,
-                \App\Models\Relier::class,
-                \App\Models\Code::class,
-                \App\Models\Text::class,
-                \App\Models\Redaction::class,
-                \App\Models\Fichier::class,
-                \App\Models\ImageExercice::class,
-                \App\Models\GlisserDeposer::class,
-                \App\Models\MotsCroises::class,
-            ])->sum(function ($modelClass) use ($examen) {
+            $totalPointsExamen = collect([])
+                ->sum(function ($modelClass) use ($examen) {
                 return $modelClass::where('examen_id', $examen->id)->sum('note_totale');
             });
 
-            // ✅ QCM géré séparément — points des questions sélectionnées pour CET examen, via la banque
             $totalPointsExamen += $examen->qcmQuestionsSelectionnees()->sum('points');
+            $totalPointsExamen += $examen->relierQuestionsSelectionnees()->sum('points');
+
+            //----TOTAL QUESTION------
+            $totalQuestionExamen =  $examen->qcmQuestionsSelectionnees()->count()+ 
+                                    $examen->relierQuestionsSelectionnees()->count();
         @endphp
-        <div class="p-1 px2 rounded-md border border-black/20 ">
-            Total: <span class="text-rouge">{{ $totalPointsExamen }}</span> Pts
+        <div class="flex gap-2">
+            <div class="p-1 px2 rounded-md border border-black/20 
+                dark:border-white/20">
+                Total: <span class="text-rouge">{{ $totalPointsExamen }}</span> Pts
+            </div>
+            <div class="p-1 px2 rounded-md border border-black/20 
+                dark:border-white/20">
+                Questions: <span class="text-rouge">{{ $totalQuestionExamen }}</span> Pts
+            </div>
         </div>
     </div>
 @else

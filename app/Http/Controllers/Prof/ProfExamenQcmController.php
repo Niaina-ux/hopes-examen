@@ -28,7 +28,7 @@ class ProfExamenQcmController extends Controller
         return view('prof.questions.qcm.create', compact('slug'));
     }
 
-    public function store(Request $request, string $slug, Examen $examen)
+    public function store(Request $request, string $slug)
     {
         $categorie = Categorie::where('slug', $slug)->firstOrFail();
 
@@ -75,7 +75,7 @@ class ProfExamenQcmController extends Controller
 
         if (!$qcm) {
             return redirect()
-                ->route('prof.qcm.show', $slug)
+                ->route('prof.question.qcm', $slug)
                 ->with('error', "Ce QCM est introuvable pour cette catégorie.");
         }
 

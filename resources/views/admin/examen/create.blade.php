@@ -1,6 +1,6 @@
 @extends('layouts.admin-layouts.layouthead')
 @section('contenue-admin')
-<div class="bg-white p-4 rounded-md">
+<div class="PY63 rounded-md">
     <h2 class="text-2xl font-semibold text-vert mb-4">Créer un examen — {{ $categorie->nom }}</h2>
 
     @if($errors->any())

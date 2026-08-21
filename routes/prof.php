@@ -97,15 +97,33 @@ Route::middleware(['auth', 'role:prof'])->group(function (){
     });
 
     Route::controller(ProfExamenRelierController::class)->group(function(){
+        // --------
+        Route::get('prof/{slug}/relier', 'showbanque')->name('prof.question.relier');
+        Route::get('prof/{slug}/relier/create', 'create')->name('prof.question.relier.create');
+        Route::post('prof/{slug}/relier/store', 'store')->name('prof.question.relier.store');
+        Route::get('/prof/{slug}/relier/{relierId}/edit', 'edit')->name('prof.question.relier.edit');
+        Route::put('prof/{slug}/relier/{relierId}/update', 'update')->name('prof.question.relier.update');
+        Route::delete('prof/{slug}/relier/{relierId}', 'destroy')->name('prof.question.relier.destroy');
+        // --------
+
         Route::get('prof/examen/{slug}/{examen}/relier', 'show')->name('prof.examen.relier');
-        Route::get('prof/examen/{slug}/{examen}/relier/create', 'create')->name('prof.examen.relier.create');
-        Route::post('prof/examen/{slug}/{examen}/relier/store', 'store')->name('prof.examen.relier.store');
-        Route::delete('prof/examen/{slug}/{examen}/relier/{relier}', 'destroy')->name('prof.examen.relier.destroy');
+
+        // -------
+        Route::get('prof/examen/{slug}/{examenId}/relier/select-questions', 'selectQuestionsForm')->name('prof.examen.relier.selectQuestions.form');
+        Route::post('prof/examen/{slug}/{examenId}/relier/select-questions', 'storeSelectedQuestions')->name('prof.examen.relier.selectQuestions.store');
+        Route::delete('prof/examen/{slug}/{examenId}/relier/question/{questionId}','removeQuestion')->name('prof.examen.relier.question.remove');
+        // --------
     });
 
     Route::controller(ProfExamenRelierQuestionController::class)->group(function () {
-        Route::get('prof/examen/{slug}/{examen}/relier/{relier}/question', 'show')->name('prof.examen.relier.question.show');
-        Route::get('prof/examen/{slug}/{examen}/relier/{relier}/question/create', 'create')->name('prof.examen.relier.question.create');
+        // -------
+        Route::get('prof/{slug}/relier/{relierId}/question/create', 'create')->name('prof.relier.question.create');
+        Route::post('prof/{slug}/relier/{relier}/question/store', 'store')->name('prof.relier.question.store');
+        Route::get('/prof/{slug}/relier/{relier}/question/{question}/edit', 'edit')->name('prof.relier.question.edit');
+        Route::put('/prof/{slug}/relier/{relier}/question/{question}', 'update')->name('prof.relier.question.update');
+        Route::delete('/prof/{slug}/relier/{relier}/question/{question}', 'destroy')->name('prof.relier.question.destroy');
+        // --------
+        
         Route::post('prof/examen/{slug}/{examen}/relier/{relier}/question/store', 'store')->name('prof.examen.relier.question.store');
         Route::get('prof/examen/{slug}/{examen}/relier/{relier}/question/{question}/edit', 'edit')->name('prof.examen.relier.question.edit');
         Route::put('prof/examen/{slug}/{examen}/relier/{relier}/question/{question}', 'update')->name('prof.examen.relier.question.update');

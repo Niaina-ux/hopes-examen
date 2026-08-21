@@ -81,11 +81,20 @@ class Examen extends Model
         return $this->hasMany(ExamAttempt::class);
     }
 
+    // ------
     public function qcmQuestionsSelectionnees(): BelongsToMany
     {
         return $this->belongsToMany(QcmQuestion::class, 'examen_qcm_questions')
             ->withPivot('ordre')
             ->orderBy('examen_qcm_questions.ordre');
     }
+
+    public function relierQuestionsSelectionnees(): BelongsToMany
+    {
+        return $this->belongsToMany(RelierQuestion::class, 'examen_relier_questions')
+            ->withPivot('ordre')
+            ->orderBy('examen_relier_questions.ordre');
+    }
+    // --------
 
 }
