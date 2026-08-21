@@ -1,10 +1,11 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="w-full p-3">
-    <a href="{{ route('prof.examen.pointiller.question.show', [$slug, $examen->id, $pointiller->id]) }}">
-        <i class="fa-solid fa-arrow-left-long"></i>
+<div class="py-3">
+    <a href="" class="flex items-center gap-2 uppercase text-sm">
+        <i class="fa-solid fa-angle-left"></i> Questions
     </a>
-    <div class="bg-white rounded-md">
+    <div class="">
+        <h2 class="text-2xl font-semibold mb-4">Modifier la question — Compléter le pointillé</h2>
         @if(session('success'))
             <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">
                 <span>{{ session('success') }}</span>
@@ -13,20 +14,19 @@
                 </button>
             </div>
         @endif
-        <h2 class="text-xl font-semibold mb-4">Modifier la question — Compléter le pointillé</h2>
-
-        <form action="{{ route('prof.examen.pointiller.question.update', [$slug, $examen->id, $pointiller->id, $question->id]) }}" method="POST" enctype="multipart/form-data">
+        
+        <form action="{{ route('prof.pointiller.question.update', [$slug, $pointiller->id, $question->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
             <div class="mb-4">
                 <label class="block text-sm font-medium">Énoncé</label>
-                <p class="text-xs text-black/50 mb-1">Utilisez [1], [2], [3]... pour indiquer les mots à compléter. Ex: Le [1] web est l'ensemble de [2] parfait.</p>
+                <p class="text-xs  mb-1">Utilisez [1], [2], [3]... pour indiquer les mots à compléter. Ex: Le [1] web est l'ensemble de [2] parfait.</p>
                 <textarea id="enonce" name="enonce" rows="3" class="border rounded w-full p-2" placeholder="Le [1] web est l'ensemble de [2] parfait.">{{ old('enonce', $question->enonce) }}</textarea>
                 @error('enonce') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
 
-            <div class="flex gap-4 mb-4">
+            <div class="flex gap-4 mb-4 hidden">
                 <div class="flex-1">
                     <label class="block text-sm font-medium">Image (optionnel)</label>
                     @if($question->image)
@@ -47,7 +47,7 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium">Points</label>
-                <input type="number" name="points" value="{{ old('points', $question->points) }}" min="0.1" step="0.1" class="border rounded w-32 p-2">
+                <input type="text" name="points" value="{{ old('points', $question->points) }}" min="0.1" step="0.1" class="border rounded w-32 p-2">
                 @error('points') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
 

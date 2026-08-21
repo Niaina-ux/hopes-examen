@@ -14,6 +14,7 @@
                     </div>
                 </a>
             </li>
+            
             @if($profCategorie ?? false)
                 <li>
                     <a href="{{ route('prof.student.show', $profCategorie->slug) }}"
@@ -26,6 +27,18 @@
                         </div>
                     </a>
                 </li>
+                @if($typePremier)
+                    <li>
+                        <a href="{{ route('prof.question.'. $typePremier->slug, $categorie->slug) }}"
+                        class="inline-block px-2 py-1 navlink {{ request()->routeIs('prof.question') ? 'active' : '' }}">
+                            <div class="tirelink"></div>
+                            <div>
+                                <i class="fa-solid fa-user-tie me-2"></i>
+                                Questions
+                            </div>
+                        </a>
+                    </li>
+                @endif
                 <li>
                     <a href="{{ route('prof.examen.show', $profCategorie->slug) }}"
                     class="inline-block px-2 py-1 navlink
@@ -38,6 +51,7 @@
                     </a>
                 </li>
             @endif
+
         </ul>
     </div>
     <div class="absolute bottom-10 left-4">

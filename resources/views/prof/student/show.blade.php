@@ -1,7 +1,7 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof') 
-<div class="bg-white rounded-md py-3 me-2">
-    <div class="bg-white sticky top-0">
+<div class="py-3 ">
+    <div class="animation-11">
         <div class="flex justify-between items-end">
             <div class="w-[70%]">
                 <h2 class="text-vert text-2xl mb-1 font-semibold">Les étudiants</h2>
@@ -9,7 +9,8 @@
             </div>
         </div>
     </div>
-    <div class="w-full  mt-4 border border-black/3 rounded-md p-2 bg-black/2">
+    <div class="w-full  mt-4 border border-black/3 rounded-md p-2 bg-black/2 animation-11
+        dark:border-white/3 dark:bg-white/2">
         @forelse ($students as $student)    
         <div class="flex justify-between gap-7 p-3 border rounded bg-white/70 border-black/3">
             <div class="w-10 h-10 rounded-md bg-black/5 border border-black/2 overflow-hidden">
@@ -32,7 +33,8 @@
             </div>
         </div>
         @empty
-            <div class="p-20 rounded-md bg-black/1">
+            <div class="p-20 rounded-md bg-black/2 text-center
+            dark:bg-white/2">
                 <i class="fa-solid fa-box-open text-3xl"></i>
                 <p class="">Il n'y a pas encore de Proffesseur!</p>
             </div>

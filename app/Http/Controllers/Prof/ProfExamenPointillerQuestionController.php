@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Prof;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorie;
 use App\Models\Examen;
 use App\Models\Pointiller;
 use App\Models\PointillerQuestion;
@@ -12,19 +13,18 @@ use Illuminate\Validation\Rule;
 
 class ProfExamenPointillerQuestionController extends Controller
 {
-    public function show(string $slug, Examen $examen, Pointiller $pointiller)
-    {
-        $questions = $pointiller->pointillerQuestions()
-            ->with('reponses.choices')
-            ->orderBy('id', 'desc')
-            ->get();
-            
-        return view('prof.examen.pointiller.quesitons.show', compact('slug','examen','pointiller','questions'));
-    }
 
-    public function create(string $slug, Examen $examen, Pointiller $pointiller)
+    public function create(string $slug,  int $pointillerId)
     {
-        return view('prof.examen.pointiller.quesitons.create', compact('slug', 'examen', 'pointiller'));
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+
+        $pointiller = Pointiller::where('categorie_id', $categorie->id)->find($pointillerId);
+        if (!$pointiller) {
+            return redirect()
+                ->route('prof.question.pointiller', $slug)
+                ->with('error', "Ce exericice est introuvable pour cette catégorie.");
+        }
+        return view('prof.questions.pointiller.quesitons.create', compact('slug',  'pointiller'));
     }
 
     public function store(Request $request, string $slug, Examen $examen, Pointiller $pointiller)
@@ -51,8 +51,34 @@ class ProfExamenPointillerQuestionController extends Controller
             'trous.*.choices.min' => 'Chaque trou doit avoir au moins 2 choix dans la banque.',
         ]);
 
+        $reponsesCorrectes = collect($validated['trous'])
+            ->pluck('reponse_correcte')
+            ->map(fn($reponse) => mb_strtolower(trim($reponse)))
+            ->filter()
+            ->values();
+
+        if ($reponsesCorrectes->count() !== $reponsesCorrectes->unique()->count()) {
+            return back()->withInput()->withErrors([
+                'trous' => 'Les réponses correctes des trous ne doivent pas être identiques.',
+            ]);
+        }
+
+        foreach ($validated['trous'] as $index => $trou) {
+            $choices = collect($trou['choices'])
+                ->map(fn($choice) => mb_strtolower(trim($choice)))
+                ->filter()
+                ->values();
+
+            if ($choices->count() !== $choices->unique()->count()) {
+                return back()->withInput()->withErrors([
+                    "trous.$index.choices" => 'Les choix d’un même trou ne doivent pas être identiques.',
+                ]);
+            }
+        }
+
         DB::transaction(function () use ($request, $validated, $pointiller) {
             $imagePath = null;
+
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $imageName = time() . '_' . $file->getClientOriginalName();
@@ -61,6 +87,7 @@ class ProfExamenPointillerQuestionController extends Controller
             }
 
             $videoPath = null;
+
             if ($request->hasFile('video')) {
                 $file = $request->file('video');
                 $videoName = time() . '_' . $file->getClientOriginalName();
@@ -74,25 +101,30 @@ class ProfExamenPointillerQuestionController extends Controller
                 'image' => $imagePath,
                 'video' => $videoPath,
                 'points' => $validated['points'],
-                'ordre' => $pointiller->pointillerQuestions()->count(),
+                'ordre' => $pointiller->pointillerQuestions()->count() + 1,
             ]);
 
             foreach ($validated['trous'] as $position => $trou) {
+                $reponseCorrecte = trim($trou['reponse_correcte']);
+
                 $reponse = $question->reponses()->create([
                     'position' => $position + 1,
-                    'reponse_correcte' => trim($trou['reponse_correcte']),
+                    'reponse_correcte' => $reponseCorrecte,
                 ]);
 
-                $choices = $trou['choices'];
-                if (!in_array(trim($trou['reponse_correcte']), array_map('trim', $choices))) {
-                    $choices[] = $trou['reponse_correcte'];
+                $choices = collect($trou['choices'])
+                    ->map(fn($choice) => trim($choice))
+                    ->filter()
+                    ->unique(fn($choice) => mb_strtolower($choice))
+                    ->values();
+
+                if (!$choices->contains(fn($choice) => mb_strtolower($choice) === mb_strtolower($reponseCorrecte))) {
+                    $choices->push($reponseCorrecte);
                 }
 
                 foreach ($choices as $choiceText) {
-                    if (empty(trim($choiceText))) continue;
-
                     $reponse->choices()->create([
-                        'texte' => trim($choiceText),
+                        'texte' => $choiceText,
                     ]);
                 }
             }
@@ -104,14 +136,37 @@ class ProfExamenPointillerQuestionController extends Controller
     }
 
 
-    public function edit(string $slug, Examen $examen, Pointiller $pointiller, PointillerQuestion $question)
+    public function edit(string $slug, int $pointillerId, int $questionId)
     {
+        $categorie = Categorie::where('slug', $slug)->firstOrFail();
+
+        $pointiller = Pointiller::where('categorie_id', $categorie->id)
+            ->find($pointillerId);
+
+        if (!$pointiller) {
+            return redirect()
+                ->route('prof.question.pointiller', $slug)
+                ->with('error', "Cet exercice est introuvable pour cette catégorie.");
+        }
+
+        $question = PointillerQuestion::where('pointiller_id', $pointiller->id)
+            ->find($questionId);
+
+        if (!$question) {
+            return redirect()
+                ->route('prof.question.pointiller', $slug)
+                ->with('error', "Cette question est introuvable dans cet exercice.");
+        }
+
         $question->load('reponses.choices');
 
-        return view('prof.examen.pointiller.quesitons.edit', compact('slug', 'examen', 'pointiller', 'question'));
+        return view(
+            'prof.questions.pointiller.quesitons.edit',
+            compact('slug', 'pointiller', 'question')
+        );
     }
 
-    public function update(Request $request, string $slug, Examen $examen, Pointiller $pointiller, PointillerQuestion $question)
+    public function update(Request $request, string $slug, Pointiller $pointiller, PointillerQuestion $question)
     {
         $validated = $request->validate([
             'enonce' => [
@@ -135,6 +190,31 @@ class ProfExamenPointillerQuestionController extends Controller
             'trous.*.reponse_correcte.required' => 'Indiquez la réponse correcte pour chaque trou.',
             'trous.*.choices.min' => 'Chaque trou doit avoir au moins 2 choix dans la banque.',
         ]);
+
+        $reponsesCorrectes = collect($validated['trous'])
+            ->pluck('reponse_correcte')
+            ->map(fn($reponse) => mb_strtolower(trim($reponse)))
+            ->filter()
+            ->values();
+
+        if ($reponsesCorrectes->count() !== $reponsesCorrectes->unique()->count()) {
+            return back()->withInput()->withErrors([
+                'trous' => 'Les réponses correctes des trous ne doivent pas être identiques.',
+            ]);
+        }
+
+        foreach ($validated['trous'] as $index => $trou) {
+            $choices = collect($trou['choices'])
+                ->map(fn($choice) => mb_strtolower(trim($choice)))
+                ->filter()
+                ->values();
+
+            if ($choices->count() !== $choices->unique()->count()) {
+                return back()->withInput()->withErrors([
+                    "trous.$index.choices" => 'Les choix d’un même trou ne doivent pas être identiques.',
+                ]);
+            }
+        }
 
         DB::transaction(function () use ($request, $validated, $question) {
             $imagePath = $question->image;
@@ -185,7 +265,7 @@ class ProfExamenPointillerQuestionController extends Controller
         });
 
         return redirect()
-            ->route('prof.examen.pointiller', [$slug, $examen->id])
+            ->route('prof.question.pointiller', $slug )
             ->with('success', 'Question modifiée avec succès.');
     }
 
@@ -202,7 +282,7 @@ class ProfExamenPointillerQuestionController extends Controller
         $question->delete();
 
         return redirect()
-            ->route('prof.examen.pointiller.question.show', [$slug, $examen->id, $pointiller->id])
+            ->back()
             ->with('success', 'Question supprimée avec succès.');
     }
 }

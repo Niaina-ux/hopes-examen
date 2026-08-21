@@ -10,12 +10,6 @@
                 Liste des examens créés pour cette catégorie.
             </p>
         </div>
-        @if($typePremier)
-            <a href="{{ route('prof.question.'. $typePremier->slug, $categorie->slug) }}"
-                class="bg-rouge rounded-full text-white hover-rouge p-2 px-5">
-                Questions
-            </a>
-        @endif
     </div>
 
     @if(session('success'))

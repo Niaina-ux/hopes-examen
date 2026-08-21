@@ -79,21 +79,29 @@ Route::middleware(['auth', 'role:prof'])->group(function (){
     });
 
     Route::controller(ProfExamenPointillerController::class)->group(function(){
+        // --------
+        Route::get('prof/{slug}/pointiller', 'showbanque')->name('prof.question.pointiller');
+        Route::get('prof/{slug}/pointiller/create', 'create')->name('prof.question.pointiller.create');
+        Route::post('prof/{slug}/pointiller/store', 'store')->name('prof.question.pointiller.store');
+        Route::get('/prof/{slug}/pointiller/{pointillerId}/edit', 'edit')->name('prof.question.pointiller.edit');
+        Route::put('prof/{slug}/pointiller/{pointillerId}/update', 'update')->name('prof.question.pointiller.update');
+        Route::delete('prof/{slug}/pointiller/{pointiller}', 'destroy')->name('prof.question.pointiller.destroy');
+        // -------
+
         Route::get('prof/examen/{slug}/{examen}/pointiller', 'show')->name('prof.examen.pointiller');
-        Route::get('prof/examen/{slug}/{examen}/pointiller/create', 'create')->name('prof.examen.pointiller.create');
-        Route::post('prof/examen/{slug}/{examen}/pointiller/store', 'store')->name('prof.examen.pointiller.store');
-        Route::get('prof/examen/{slug}/{examen}/pointiller/{pointiller}/edit', 'edit')->name('prof.examen.pointiller.edit');
-        Route::put('/prof/examen/{slug}/{examen}/pointiller/{pointiller}', 'update')->name('prof.examen.pointiller.update');
-        Route::delete('prof/examen/{slug}/{examen}/pointiller/{pointiller}', 'destroy')->name('prof.examen.pointiller.destroy');
+
+        // -------
+        
     });
 
     Route::controller(ProfExamenPointillerQuestionController::class)->group(function () {
-        Route::get('prof/examen/{slug}/{examen}/pointiller/{pointiller}/question', 'show')->name('prof.examen.pointiller.question.show');
-        Route::get('prof/examen/{slug}/{examen}/pointiller/{pointiller}/question/create', 'create')->name('prof.examen.pointiller.question.create');
-        Route::post('prof/examen/{slug}/{examen}/pointiller/{pointiller}/question/store', 'store')->name('prof.examen.pointiller.question.store');
-        Route::get('/prof/examen/{slug}/{examen}/pointiller/{pointiller}/question/{question}/edit', 'edit')->name('prof.examen.pointiller.question.edit');
-        Route::put('/prof/examen/{slug}/{examen}/pointiller/{pointiller}/question/{question}', 'update')->name('prof.examen.pointiller.question.update');
-        Route::delete('/prof/examen/{slug}/{examen}/pointiller/{pointiller}/question/{question}', 'destroy')->name('prof.examen.pointiller.question.destroy');
+        // --------
+        Route::get('prof/{slug}/pointiller/{pointiller}/question/create', 'create')->name('prof.pointiller.question.create');
+        Route::post('prof/{slug}/pointiller/{pointiller}/question/store', 'store')->name('prof.pointiller.question.store');
+        Route::get('/prof/{slug}/pointiller/{pointiller}/question/{question}/edit', 'edit')->name('prof.pointiller.question.edit');
+        Route::put('/prof/{slug}/pointiller/{pointiller}/question/{question}', 'update')->name('prof.pointiller.question.update');
+        Route::delete('/prof/{slug}/pointiller/{pointiller}/question/{question}', 'destroy')->name('prof.pointiller.question.destroy');
+        // ---------
     });
 
     Route::controller(ProfExamenRelierController::class)->group(function(){

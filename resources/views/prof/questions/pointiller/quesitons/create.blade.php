@@ -1,37 +1,40 @@
 @extends('layouts.prof-layouts.proflayoutshead')
 @section('contenue-prof')
-<div class="py-3 me-2">
+<div class="py-3">
     <div>
-        <a href="{{route('prof.examen.pointiller', [$slug, $examen->id])}} ">
+        <a href=" ">
             Retour / 
         </a>
         <span class="font-semibold">Création</span>
     </div>
     
-    <div class="bg-white rounded-md">
+    <div class="">
+        <h2 class="text-2xl text-vert border-b-2 border-black/10 pb-1 mb-4 font-semibold
+        dark:border-white/10">Ajouter une question — Compléter le pointillé</h2>
         @if(session('success'))
-            <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 rounded-md mt-4 flex justify-between items-center">
+            <div id="success-alert" class="bg-green-100/50 text-green-700 px-4 py-2 mb-2 rounded-md mt-2 flex justify-between items-center">
                 <span>{{ session('success') }}</span>
                 <button type="button" onclick="document.getElementById('success-alert').remove()">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
         @endif
-        <h2 class="text-2xl text-vert border-b-2 border-black/10 pb-1 mb-4 font-semibold">Ajouter une question — Compléter le pointillé</h2>
-
-        <form action="{{ route('prof.examen.pointiller.question.store', [$slug, $examen->id, $pointiller->id]) }}" 
-                method="POST" 
-                enctype="multipart/form-data"
-                class="border  border-black/3 bg-black/1 p-4 rounded-md">
+        
+        <form action="{{route('prof.pointiller.question.store', [$slug, $pointiller->id])}}" 
+            method="POST" 
+            enctype="multipart/form-data"
+            class="border  border-black/3 bg-black/1 p-4 rounded-md
+            dark:border-white/3 dark:bg-white/1">
             @csrf
 
             <div class="">
                 <label class="block font-medium">Énoncé</label>
-                <p class="text-xs text-black/50 mb-1">Utilisez [1], [2], [3]... pour indiquer les mots à compléter. Ex: Le [1] web est l'ensemble de [2] parfait.</p>
+                <p class="text-xs mb-1">Utilisez [1], [2], [3]... pour indiquer les mots à compléter. Ex: Le [1] web est l'ensemble de [2] parfait.</p>
                 <textarea id="enonce" 
                         name="enonce" 
                         rows="3" 
-                        class="border border-black/20 rounded bg-white/90 formulaire w-full p-2" 
+                        class="border border-black/20 rounded bg-white/90 formulaire w-full p-2
+                            dark:border-white/10 dark:bg-white/2" 
                         placeholder="Le [1] web est l'ensemble de [2] parfait.">{{ old('enonce') }}</textarea>
                         @error('enonce') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
@@ -42,7 +45,8 @@
                     <input type="file" 
                             name="image" 
                             accept="image/*" 
-                            class="border border-black/20 rounded bg-white/90 formulaire w-full p-2">
+                            class="border border-black/20 rounded bg-white/90 formulaire w-full p-2
+                                dark:border-white/10 dark:bg-white/2">
                             @error('image') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div class="flex-1">
@@ -50,7 +54,8 @@
                     <input type="file" 
                             name="video" 
                             accept="video/*" 
-                            class="border border-black/20 rounded bg-white/90 formulaire w-full p-2">
+                            class="border border-black/20 rounded bg-white/90 formulaire w-full p-2
+                                dark:border-white/10 dark:bg-white/2">
                             @error('video') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -62,7 +67,8 @@
                         value="{{ old('points', 1) }}" 
                         min="0.1" 
                         step="0.1" 
-                        class="border border-black/20 bg-white/90 formulaire rounded w-32 p-2">
+                        class="border border-black/20 bg-white/90 formulaire rounded w-32 p-2
+                            dark:border-white/10 dark:bg-white/2">
                         @error('points') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
 
@@ -70,7 +76,8 @@
                 <p class="text-red-500 text-sm mb-2">{{ $message }}</p>
             @enderror
 
-            <button type="button" id="detect-trous" class="bg-black/5 border rounded-md px-4 py-2 mb-4">
+            <button type="button" id="detect-trous" class="bg-black/5 border rounded-md px-4 py-2 mb-4
+                 dark:bg-white/5">
                 Détecter les trous depuis l'énoncé
             </button>
 
@@ -85,7 +92,8 @@
                                 <input type="text" 
                                         name="trous[{{ $index }}][reponse_correcte]" 
                                         value="{{ $trou['reponse_correcte'] ?? '' }}" 
-                                        class="border border-black/20 rounded w-full bg-white/90 formulaire p-2">
+                                        class="border border-black/20 rounded w-full bg-white/90 formulaire p-2
+                                            dark:border-white/10 dark:bg-white/2">
                                         @error("trous.$index.reponse_correcte") <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                             </div>
 
@@ -97,7 +105,8 @@
                                             <input type="text" 
                                                     name="trous[{{ $index }}][choices][]" 
                                                     value="{{ $choice }}" 
-                                                    class="border border-black/20 bg-white/90 formulaire rounded w-full p-2">
+                                                    class="border border-black/20 bg-white/90 formulaire rounded w-full p-2
+                                                        dark:border-white/10 dark:bg-white/2">
                                             <button type="button" class="remove-choice text-rouge px-2 border rounded" title="Supprimer ce choix">
                                                 <i class="fa-solid fa-xmark"></i>
                                             </button>
@@ -141,7 +150,8 @@ document.getElementById('detect-trous').addEventListener('click', function () {
                 <label class="block  font-medium">Réponse correcte</label>
                 <input type="text" 
                         name="trous[${index}][reponse_correcte]" 
-                        class="border border-black/20 bg-white/90 formulaire rounded w-full p-2" 
+                        class="border border-black/20 bg-white/90 formulaire rounded w-full p-2
+                            dark:border-white/10 dark:bg-white/2" 
                         placeholder="Ex: developement">
             </div>
             <div class="choices-container">
@@ -150,7 +160,8 @@ document.getElementById('detect-trous').addEventListener('click', function () {
                     <div class="flex gap-2 choice-row">
                         <input type="text" 
                                 name="trous[${index}][choices][]" 
-                                class="border border-black/20 rounded bg-white/90 formulaire w-full p-2" 
+                                class="border border-black/20 rounded bg-white/90 formulaire w-full p-2
+                                    dark:border-white/10 dark:bg-white/2" 
                                 placeholder="Choix 1">
                         <button type="button" class="remove-choice text-rouge px-2 border rounded" title="Supprimer ce choix">
                             <i class="fa-solid fa-xmark"></i>
@@ -159,7 +170,8 @@ document.getElementById('detect-trous').addEventListener('click', function () {
                     <div class="flex gap-2 choice-row">
                         <input type="text" 
                                 name="trous[${index}][choices][]" 
-                                class="border border-black/20 rounded bg-white/90 formulaire w-full p-2" 
+                                class="border border-black/20 rounded bg-white/90 formulaire w-full p-2
+                                    dark:border-white/10 dark:bg-white/2" 
                                 placeholder="Choix 2">
                         <button type="button" class="remove-choice text-rouge px-2 border rounded" title="Supprimer ce choix">
                             <i class="fa-solid fa-xmark"></i>
