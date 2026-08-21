@@ -94,7 +94,7 @@
             </div>
             <div class="p-1 px2 rounded-md border border-black/20 
                 dark:border-white/20">
-                Questions: <span class="text-rouge">{{ $totalQuestionExamen }}</span> Pts
+                Questions: <span class="text-rouge">{{ $totalQuestionExamen }}</span> Qs
             </div>
         </div>
     </div>

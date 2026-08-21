@@ -24,12 +24,16 @@
                             <div class="flex-1">
                                 <h3 class="text-lg font-semibold">{{ $relier->titre }}</h3>
                                 <p>{{ $relier->description }}</p>
+                                @php
+                                    $noteTotaleRelier = $relier->relierQuestions->sum('points');
+                                    $questionTotal = $relier->relierQuestions->count();
+                                @endphp
                                 <div class="flex gap-4">
                                     <div class="flex text-sm text-rouge">
-                                         {{$relier->note_totale}} Pts
+                                         {{$noteTotaleRelier}} Pts
                                     </div>
                                     <div class="flex text-sm text-vert">
-                                        Il y a {{ $relier->relier_questions_count }} Questions 
+                                        Il y a {{ $questionTotal }} Questions 
                                     </div>
                                 </div>
                             </div>
